@@ -6,7 +6,11 @@ Video game developed in Delphi with FireMonkey framework on the occasion of the 
 
 This code repository contains a project developed in Object Pascal language under Delphi. You don't know what Delphi is and where to download it ? You'll learn more [on this web site](https://delphi-resources.developpeur-pascal.fr/).
 
-## Install
+## Game installation (how to play)
+
+Download the game from [its website](https://sporgloo.gamolf.fr) and follow the instructions to install it and play.
+
+## Source code installation
 
 To download this project you better should use "git" command but you also can download a ZIP from [its GitHub repository](https://github.com/DeveloppeurPascal/Sporgloo).
 
@@ -16,8 +20,10 @@ To download this project you better should use "git" command but you also can do
 
 This project depends on :
 
-* project 1
-* project 2
+* [DeveloppeurPascal/Delphi-Game-Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) in the subfolder ./lib-externes/Delphi-Game-Engine
+* [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) in the subfolder ./lib-externes/librairies
+
+Sporgloo uses the library [Skia4Delphi](https://skia4delphi.org) installed from GetIt in Delphi IDE.
 
 ## How to ask a new feature, report a bug or a security issue ?
 

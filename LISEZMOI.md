@@ -6,7 +6,11 @@ Jeu vidéo développé en Delphi avec le framework FireMonkey à l'occasion de l
 
 Ce dépôt de code contient un projet développé en langage Pascal Objet sous Delphi. Vous ne savez pas ce qu'est Dephi ni où le télécharger ? Vous en saurez plus [sur ce site web](https://delphi-resources.developpeur-pascal.fr/).
 
-## Installation
+## Installation du jeu (comment jouer)
+
+Téléchargez le jeu depuis [son site Internet](https://sporgloo.gamolf.fr) et suivez les instructions pour l'installer et jouer.
+
+## Installation des codes sources
 
 Pour télécharger ce projet il est recommandé de passer par "git" mais vous pouvez aussi télécharger un ZIP directement depuis [son dépôt GitHub](https://github.com/DeveloppeurPascal/Sporgloo).
 
@@ -16,8 +20,10 @@ Pour télécharger ce projet il est recommandé de passer par "git" mais vous po
 
 Ce dépôt de code dépend des dépôts suivants :
 
-* project 1
-* project 2
+* [DeveloppeurPascal/Delphi-Game-Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) dans le sous-dossier ./lib-externes/Delphi-Game-Engine
+* [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) dans le sous-dossier ./lib-externes/librairies
+
+Il utilise aussi la librairie [Skia4Delphi](https://skia4delphi.org) installée depuis GetIt directement dans Delphi.
 
 ## Comment demander une nouvelle fonctionnalité, signaler un bogue ou une faille de sécurité ?
 
