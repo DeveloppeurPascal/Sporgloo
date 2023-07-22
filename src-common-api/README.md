@@ -37,6 +37,7 @@ Server response : DeviceID+SessionID+PlayerX+PlayerX
 Each time the game program starts, it ask for a SessionID to the server.
 
 The server generate a uniq ID as a SessionID and sent it to the client with last coordinates of the player.
+**TODO : add player data (score, life, ...)**
 
 ### Map refresh
 
