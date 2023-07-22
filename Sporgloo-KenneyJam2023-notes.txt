@@ -1,0 +1,118 @@
+https://kenney.nl/assets/medieval-rts
+Medieval RTS
+
+https://kenney.nl/assets/game-icons
+Game Icons
+
+https://kenney.nl/assets/ui-pack
+UI Pack
+
+https://kenney.nl/assets/puzzle-pack-2
+Puzzle Pack 2
+
+fonte du titre et des textes :
+AdobeStock_526775911
+
+https://kenney.nl/assets/crosshair-pack
+Crosshair Pack
+
+
+=> tuile du background (forêt)
+=> tuile background chemin
+=> tuiles des chemins
+=> personnage
+=> pastilles à déposer ou ramasser (étoiles)
+=> fonte pour titres (Adobe Stock)
+=> fonte pour textes (Adobe Stock)
+=> viseur géré par les contrôleurs de jeu
+
+
+-----
+
+
+Musique d'ambiance de Joel Steudler
+https://www.joelsteudlermusic.com
+
+/Volumes/Home/Archives-sites-et-droits-de-revente/HumbleBundle.com/EpicRoyalty-FreeMusicCollection-JoelSteudler-20230403/Atmospheric Explorer
+
+Mysterious_Moments_140bpm_125s.wav
+Mysterious_Passage_126s.wav
+
+
+-----
+
+
+exploration
+forêt
+villes
+multi joueur
+pac man
+
+Sporgloo
+
+sporgloo.gamolf.fr
+https://sporgloo.gamolf.fr
+
+https://gamolf.itch.io/sporgloo
+
+https://github.com/DeveloppeurPascal/Sporgloo
+
+
+-----
+
+
+inspirations : 
+- pacman : récupération de pastilles
+- RPG : promenade en forêt, terrain illimité (-4milliards / +4 milliards cases), score + niveau de vie, éventuellement des combats ou créatures à ajouter plus tard, des obstacles infranchissables
+- game play : le joueur place des pastilles et crée des chemins, son personnage se déplace tout seul vers la pastille la plus proche
+
+
+à coder :
+- déplacements des personnages
+- évolution du score
+- évolution du niveau de vie du joueur
+- évolution du nombre de pastilles pouvant être déposées sur la carte
+- dessin de l'écran sur le jeu
+- gestion côté serveur (map, liste des joueurs, pastilles disponibles)
+- actions du joueur: poser des pastilles pour déplacer son personnage et gagner des points
+
+
+évolutions :
+- éléments non joueurs sur la map
+- définir des parties privées
+- jouer en réseau local au lieu d'Internet
+- déplacement du compte du joueur d'un appareil à un autre (en cas de changement ou perte d'appareil)
+
+
+Contenu du score :
+- nombre de cases parcourues par le personnage du joueur (1 point)
+- nombre de pastilles récoltées (10 points)
+- score = pseudo du joueur (à modérer) + valeur
+
+Niveau de vie du personnage :
+- s'incréments de 12 points à chaque pastille récoltée
+- décrémente de 1 point toutes les heures (y compris hors ligne)
+- décrémente de 1 point toutes les X cases (X = 1 au départ, à affiner plus tard)
+
+Nombre de pastilles à poser :
+- diminue de 1 à chaque pastille posée
+- augmente de 1 à chaque pastille récoltée
+- ajout automatique de 12 pastilles toutes les 24 heures
+- (futur) éventuellement vente de packs de pastilles en in-App
+
+Infos (stockées) du joueur :
+- position (x,y) sur la map
+- score
+- niveau de vie
+- nombre de pastilles disponibles
+- ID du logiciel/ordinateur associé au joueur
+
+Infos (stockées) de la map :
+- position (x,y) et niveau (Z-index) des éléments disponibles (chemins + éléments par dessus)
+=> par défaut c'est une forêt
+=> on ne stocke que les éléments modifiés (les chemins et plus tard les PNJ)
+- la liste des pastilles disponibles sur la map (x,y)
+- la liste des joueurs disponibles sur la map (x,y, ID)
+
+
+-----
