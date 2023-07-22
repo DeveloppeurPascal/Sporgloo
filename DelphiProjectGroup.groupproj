@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{DB0AF20C-134D-4ADE-8C20-43D57DA6B722}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="src-game\Sporgloo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="src-server\SporglooServer.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Sporgloo">
+        <MSBuild Projects="src-game\Sporgloo.dproj"/>
+    </Target>
+    <Target Name="Sporgloo:Clean">
+        <MSBuild Projects="src-game\Sporgloo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Sporgloo:Make">
+        <MSBuild Projects="src-game\Sporgloo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SporglooServer">
+        <MSBuild Projects="src-server\SporglooServer.dproj"/>
+    </Target>
+    <Target Name="SporglooServer:Clean">
+        <MSBuild Projects="src-server\SporglooServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SporglooServer:Make">
+        <MSBuild Projects="src-server\SporglooServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Sporgloo;SporglooServer"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Sporgloo:Clean;SporglooServer:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Sporgloo:Make;SporglooServer:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

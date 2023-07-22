@@ -1,0 +1,12 @@
+object frmMain: TfrmMain
+  Left = 0
+  Top = 0
+  Caption = 'Sporgloo'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  FullScreen = True
+  DesignerMasterStyle = 0
+end
