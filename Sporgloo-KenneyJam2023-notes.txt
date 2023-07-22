@@ -11,21 +11,23 @@ https://kenney.nl/assets/puzzle-pack-2
 Puzzle Pack 2
 
 fonte du titre et des textes :
-AdobeStock_526775911
+AdobeStock_440583506 => textes (boutons, barres de titre)
+AdobeStock_526775911 => game title
 
 https://kenney.nl/assets/crosshair-pack
 Crosshair Pack
 
 
-=> tuile du background (forêt)
-=> tuile background chemin
-=> tuiles des chemins
-=> personnage
-=> pastilles à déposer ou ramasser (étoiles)
-=> fonte pour titres (Adobe Stock)
-=> fonte pour textes (Adobe Stock)
-=> viseur géré par les contrôleurs de jeu
+=> tuile du background (forêt) : arbres-1.svg ... arbres-8.svg
+=> tuile du chemin : chemin-HBGD.svg (H-haut, B-bas, G-gauche, D-droite)
+=> personnage : perso-1.svg ... perso-24.svg
+=> pastilles à déposer ou ramasser : star.svg
+=> viseur géré par les contrôleurs de jeu : viseur.svg
+=> music on/off en cours de jeu ou options : music-on.svg, music-off.svg
+=> bouton "pause" : pause.svg
 
+=> fonte pour titres (Adobe Stock) : AdobeStock_526775911.ai
+=> fonte pour textes (Adobe Stock) : AdobeStock_440583506.ai
 
 -----
 
