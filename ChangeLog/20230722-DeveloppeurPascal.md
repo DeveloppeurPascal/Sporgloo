@@ -32,4 +32,10 @@
 ***** pause repas
 
 
-## Stream de l'après-midi (19h45 - 23h45)
+## Stream de l'après-midi (20h20 - 0h10)
+
+* codage du stockage des données côté joueur
+* codage du stockage des données côté serveur
+* modification des méthodes d'envoi et de réception de messages entre client et serveur pour utiliser les données des joueurs et de la carte de jeu en mémoire
+* mise à jour des messages à partir des données en mémoire (côté client+serveur) et des données de jeu (côté client)
+* mise à jour des docs
