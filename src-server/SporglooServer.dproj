@@ -229,7 +229,11 @@
         </DelphiCompile>
         <DCCReference Include="uListeningServer.pas"/>
         <DCCReference Include="uConnectedClient.pas"/>
-        <DCCReference Include="..\src-common-api\uAPIMessages.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.API.Messages.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.Types.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.Database.pas"/>
+        <DCCReference Include="uServerData.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.Consts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

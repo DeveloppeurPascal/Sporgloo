@@ -7,7 +7,11 @@ uses
   System.SysUtils,
   uListeningServer in 'uListeningServer.pas',
   uConnectedClient in 'uConnectedClient.pas',
-  uAPIMessages in '..\src-common-api\uAPIMessages.pas';
+  Sporgloo.API.Messages in '..\src-common-api\Sporgloo.API.Messages.pas',
+  Sporgloo.Types in '..\src-common-api\Sporgloo.Types.pas',
+  Sporgloo.Database in '..\src-common-api\Sporgloo.Database.pas',
+  uServerData in 'uServerData.pas',
+  Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas';
 
 var
   GameServer: TListeningServer;
