@@ -7,7 +7,7 @@ X => associer son icone au projet du serveur
 X => choisir une typo pour le titre
 X => choisir une typo pour les éléments affichés à l'écran
 X => définir l'interface client/serveur (API)
-=> coder l'API
+X => coder l'API
 => faire un TFrame pour un bouton de menu
 => faire un TFrame pour la boite de dialogue avec ou sans titre
 => faire un TFrame pour un champ de saisie
@@ -22,7 +22,7 @@ X => définir l'interface client/serveur (API)
 ==> écran du jeu (jeu en cours) : background du jeu, curseur souris ou contrôleur de jeu, boutons pause / play/pause musique, play/pause bruitages, score, niveau de vie, nombre de pastilles (= étoiles) dispos, actions du joueur, actions du personnage
 => coder le format de stockage des données côté joueur
 => coder le format de stockage des données côté serveur
-=> choix des éléments visuels de la map
+X => choix des éléments visuels de la map
 => coder du moteur d'affichage de la map
 => coder le jeu en interaction avec la souris / écran tactile (avec ou sans curseur sur l'écran, prise en compte des clicks)
 => coder le jeu en interaction avec les contrôleurs de jeu (simuler un curseur à l'écran)
