@@ -16,7 +16,12 @@ uses
   iOSapi.GameController in '..\lib-externes\Delphi-Game-Engine\src\iOSapi.GameController.pas',
   Macapi.GameController in '..\lib-externes\Delphi-Game-Engine\src\Macapi.GameController.pas',
   uClientSocket in 'uClientSocket.pas',
-  uAPIMessages in '..\src-common-api\uAPIMessages.pas';
+  Sporgloo.API.Messages in '..\src-common-api\Sporgloo.API.Messages.pas',
+  uGameData in 'uGameData.pas',
+  uConfig in 'uConfig.pas',
+  Sporgloo.Types in '..\src-common-api\Sporgloo.Types.pas',
+  Sporgloo.Database in '..\src-common-api\Sporgloo.Database.pas',
+  Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas';
 
 {$R *.res}
 

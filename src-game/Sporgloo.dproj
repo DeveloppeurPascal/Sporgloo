@@ -467,7 +467,12 @@
         <DCCReference Include="..\lib-externes\Delphi-Game-Engine\src\iOSapi.GameController.pas"/>
         <DCCReference Include="..\lib-externes\Delphi-Game-Engine\src\Macapi.GameController.pas"/>
         <DCCReference Include="uClientSocket.pas"/>
-        <DCCReference Include="..\src-common-api\uAPIMessages.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.API.Messages.pas"/>
+        <DCCReference Include="uGameData.pas"/>
+        <DCCReference Include="uConfig.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.Types.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.Database.pas"/>
+        <DCCReference Include="..\src-common-api\Sporgloo.Consts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
