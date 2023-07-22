@@ -92,7 +92,7 @@ Contenu du score :
 - score = pseudo du joueur (à modérer) + valeur
 
 Niveau de vie du personnage :
-- s'incréments de 12 points à chaque pastille récoltée
+- s'incrémente de 12 points à chaque pastille récoltée
 - décrémente de 1 point toutes les heures (y compris hors ligne)
 - décrémente de 1 point toutes les X cases (X = 1 au départ, à affiner plus tard)
 
