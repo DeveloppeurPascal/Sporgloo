@@ -14,6 +14,7 @@ type
     procedure SetSocket(const Value: TSocket);
   protected
     procedure Execute; override;
+
     procedure ReceivedAPIMessage(Const Msg: TSporglooAPIMessage);
     procedure SendAPIMessage(Const Msg: TSporglooAPIMessage);
 
@@ -163,8 +164,21 @@ begin
 end;
 
 procedure TConnectedClient.SendAPIMessage(const Msg: TSporglooAPIMessage);
+var
+  MsgSize: integer;
 begin
-  // TODO : à compléter
+  if not assigned(FSocket) then
+    exit;
+
+  MsgSize := 0;
+  while (MsgSize < CSportglooBufferLength) and
+    (Msg.Buffer[MsgSize] <> CSportglooAPIMessageTerminator) do
+    inc(MsgSize);
+
+  if not(MsgSize < CSportglooBufferLength) then
+    raise Exception.Create('Wrong buffer size. Please increase it.');
+
+  FSocket.Send(Msg.Buffer, MsgSize);
 end;
 
 procedure TConnectedClient.SendClientLoginResponse(const DeviceID,
