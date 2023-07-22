@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.1 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e9c07f;
+      }
+
+      .cls-2 {
+        fill: #ffd18b;
+      }
+
+      .cls-3 {
+        fill: #9a6836;
+      }
+
+      .cls-4 {
+        fill: #c48647;
+      }
+
+      .cls-5 {
+        fill: #af8f5e;
+      }
+
+      .cls-6 {
+        fill: #1ea7e1;
+      }
+    </style>
+  </defs>
+  <g id="Calque_1-2" data-name="Calque 1">
+    <g id="Layer0_91_FILL" data-name="Layer0 91 FILL">
+      <path class="cls-1" d="m10.05,12h2v6h2.05v-8h-4.05v2m-4,0v-2H2v8h2.05v-6h2Z"/>
+      <path class="cls-2" d="m4.05,18v4h8v-4H4.05m2-14v4H2v2h4.05v2h-2v2h8v-2h-2v-2h4.05v-2h-4.05v-4h-4Z"/>
+      <path class="cls-6" d="m4.05,14v4h8v-4H4.05Z"/>
+      <path class="cls-5" d="m6.05,6H2c-.57,0-1.03.2-1.4.6-.4.37-.6.83-.6,1.4v10c0,.57.2,1.05.6,1.45.37.37.83.55,1.4.55h.05v2c0,.57.2,1.05.6,1.45.37.37.83.55,1.4.55h8c.57,0,1.05-.18,1.45-.55.37-.4.55-.88.55-1.45v-2h.05c.57,0,1.05-.18,1.45-.55.37-.4.55-.88.55-1.45v-10c0-.57-.18-1.03-.55-1.4-.4-.4-.85-.6-1.35-.6h-4.15v2h4.05v10h-2.05v4H4.05v-4h-2.05v-10h4.05v-2Z"/>
+      <path class="cls-4" d="m6.05,2v2h4v-2h-4Z"/>
+      <path class="cls-3" d="m4.05,2v4h2V2h4v4h2V2c0-.57-.18-1.03-.55-1.4-.4-.4-.88-.6-1.45-.6h-4c-.57,0-1.03.2-1.4.6-.4.37-.6.83-.6,1.4Z"/>
+    </g>
+  </g>
+</svg>

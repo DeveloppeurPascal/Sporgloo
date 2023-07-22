@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #27ae60;
+      }
+
+      .cls-2 {
+        fill: #29b865;
+      }
+
+      .cls-3 {
+        fill: #24a159;
+      }
+    </style>
+  </defs>
+  <g id="Calque_1-2" data-name="Calque 1">
+    <g id="Layer0_10_FILL" data-name="Layer0 10 FILL">
+      <path class="cls-3" d="m4,12H0v8h4v-8m60,0h-4v8h4v-8M28,60v-4h-4v4h4M12,24h-4v4h4v-4m20,0h-4v4h4v-4m8,16h-4v4h4v-4m4-28h4v-4h-4v4Z"/>
+      <path class="cls-1" d="m60,12h4V0H0v12h4v8H0v44h64V20h-4v-8m-12,4h4v4h-4v-4m0-4h-4v-4h4v4m-12,28h4v4h-4v-4m12-12v8h-8v-8h8m4,24v-4h4v4h-4M16,8h-4v-4h4v4m12,16h4v4h-4v-4m-20,0h4v4h-4v-4m0,28h4v4h-4v-4m12-4h-4v-4h4v4m8,8v4h-4v-4h4Z"/>
+      <path class="cls-2" d="m16,48h4v-4h-4v4m-4,4h-4v4h4v-4m0-44h4v-4h-4v4m40,40v4h4v-4h-4m-4-12v-8h-8v8h8m4-20h-4v4h4v-4Z"/>
+    </g>
+  </g>
+</svg>

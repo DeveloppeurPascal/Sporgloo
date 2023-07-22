@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #d9a24d;
+      }
+
+      .cls-2 {
+        fill: #cd9948;
+      }
+
+      .cls-3 {
+        fill: #e2a94f;
+      }
+
+      .cls-4 {
+        fill: #219853;
+      }
+
+      .cls-5 {
+        fill: #27ae60;
+      }
+
+      .cls-6 {
+        fill: #29b865;
+      }
+
+      .cls-7 {
+        fill: #24a159;
+      }
+    </style>
+  </defs>
+  <g id="Calque_1-2" data-name="Calque 1">
+    <g id="Layer0_38_FILL" data-name="Layer0 38 FILL">
+      <path class="cls-7" d="m36,60v4h4v-4h-4M64,4h-4v4h4v-4M24,48h4v-4h-4v4m12-8v-4h-4v4h4m0-16v-4h-4v4h4m-24-8v-4h-4v4h4m44,40v-8h-8v8h8Z"/>
+      <path class="cls-5" d="m60,4h4V0H0v64h36v-4h4v4h24V8h-4v-4m0,12h-4v-4h4v4m-4,32v8h-8v-8h8M28,8h4v4h-4v-4m-12,8h8v8h-8v-8m-4-4v4h-4v-4h4m0,20v-4h4v4h-4m-4,16v4h-4v-4h4m28-28v4h-4v-4h4m0,16v4h-4v-4h4m-8,12h-4v-4h4v4m12-4h4v4h-4v-4Z"/>
+      <path class="cls-6" d="m44,44h-4v4h4v-4m-36,8v-4h-4v4h4m4-24v4h4v-4h-4m12-12h-8v8h8v-8m8-8h-4v4h4v-4m24,8h4v-4h-4v4Z"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_FILL" data-name="Layer0 38 MEMBER 0 FILL">
+      <path class="cls-4" d="m64,21.05c-.3,0-.6.08-.9.25-10.07,5.1-20.13,5.1-30.2,0-10.97-5.57-21.93-5.72-32.9-.45v2.2c10.67-5.4,21.33-5.4,32,0,10.67,5.43,21.33,5.43,32,0v-2m0,22.15v-2.25c-10.67,5.4-21.33,5.4-32,0-9.33-4.77-18.67-5.35-28-1.75l-2,.8c-.67.3-1.33.62-2,.95v2c.3,0,.6-.07.9-.2.63-.33,1.27-.63,1.9-.9h-.05l1.95-.8h.05c8.8-3.37,17.58-2.8,26.35,1.7,10.97,5.53,21.93,5.68,32.9.45Z"/>
+      <path class="cls-1" d="m64,40.95v-17.9c-10.67,5.43-21.33,5.43-32,0-10.67-5.4-21.33-5.4-32,0v17.9c.67-.33,1.33-.65,2-.95l2-.8c9.33-3.6,18.67-3.02,28,1.75,10.67,5.4,21.33,5.4,32,0Z"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_0_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 0 FILL">
+      <path class="cls-3" d="m10,30v-4h-4v4h4Z"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_1_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 1 FILL">
+      <path class="cls-2" d="m12,22v4h4v-4h-4Z"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_2_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 2 FILL">
+      <path class="cls-3" d="m34,40h4v-4h-4v4Z"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_3_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 3 FILL">
+      <path class="cls-2" d="m56,40v-4h-4v4h4Z"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #d9a24d;
+      }
+
+      .cls-2 {
+        fill: #cd9948;
+      }
+
+      .cls-3 {
+        fill: #e2a94f;
+      }
+
+      .cls-4 {
+        fill: #219853;
+      }
+
+      .cls-5 {
+        fill: #27ae60;
+      }
+
+      .cls-6 {
+        fill: #29b865;
+      }
+
+      .cls-7 {
+        fill: #24a159;
+      }
+    </style>
+  </defs>
+  <g id="Calque_1-2" data-name="Calque 1">
+    <g id="Layer0_26_FILL" data-name="Layer0 26 FILL">
+      <path class="cls-7" d="m36,60v4h4v-4h-4M64,4h-4v4h4v-4M8,16h4v-4h-4v4m48,40v-8h-8v8h8m-28-8v-4h-4v4h4m8-12h-4v4h4v-4m0-16h-4v4h4v-4Z"/>
+      <path class="cls-5" d="m64,4V0H0v64h36v-4h4v4h24V8h-4v-4h4M28,12v-4h4v4h-4m32,0v4h-4v-4h4m-28,8h4v4h-4v-4m0,16h4v4h-4v-4m8,8h4v4h-4v-4m-12,0v4h-4v-4h4m28,4v8h-8v-8h8M12,16h-4v-4h4v4m4,0h8v8h-8v-8m0,12v4h-4v-4h4m-12,24v-4h4v4h-4Z"/>
+      <path class="cls-6" d="m4,48v4h4v-4h-4m12-16v-4h-4v4h4m8-16h-8v8h8v-8m20,28h-4v4h4v-4m16-28v-4h-4v4h4M28,8v4h4v-4h-4Z"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_FILL" data-name="Layer0 26 MEMBER 0 FILL">
+      <path class="cls-4" d="m15.5,38.9c.62.08,1.06.44,1.3,1.1.46,1.28.56,3.14.3,5.6v.05c-.44,6.12.79,12.23,3.7,18.35h2.25c-3.07-6.07-4.38-12.13-3.95-18.2.6-5.73-.55-8.7-3.45-8.9-5.23.03-10.45,1.38-15.65,4.05v2c.32,0,.62-.08.9-.25,4.86-2.47,9.73-3.73,14.6-3.8m27.9,5.8c-4.27-1.2-6.43.35-6.5,4.65.2,4.87,1.55,9.75,4.05,14.65h2c0-.31-.09-.61-.25-.9-2.32-4.59-3.59-9.17-3.8-13.75,0-.02,0-.05,0-.1.04-1.26.32-2.14.85-2.65.7-.37,1.73-.37,3.1,0,.09.04.18.06.25.05,6.98,1.01,13.94-.16,20.9-3.5v-2.2c-6.87,3.47-13.73,4.72-20.6,3.75m20.6-21.65v-2c-.31,0-.61.07-.9.2-10.07,5.14-20.13,5.14-30.2,0-10.97-5.54-21.93-5.69-32.9-.45v2.25c10.67-5.4,21.33-5.4,32,0,10.67,5.43,21.33,5.43,32,0Z"/>
+      <path class="cls-1" d="m64,40.95v-17.9c-10.67,5.43-21.33,5.43-32,0-10.67-5.4-21.33-5.4-32,0v17.9c5.2-2.67,10.42-4.02,15.65-4.05,2.9.2,4.05,3.17,3.45,8.9-.43,6.07.88,12.13,3.95,18.2h17.9c-2.5-4.9-3.85-9.78-4.05-14.65.07-4.3,2.23-5.85,6.5-4.65,6.87.97,13.73-.28,20.6-3.75Z"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_0_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 0 FILL">
+      <path class="cls-3" d="m36,54h-4v4h4v-4Z"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_1_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 1 FILL">
+      <path class="cls-2" d="m26,49v-4h-4v4h4Z"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_2_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 2 FILL">
+      <path class="cls-3" d="m50,33v-4h-4v4h4Z"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_3_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 3 FILL">
+      <path class="cls-3" d="m8,34h4v-4h-4v4Z"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_4_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 4 FILL">
+      <path class="cls-2" d="m14,28v4h4v-4h-4Z"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_5_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 5 FILL">
+      <path class="cls-2" d="m60,36h-4v4h4v-4Z"/>
+    </g>
+  </g>
+</svg>
