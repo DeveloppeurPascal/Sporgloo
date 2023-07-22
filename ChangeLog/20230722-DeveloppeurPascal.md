@@ -17,4 +17,19 @@
 ***** pause repas
 
 
-## Stream de l'après-midi (14h15 - 18h00)
+## Stream de l'après-midi (14h30 - 18h45)
+
+* consultation d'un autre projet pour base de travail sur le client/server en sockets
+* mise en place de la partie client/serveur sur le programme serveur
+* mise en place de la partie client/serveur sur le programme du jeu
+* déclaration des messages de l'API client/serveur
+* gestion de la boucle de réception de données sur le client et le serveur
+* implémentation du paramétrage des messages à envoyer (côté client comme côté serveur)
+* implémentation des envois des messages du client vers le serveur et du serveur vers le client
+* implémentation des messages reçus côté client et serveur dans la limite des choses possibles (à compléter avec les données du jeu)
+
+
+***** pause repas
+
+
+## Stream de l'après-midi (19h45 - 23h45)
