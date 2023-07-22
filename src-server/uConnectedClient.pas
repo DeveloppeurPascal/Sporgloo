@@ -15,6 +15,8 @@ type
   protected
     procedure Execute; override;
     procedure ReceivedAPIMessage(Const Msg: TSporglooAPIMessage);
+    procedure SendAPIMessage(Const Msg: TSporglooAPIMessage);
+
     procedure onClientRegister(Const DeviceID: TSporglooAPIAlpha16);
     procedure onClientLogin(Const DeviceID, PlayerID: TSporglooAPIAlpha16);
     procedure onMapRefresh(Const MapX, MapY, ColNumber,
@@ -23,6 +25,18 @@ type
       Const PlayerX, PlayerY: TSporglooAPINumber);
     procedure onPlayerPutAStar(Const SessionID, PlayerID: TSporglooAPIAlpha16;
       Const NewStarX, NewStarY: TSporglooAPINumber);
+
+    procedure SendClientRegisterResponse(Const DeviceID, PlayerID: string;
+      var Msg: TSporglooAPIMessage);
+    procedure SendClientLoginResponse(Const DeviceID, SessionID: string;
+      Const PlayerX, PlayerY: TSporglooAPINumber; var Msg: TSporglooAPIMessage);
+    procedure SendMapCell(Const MapX, MapY: TSporglooAPINumber;
+      Const MapTileID: TSporglooAPIShort; var Msg: TSporglooAPIMessage);
+    procedure SendPlayerMoveResponse(var Msg: TSporglooAPIMessage);
+    procedure SendPlayerPutAStarResponse(Const NewStarX,
+      NewStarY: TSporglooAPINumber; var Msg: TSporglooAPIMessage);
+    procedure SendOtherPlayerMove(Const PlayerID: string;
+      Const PlayerX, PlayerY: TSporglooAPINumber; var Msg: TSporglooAPIMessage);
   public
     property Socket: TSocket read FSocket write SetSocket;
     constructor Create(AClientSocket: TSocket);
@@ -146,6 +160,73 @@ begin
     raise Exception.Create('Message ' + Msg.MessageID.Tostring +
       ' received by the server.');
   end;
+end;
+
+procedure TConnectedClient.SendAPIMessage(const Msg: TSporglooAPIMessage);
+begin
+  // TODO : à compléter
+end;
+
+procedure TConnectedClient.SendClientLoginResponse(const DeviceID,
+  SessionID: string; const PlayerX, PlayerY: TSporglooAPINumber;
+  var Msg: TSporglooAPIMessage);
+begin
+  Msg.Clear;
+  Msg.MessageID := 4;
+  StringToAlpha16(DeviceID, Msg.Msg4DeviceID);
+  StringToAlpha16(SessionID, Msg.Msg4SessionID);
+  Msg.Msg4PlayerX := PlayerX;
+  Msg.Msg4Playery := PlayerY;
+  SendAPIMessage(Msg);
+end;
+
+procedure TConnectedClient.SendClientRegisterResponse(const DeviceID,
+  PlayerID: string; var Msg: TSporglooAPIMessage);
+begin
+  Msg.Clear;
+  Msg.MessageID := 2;
+  StringToAlpha16(DeviceID, Msg.Msg2DeviceID);
+  StringToAlpha16(PlayerID, Msg.Msg2PlayerID);
+  SendAPIMessage(Msg);
+end;
+
+procedure TConnectedClient.SendMapCell(const MapX, MapY: TSporglooAPINumber;
+  const MapTileID: TSporglooAPIShort; var Msg: TSporglooAPIMessage);
+begin
+  Msg.Clear;
+  Msg.MessageID := 6;
+  Msg.Msg6MapX := MapX;
+  Msg.Msg6MapY := MapY;
+  Msg.Msg6MapTileID := MapTileID;
+  SendAPIMessage(Msg);
+end;
+
+procedure TConnectedClient.SendOtherPlayerMove(const PlayerID: string;
+  const PlayerX, PlayerY: TSporglooAPINumber; var Msg: TSporglooAPIMessage);
+begin
+  Msg.Clear;
+  Msg.MessageID := 11;
+  StringToAlpha16(PlayerID, Msg.Msg11PlayerID);
+  Msg.Msg11PlayerX := PlayerX;
+  Msg.Msg11Playery := PlayerY;
+  SendAPIMessage(Msg);
+end;
+
+procedure TConnectedClient.SendPlayerMoveResponse(var Msg: TSporglooAPIMessage);
+begin
+  Msg.Clear;
+  Msg.MessageID := 8;
+  SendAPIMessage(Msg);
+end;
+
+procedure TConnectedClient.SendPlayerPutAStarResponse(const NewStarX,
+  NewStarY: TSporglooAPINumber; var Msg: TSporglooAPIMessage);
+begin
+  Msg.Clear;
+  Msg.MessageID := 10;
+  Msg.Msg10NewStarX := NewStarX;
+  Msg.Msg10NewStary := NewStarY;
+  SendAPIMessage(Msg);
 end;
 
 procedure TConnectedClient.SetSocket(const Value: TSocket);
