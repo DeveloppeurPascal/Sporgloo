@@ -32,7 +32,7 @@ MessageID = 3
 Client send : DevideID+PlayerID
 
 MessageID = 4
-Server response : DeviceID+SessionID+PlayerX+PlayerX
+Server response : DeviceID+SessionID+PlayerX+PlayerX+Score+StarsCount+LifeLevel
 
 Each time the game program starts, it ask for a SessionID to the server.
 
