@@ -1,11 +1,11 @@
 X => créer le projet du jeu dans Delphi
 X => créer le projet du serveur dans Delphi
-=> créer icône du jeu
-=> créer icône du serveur de jeu
-=> associer son icone au projet du jeu
-=> associer son icone au projet du serveur
-=> choisir une typo pour le titre
-=> choisir une typo pour les éléments affichés à l'écran
+X => créer icône du jeu
+X => créer icône du serveur de jeu
+X => associer son icone au projet du jeu
+X => associer son icone au projet du serveur
+X => choisir une typo pour le titre
+X => choisir une typo pour les éléments affichés à l'écran
 X => définir l'interface client/serveur (API)
 => coder l'API
 => faire un TFrame pour un bouton de menu
@@ -27,5 +27,3 @@ X => définir l'interface client/serveur (API)
 => coder le jeu en interaction avec la souris / écran tactile (avec ou sans curseur sur l'écran, prise en compte des clicks)
 => coder le jeu en interaction avec les contrôleurs de jeu (simuler un curseur à l'écran)
 => coder la boucle de musique en fond sonore
-
-
