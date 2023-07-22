@@ -109,22 +109,26 @@ When the server receive a new player position, it sends the position to all conn
 
 ## Values types and sizes
 
-integer => int64
-PlayerX : integer
-PlayerY : integer
-StarX : integer
-StarY : integer
-MapX : integer
-MapY : integer
-ColNumber : integer
-RowNumber : integer
+* TSporglooAPINumber => int64
 
-ID :
-DevideID : ID
-PlayerID : ID
-SessionID : ID
+PlayerX : TSporglooAPINumber
+PlayerY : TSporglooAPINumber
+StarX : TSporglooAPINumber
+StarY : TSporglooAPINumber
+MapX : TSporglooAPINumber
+MapY : TSporglooAPINumber
+ColNumber : TSporglooAPINumber
+RowNumber : TSporglooAPINumber
 
-MapTileID : byte
+* TSporglooAPIAlpha16 => array[0..15]of byte
 
-MessageID : byte = depending on the message sent
-MessageEnd : byte = $00
+DevideID : TSporglooAPIAlpha16
+PlayerID : TSporglooAPIAlpha16
+SessionID : TSporglooAPIAlpha16
+
+* TSporglooAPIShort => byte
+
+MapTileID : TSporglooAPIShort
+
+MessageID : TSporglooAPIShort = depending on the message sent
+MessageEnd : TSporglooAPIShort = $00
