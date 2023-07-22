@@ -101,37 +101,49 @@ end;
 
 procedure TSporglooAPIClient.onClientLoginResponse(const DeviceID,
   SessionID: TSporglooAPIAlpha16; const PlayerX, PlayerY: TSporglooAPINumber);
+var
+  LDeviceID, LSessionID: string;
 begin
-  // TODO : à compléter
+  Alpha16ToString(DeviceID, LDeviceID);
+  // TODO : check if the device ID is the current DeviceID
+  Alpha16ToString(SessionID, LSessionID);
+  // TODO : if the session is filled, store it
+  // TODO : draw the map centered at (PlayerX,PlayerY)
 end;
 
 procedure TSporglooAPIClient.onClientRegisterResponse(const DeviceID,
   PlayerID: TSporglooAPIAlpha16);
+var
+  LDeviceID, LPlayerID: string;
 begin
-  // TODO : à compléter
+  Alpha16ToString(DeviceID, LDeviceID);
+  // TODO : check if the device ID is the current DeviceID
+  Alpha16ToString(PlayerID, LPlayerID);
+  // TODO : if the player is filled, store it
+  SendClientLogin(LDeviceID, LPlayerID);
 end;
 
 procedure TSporglooAPIClient.onMapCell(const MapX, MapY: TSporglooAPINumber;
   const MapTileID: TSporglooAPIShort);
 begin
-  // TODO : à compléter
+  // TODO : draw the tile on the map
 end;
 
 procedure TSporglooAPIClient.onOtherPlayerMove(const PlayerID
   : TSporglooAPIAlpha16; const PlayerX, PlayerY: TSporglooAPINumber);
 begin
-  // TODO : à compléter
+  // TODO : draw the player on the map
 end;
 
 procedure TSporglooAPIClient.onPlayerMoveResponse;
 begin
-  // TODO : à compléter
+  // TODO : register the playerx,playerY coordinates have been send to the server
 end;
 
 procedure TSporglooAPIClient.onPlayerPutAStarResponse(const NewStarX,
   NewStarY: TSporglooAPINumber);
 begin
-  // TODO : à compléter
+  // TODO : check if X,Y correspond to a "new star" sent
 end;
 
 procedure TSporglooAPIClient.ReceivedAPIMessage;
