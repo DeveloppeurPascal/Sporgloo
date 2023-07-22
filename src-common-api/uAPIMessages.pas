@@ -4,6 +4,7 @@ interface
 
 const
   CSportglooAPIMessageTerminator = 0;
+  CSportglooBufferLength = 255;
 
 type
   TSporglooAPINumber = int64;
@@ -13,13 +14,16 @@ type
   TSporglooAPIMessage = record
   private
     BufferPos: integer;
+    procedure SetMessageID(const Value: TSporglooAPIShort);
+    function GetMessageID: TSporglooAPIShort;
   public
-    function MessageID: TSporglooAPIShort;
+    property MessageID: TSporglooAPIShort read GetMessageID write SetMessageID;
     procedure Reset;
+    procedure Clear;
     procedure Push(O: byte);
     case byte of
       0:
-        (Buffer: array [0 .. 255] of byte);
+        (Buffer: array [0 .. CSportglooBufferLength] of byte);
       1: // Client register
         (Msg1ID: TSporglooAPIShort; Msg1DeviceID: TSporglooAPIAlpha16);
       2: // Client register response
@@ -58,11 +62,27 @@ type
           Msg11PlayerX, Msg11PlayerY: TSporglooAPINumber);
   end;
 
+procedure Alpha16ToString(Const Source: TSporglooAPIAlpha16;
+  var Destination: string);
+procedure StringToAlpha16(Const Source: string;
+  var Destination: TSporglooAPIAlpha16);
+
 implementation
+
+uses
+  system.SysUtils;
 
 { TSporglooAPIMessage }
 
-function TSporglooAPIMessage.MessageID: TSporglooAPIShort;
+procedure TSporglooAPIMessage.Clear;
+var
+  i: integer;
+begin
+  for i := 0 to CSportglooBufferLength - 1 do
+    Buffer[i] := 0;
+end;
+
+function TSporglooAPIMessage.GetMessageID: TSporglooAPIShort;
 begin
   result := Buffer[0];
 end;
@@ -78,6 +98,39 @@ end;
 procedure TSporglooAPIMessage.Reset;
 begin
   BufferPos := 0;
+end;
+
+procedure TSporglooAPIMessage.SetMessageID(const Value: TSporglooAPIShort);
+begin
+  Buffer[0] := Value;
+end;
+
+procedure Alpha16ToString(Const Source: TSporglooAPIAlpha16;
+  var Destination: string);
+var
+  i: integer;
+begin
+  Destination := '';
+  for i := 0 to SizeOf(TSporglooAPIAlpha16) - 1 do
+    Destination := Destination + chr(Source[i]);
+end;
+
+procedure StringToAlpha16(Const Source: string;
+  var Destination: TSporglooAPIAlpha16);
+var
+  i: integer;
+begin
+  i := 0;
+  while (i < Source.length) and (i < SizeOf(TSporglooAPIAlpha16)) do
+  begin
+    Destination[i] := ord(Source.Chars[i]);
+    inc(i);
+  end;
+  while (i < SizeOf(TSporglooAPIAlpha16)) do
+  begin
+    Destination[i] := 0;
+    inc(i);
+  end;
 end;
 
 end.
