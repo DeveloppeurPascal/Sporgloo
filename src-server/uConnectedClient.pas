@@ -115,9 +115,13 @@ var
   lplayerX, lplayery: TSporglooAPINumber;
 begin
   Alpha16ToString(DeviceID, LDeviceID);
+  // TODO : check if the device ID is known
   Alpha16ToString(PlayerID, LPlayerID);
-  // TODO : client login
+  // TODO : check if the player exists
+  // TODO : check if the devide ID is own by the player
+  // TODO : generate a session ID
   LSessionID := '';
+  // TODO : get data from the player and send them
   lplayerX := 0;
   lplayery := 0;
   SendClientLoginResponse(LDeviceID, LSessionID, lplayerX, lplayery);
@@ -125,26 +129,60 @@ end;
 
 procedure TConnectedClient.onClientRegister(const DeviceID
   : TSporglooAPIAlpha16);
+var
+  LDeviceID, LPlayerID: string;
 begin
-  // TODO : à compléter
+  Alpha16ToString(DeviceID, LDeviceID);
+  // TODO : check if the device ID already exists
+  // TODO : generate a player ID and send it
+  LPlayerID := '';
+  SendClientRegisterResponse(LDeviceID, LPlayerID);
 end;
 
 procedure TConnectedClient.onMapRefresh(const MapX, MapY, ColNumber,
   RowNumber: TSporglooAPINumber);
+var
+  x, y: TSporglooAPINumber;
 begin
-  // TODO : à compléter
+  if ColNumber < 1 then
+    exit;
+  if RowNumber < 1 then
+    exit;
+  for x := MapX to MapX + ColNumber - 1 do
+    for y := MapY to MapY + RowNumber - 1 do
+      SendMapCell(x, y, 0); // TODO : get MapTileID on (x,y)
 end;
 
 procedure TConnectedClient.onPlayerMove(const SessionID,
   PlayerID: TSporglooAPIAlpha16; const PlayerX, PlayerY: TSporglooAPINumber);
+var
+  LSessionID, LPlayerID: string;
 begin
-  // TODO : à compléter
+  Alpha16ToString(SessionID, LSessionID);
+  // TODO : check the session ID
+  Alpha16ToString(PlayerID, LPlayerID);
+  // TODO : check the player ID
+  // TODO : check the session if for this player
+  // TODO : store player coordinates
+  SendPlayerMoveResponse;
+  // TODO : inform other users of the change
+  // SendMapCell()
 end;
 
 procedure TConnectedClient.onPlayerPutAStar(const SessionID,
   PlayerID: TSporglooAPIAlpha16; const NewStarX, NewStarY: TSporglooAPINumber);
+var
+  LSessionID, LPlayerID: string;
 begin
-  // TODO : à compléter
+  Alpha16ToString(SessionID, LSessionID);
+  // TODO : check the session ID
+  Alpha16ToString(PlayerID, LPlayerID);
+  // TODO : check the player ID
+  // TODO : check the session if for this player
+  // TODO : store new star coordinates (and changes on map tiles)
+  SendPlayerPutAStarResponse(NewStarX, NewStarY);
+  // TODO : inform other users of the change
+  // SendMapCell()
 end;
 
 procedure TConnectedClient.ReceivedAPIMessage;
