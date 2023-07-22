@@ -5,7 +5,8 @@ interface
 uses
   System.Classes,
   System.net.Socket,
-  uAPIMessages;
+  Sporgloo.API.Messages,
+  Sporgloo.Types;
 
 type
   TSporglooAPIClient = class(TThread)
@@ -23,8 +24,8 @@ type
     procedure onClientRegisterResponse(Const DeviceID,
       PlayerID: TSporglooAPIAlpha16);
     procedure onClientLoginResponse(Const DeviceID,
-      SessionID: TSporglooAPIAlpha16;
-      Const PlayerX, PlayerY: TSporglooAPINumber);
+      SessionID: TSporglooAPIAlpha16; Const PlayerX, PlayerY, Score, StarsCount,
+      LifeLevel: TSporglooAPINumber);
     procedure onMapCell(Const MapX, MapY: TSporglooAPINumber;
       Const MapTileID: TSporglooAPIShort);
     procedure onPlayerMoveResponse;
@@ -32,6 +33,8 @@ type
       NewStarY: TSporglooAPINumber);
     procedure onOtherPlayerMove(Const PlayerID: TSporglooAPIAlpha16;
       Const PlayerX, PlayerY: TSporglooAPINumber);
+  public
+    constructor Create(AIP: string; APort: word);
 
     procedure SendClientRegister(Const DeviceID: string);
     procedure SendClientLogin(Const DeviceID, PlayerID: string);
@@ -41,14 +44,16 @@ type
       Const PlayerX, PlayerY: TSporglooAPINumber);
     procedure SendPlayerPutAStar(Const SessionID, PlayerID: string;
       Const NewStarX, NewStarY: TSporglooAPINumber);
-  public
-    constructor Create(AIP: string; APort: word);
   end;
 
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils,
+  uConfig,
+  uGameData,
+  Sporgloo.Database,
+  Sporgloo.Consts;
 
 { TSporglooAPIClient }
 
@@ -81,7 +86,7 @@ begin
           if (RecCount > 0) then
           begin
             for i := 0 to RecCount - 1 do
-              if (Buffer[i] = CSportglooAPIMessageTerminator) then
+              if (Buffer[i] = CSporglooAPIMessageTerminator) then
               begin
                 ReceivedAPIMessage;
                 FMsg.Reset;
@@ -100,15 +105,29 @@ begin
 end;
 
 procedure TSporglooAPIClient.onClientLoginResponse(const DeviceID,
-  SessionID: TSporglooAPIAlpha16; const PlayerX, PlayerY: TSporglooAPINumber);
+  SessionID: TSporglooAPIAlpha16; const PlayerX, PlayerY, Score, StarsCount,
+  LifeLevel: TSporglooAPINumber);
 var
   LDeviceID, LSessionID: string;
+  LGameData: TGameData;
 begin
   Alpha16ToString(DeviceID, LDeviceID);
-  // TODO : check if the device ID is the current DeviceID
+  if (tconfig.Current.DeviceID <> LDeviceID) then
+    raise exception.Create('Wrong DeviceID sent from the server.');
+
   Alpha16ToString(SessionID, LSessionID);
-  // TODO : if the session is filled, store it
-  // TODO : draw the map centered at (PlayerX,PlayerY)
+  if LSessionID.IsEmpty then
+    raise exception.Create('No SessionID returned by the server.');
+
+  LGameData := TGameData.Current;
+  LGameData.Session.SessionID := LSessionID;
+  LGameData.Player.PlayerX := PlayerX;
+  LGameData.Player.PlayerY := PlayerY;
+  LGameData.Player.Score := Score;
+  LGameData.Player.StarsCount := StarsCount;
+  LGameData.Player.LifeLevel := LifeLevel;
+
+  LGameData.RefreshMap;
 end;
 
 procedure TSporglooAPIClient.onClientRegisterResponse(const DeviceID,
@@ -117,22 +136,43 @@ var
   LDeviceID, LPlayerID: string;
 begin
   Alpha16ToString(DeviceID, LDeviceID);
-  // TODO : check if the device ID is the current DeviceID
+  if (tconfig.Current.DeviceID <> LDeviceID) then
+    raise exception.Create('Wrong DeviceID sent from the server.');
+
   Alpha16ToString(PlayerID, LPlayerID);
-  // TODO : if the player is filled, store it
+  if LPlayerID.IsEmpty then
+    raise exception.Create('No PlayerID returned by the server.');
+
+  tconfig.Current.PlayerID := LPlayerID;
+  TGameData.Current.Player.PlayerID := LPlayerID;
+  TGameData.Current.Session.PlayerID := LPlayerID;
+
   SendClientLogin(LDeviceID, LPlayerID);
 end;
 
 procedure TSporglooAPIClient.onMapCell(const MapX, MapY: TSporglooAPINumber;
   const MapTileID: TSporglooAPIShort);
 begin
-  // TODO : draw the tile on the map
+  TGameData.Current.Map.SetTileID(MapX, MapY, MapTileID);
+  // TODO : refresh the map cell
 end;
 
 procedure TSporglooAPIClient.onOtherPlayerMove(const PlayerID
   : TSporglooAPIAlpha16; const PlayerX, PlayerY: TSporglooAPINumber);
+var
+  Player: TSporglooPlayer;
+  LPlayerID: string;
 begin
-  // TODO : draw the player on the map
+  Alpha16ToString(PlayerID, LPlayerID);
+  if not TGameData.Current.OtherPlayers.TryGetValue(LPlayerID, Player) then
+  begin
+    Player := TSporglooPlayer.Create;
+    Player.PlayerID := LPlayerID;
+    TGameData.Current.OtherPlayers.add(LPlayerID, Player);
+  end;
+  Player.PlayerX := PlayerX;
+  Player.PlayerY := PlayerY;
+  // TODO : refresh the map cell
 end;
 
 procedure TSporglooAPIClient.onPlayerMoveResponse;
@@ -153,7 +193,8 @@ begin
       onClientRegisterResponse(FMsg.Msg2DeviceID, FMsg.Msg2PlayerID);
     4:
       onClientLoginResponse(FMsg.Msg4DeviceID, FMsg.Msg4SessionID,
-        FMsg.Msg4PlayerX, FMsg.Msg4PlayerY);
+        FMsg.Msg4PlayerX, FMsg.Msg4PlayerY, FMsg.Msg4Score, FMsg.Msg4StarsCount,
+        FMsg.Msg4LifeLevel);
     6:
       onMapCell(FMsg.Msg6MapX, FMsg.Msg6MapY, FMsg.Msg6MapTileID);
     8:
@@ -164,27 +205,27 @@ begin
       onOtherPlayerMove(FMsg.Msg11PlayerID, FMsg.Msg11PlayerX,
         FMsg.Msg11PlayerY);
   else
-    raise Exception.Create('Message ' + FMsg.MessageID.Tostring +
+    raise exception.Create('Message ' + FMsg.MessageID.Tostring +
       ' received by the game.');
   end;
 end;
 
 procedure TSporglooAPIClient.SendAPIMessage;
 var
-  MsgSize: integer;
+  TerminatorPosition: integer;
 begin
   if not assigned(FSocket) then
     exit;
 
-  MsgSize := 0;
-  while (MsgSize < CSportglooBufferLength) and
-    (FMsg.Buffer[MsgSize] <> CSportglooAPIMessageTerminator) do
-    inc(MsgSize);
+  TerminatorPosition := 0;
+  while (TerminatorPosition < CSporglooAPIBufferLength) and
+    (FMsg.Buffer[TerminatorPosition] <> CSporglooAPIMessageTerminator) do
+    inc(TerminatorPosition);
 
-  if not(MsgSize < CSportglooBufferLength) then
-    raise Exception.Create('Wrong buffer size. Please increase it.');
+  if not(TerminatorPosition < CSporglooAPIBufferLength) then
+    raise exception.Create('Wrong buffer size. Please increase it.');
 
-  FSocket.Send(FMsg.Buffer, MsgSize);
+  FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
 end;
 
 procedure TSporglooAPIClient.SendClientLogin(const DeviceID, PlayerID: string);
