@@ -1,16 +1,12 @@
-unit uAPIMessages;
+unit Sporgloo.API.Messages;
 
 interface
 
-const
-  CSportglooAPIMessageTerminator = 0;
-  CSportglooBufferLength = 255;
+uses
+  Sporgloo.Types,
+  Sporgloo.Consts;
 
 type
-  TSporglooAPINumber = int64;
-  TSporglooAPIAlpha16 = array [0 .. 15] of byte;
-  TSporglooAPIShort = byte;
-
   TSporglooAPIMessage = record
   private
     BufferPos: integer;
@@ -23,7 +19,7 @@ type
     procedure Push(O: byte);
     case byte of
       0:
-        (Buffer: array [0 .. CSportglooBufferLength] of byte);
+        (Buffer: array [0 .. CSporglooAPIBufferLength] of byte);
       1: // Client register
         (Msg1ID: TSporglooAPIShort; Msg1DeviceID: TSporglooAPIAlpha16);
       2: // Client register response
@@ -35,8 +31,8 @@ type
       4: // Client login response
         (Msg4ID: TSporglooAPIShort;
           Msg4DeviceID, Msg4SessionID: TSporglooAPIAlpha16;
-          Msg4PlayerX, Msg4PlayerY: TSporglooAPINumber
-          // TODO : add other player infos (score, etc)
+          Msg4PlayerX, Msg4PlayerY, Msg4Score, Msg4StarsCount,
+          Msg4LifeLevel: TSporglooAPINumber
         );
       5: // Map refresh
         (Msg5ID: TSporglooAPIShort;
@@ -62,15 +58,7 @@ type
           Msg11PlayerX, Msg11PlayerY: TSporglooAPINumber);
   end;
 
-procedure Alpha16ToString(Const Source: TSporglooAPIAlpha16;
-  var Destination: string);
-procedure StringToAlpha16(Const Source: string;
-  var Destination: TSporglooAPIAlpha16);
-
 implementation
-
-uses
-  system.SysUtils;
 
 { TSporglooAPIMessage }
 
@@ -78,8 +66,8 @@ procedure TSporglooAPIMessage.Clear;
 var
   i: integer;
 begin
-  for i := 0 to CSportglooBufferLength - 1 do
-    Buffer[i] := CSportglooAPIMessageTerminator;
+  for i := 0 to CSporglooAPIBufferLength - 1 do
+    Buffer[i] := CSporglooAPIMessageTerminator;
 end;
 
 function TSporglooAPIMessage.GetMessageID: TSporglooAPIShort;
@@ -103,34 +91,6 @@ end;
 procedure TSporglooAPIMessage.SetMessageID(const Value: TSporglooAPIShort);
 begin
   Buffer[0] := Value;
-end;
-
-procedure Alpha16ToString(Const Source: TSporglooAPIAlpha16;
-  var Destination: string);
-var
-  i: integer;
-begin
-  Destination := '';
-  for i := 0 to SizeOf(TSporglooAPIAlpha16) - 1 do
-    Destination := Destination + chr(Source[i]);
-end;
-
-procedure StringToAlpha16(Const Source: string;
-  var Destination: TSporglooAPIAlpha16);
-var
-  i: integer;
-begin
-  i := 0;
-  while (i < Source.length) and (i < SizeOf(TSporglooAPIAlpha16)) do
-  begin
-    Destination[i] := ord(Source.Chars[i]);
-    inc(i);
-  end;
-  while (i < SizeOf(TSporglooAPIAlpha16)) do
-  begin
-    Destination[i] := CSportglooAPIMessageTerminator;
-    inc(i);
-  end;
 end;
 
 end.
