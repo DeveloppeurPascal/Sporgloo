@@ -79,7 +79,7 @@ var
   i: integer;
 begin
   for i := 0 to CSportglooBufferLength - 1 do
-    Buffer[i] := 0;
+    Buffer[i] := CSportglooAPIMessageTerminator;
 end;
 
 function TSporglooAPIMessage.GetMessageID: TSporglooAPIShort;
@@ -128,7 +128,7 @@ begin
   end;
   while (i < SizeOf(TSporglooAPIAlpha16)) do
   begin
-    Destination[i] := 0;
+    Destination[i] := CSportglooAPIMessageTerminator;
     inc(i);
   end;
 end;
