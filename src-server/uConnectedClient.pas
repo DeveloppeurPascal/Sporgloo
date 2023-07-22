@@ -5,13 +5,17 @@ interface
 uses
   System.net.Socket,
   System.Classes,
-  uAPIMessages;
+  Sporgloo.API.Messages,
+  Sporgloo.Types,
+  Sporgloo.Database;
 
 type
   TConnectedClient = class(TThread)
   private
     FSocket: TSocket;
     FMsg: TSporglooAPIMessage;
+    FSession: TSporglooSession;
+    function GetSession: TSporglooSession;
   protected
     procedure Execute; override;
 
@@ -29,7 +33,7 @@ type
 
     procedure SendClientRegisterResponse(Const DeviceID, PlayerID: string);
     procedure SendClientLoginResponse(Const DeviceID, SessionID: string;
-      Const PlayerX, PlayerY: TSporglooAPINumber);
+      Const PlayerX, PlayerY, Score, StarsCount, LifeLevel: TSporglooAPINumber);
     procedure SendMapCell(Const MapX, MapY: TSporglooAPINumber;
       Const MapTileID: TSporglooAPIShort);
     procedure SendPlayerMoveResponse;
@@ -38,6 +42,8 @@ type
     procedure SendOtherPlayerMove(Const PlayerID: string;
       Const PlayerX, PlayerY: TSporglooAPINumber);
   public
+    property Session: TSporglooSession read GetSession;
+
     constructor Create(AClientSocket: TSocket);
     destructor Destroy; override;
   end;
@@ -46,7 +52,7 @@ implementation
 
 uses
   System.Generics.Collections,
-  System.SysUtils;
+  System.SysUtils, uServerData, Sporgloo.Consts;
 
 var
   ClientsList: TThreadList<TConnectedClient>;
@@ -72,6 +78,7 @@ constructor TConnectedClient.Create(AClientSocket: TSocket);
 begin
   inherited Create(false);
   FSocket := AClientSocket;
+  FSession := nil;
   FreeOnTerminate := true;
   ClientsList.Add(self);
 end;
@@ -97,7 +104,7 @@ begin
     if (RecCount > 0) then
     begin
       for i := 0 to RecCount - 1 do
-        if (Buffer[i] = CSportglooAPIMessageTerminator) then
+        if (Buffer[i] = CSporglooAPIMessageTerminator) then
         begin
           ReceivedAPIMessage;
           FMsg.Reset;
@@ -108,35 +115,75 @@ begin
   end;
 end;
 
+function TConnectedClient.GetSession: TSporglooSession;
+begin
+  // TODO : lock the session for each access to it
+  result := FSession;
+end;
+
 procedure TConnectedClient.onClientLogin(const DeviceID,
   PlayerID: TSporglooAPIAlpha16);
 var
-  LDeviceID, LPlayerID, LSessionID: string;
-  lplayerX, lplayery: TSporglooAPINumber;
+  LDeviceID, LPlayerID: string;
+  player: TSporglooPlayer;
+  Session: TSporglooSession;
 begin
   Alpha16ToString(DeviceID, LDeviceID);
-  // TODO : check if the device ID is known
+  if LDeviceID.IsEmpty then
+    raise exception.Create('Login with empty device ID is not allowed.');
+
   Alpha16ToString(PlayerID, LPlayerID);
-  // TODO : check if the player exists
-  // TODO : check if the devide ID is own by the player
-  // TODO : generate a session ID
-  LSessionID := '';
-  // TODO : get data from the player and send them
-  lplayerX := 0;
-  lplayery := 0;
-  SendClientLoginResponse(LDeviceID, LSessionID, lplayerX, lplayery);
+  if LPlayerID.IsEmpty then
+    raise exception.Create('Login with empty player ID is not allowed.');
+
+  if not TServerData.Current.Players.TryGetValue(LPlayerID, player) then
+    raise exception.Create('Unknow player !');
+
+  if (player.DeviceID <> LDeviceID) then
+    raise exception.Create('Can''t log with this player on your device.');
+
+  Session := TSporglooSession.Create;
+  Session.SessionID := GetUniqID;
+  Session.DeviceID := player.DeviceID;
+  Session.PlayerID := player.PlayerID;
+  Session.MapRangeX := 0;
+  Session.MapRangey := 0;
+  Session.MapRangeColNumber := 0;
+  Session.MapRangeRowNumber := 0;
+  // TODO : add a link to the player instance in the session
+
+  TServerData.Current.Sessions.Add(Session.SessionID, Session);
+
+  SendClientLoginResponse(Session.DeviceID, Session.SessionID, player.PlayerX,
+    player.PlayerY, player.Score, player.StarsCount, player.LifeLevel);
 end;
 
 procedure TConnectedClient.onClientRegister(const DeviceID
   : TSporglooAPIAlpha16);
 var
   LDeviceID, LPlayerID: string;
+  player: TSporglooPlayer;
 begin
   Alpha16ToString(DeviceID, LDeviceID);
-  // TODO : check if the device ID already exists
-  // TODO : generate a player ID and send it
-  LPlayerID := '';
-  SendClientRegisterResponse(LDeviceID, LPlayerID);
+  if LDeviceID.IsEmpty then
+    raise exception.Create('Empty DeviceID to register.');
+
+  player := TServerData.Current.Players.GetPlayerByDevice(LDeviceID);
+  if not assigned(player) then
+  begin
+    player := TSporglooPlayer.Create;
+    player.DeviceID := LDeviceID;
+    player.PlayerID := GetUniqID;
+    player.PlayerX := 0;
+    player.PlayerY := 0;
+    // TODO : change the coordinates if an other player is here too
+    player.Score := 0;
+    player.StarsCount := 12; // TODO : use a constant for stars count start
+    player.LifeLevel := 24; // TODO : use a const for life level start
+    TServerData.Current.Players.Add(player.PlayerID, player);
+  end;
+
+  SendClientRegisterResponse(player.DeviceID, player.PlayerID);
 end;
 
 procedure TConnectedClient.onMapRefresh(const MapX, MapY, ColNumber,
@@ -150,39 +197,100 @@ begin
     exit;
   for x := MapX to MapX + ColNumber - 1 do
     for y := MapY to MapY + RowNumber - 1 do
-      SendMapCell(x, y, 0); // TODO : get MapTileID on (x,y)
+      SendMapCell(x, y, TServerData.Current.Map.GetTileID(x, y));
+  // TODO : send the sessionID with the demand and store the size of displayed map for this session
 end;
 
 procedure TConnectedClient.onPlayerMove(const SessionID,
   PlayerID: TSporglooAPIAlpha16; const PlayerX, PlayerY: TSporglooAPINumber);
 var
   LSessionID, LPlayerID: string;
+  Session: TSporglooSession;
+  player: TSporglooPlayer;
+  List: TList<TConnectedClient>;
+  i: integer;
 begin
   Alpha16ToString(SessionID, LSessionID);
-  // TODO : check the session ID
+  if LSessionID.IsEmpty then
+    raise exception.Create('Session ID needed.');
+
   Alpha16ToString(PlayerID, LPlayerID);
-  // TODO : check the player ID
-  // TODO : check the session if for this player
-  // TODO : store player coordinates
+  if LPlayerID.IsEmpty then
+    raise exception.Create('Player ID needed.');
+
+  if not TServerData.Current.Sessions.TryGetValue(LSessionID, Session) then
+    raise exception.Create('Unknow Session !');
+
+  if not TServerData.Current.Players.TryGetValue(LPlayerID, player) then
+    raise exception.Create('Unknow player !');
+
+  if (player.DeviceID <> Session.DeviceID) and
+    (player.PlayerID <> Session.PlayerID) then
+    raise exception.Create('Wrong player for this session.');
+
+  // TODO : check if the movement the position is free on the map
+  player.PlayerX := PlayerX;
+  player.PlayerY := PlayerY;
+
+  // TODO : check the TileID, change score if needed, change lifelevel, change map tile
+
   SendPlayerMoveResponse;
-  // TODO : inform other users of the change
-  // SendMapCell()
+
+  // TODO : to optimize this feature, store the new coordinates in a list and have a separate check for it
+  List := ClientsList.LockList;
+  try // TODO : try with TParallel.for()
+    for i := 0 to List.count - 1 do
+      if (List[i] <> self) then
+        List[i].SendOtherPlayerMove(player.PlayerID, player.PlayerX,
+          player.PlayerY);
+  finally
+    ClientsList.UnlockList;
+  end;
 end;
 
 procedure TConnectedClient.onPlayerPutAStar(const SessionID,
   PlayerID: TSporglooAPIAlpha16; const NewStarX, NewStarY: TSporglooAPINumber);
 var
   LSessionID, LPlayerID: string;
+  Session: TSporglooSession;
+  player: TSporglooPlayer;
+  List: TList<TConnectedClient>;
+  i: integer;
 begin
   Alpha16ToString(SessionID, LSessionID);
-  // TODO : check the session ID
+  if LSessionID.IsEmpty then
+    raise exception.Create('Session ID needed.');
+
   Alpha16ToString(PlayerID, LPlayerID);
-  // TODO : check the player ID
-  // TODO : check the session if for this player
-  // TODO : store new star coordinates (and changes on map tiles)
+  if LPlayerID.IsEmpty then
+    raise exception.Create('Player ID needed.');
+
+  if not TServerData.Current.Sessions.TryGetValue(LSessionID, Session) then
+    raise exception.Create('Unknow Session !');
+
+  if not TServerData.Current.Players.TryGetValue(LPlayerID, player) then
+    raise exception.Create('Unknow player !');
+
+  if (player.DeviceID <> Session.DeviceID) and
+    (player.PlayerID <> Session.PlayerID) then
+    raise exception.Create('Wrong player for this session.');
+
+  if (player.StarsCount > 0) then
+  begin
+    TServerData.Current.Map.SetTileID(NewStarX, NewStarY, CSporglooTileStar);
+    player.StarsCount := player.StarsCount - 1;
+  end;
   SendPlayerPutAStarResponse(NewStarX, NewStarY);
-  // TODO : inform other users of the change
-  // SendMapCell()
+
+  // TODO : to optimize this feature, store the changes in a list and have a separate check for it
+  List := ClientsList.LockList;
+  try // TODO : try with TParallel.for()
+    for i := 0 to List.count - 1 do
+      if (List[i] <> self) then
+        List[i].SendMapCell(NewStarX, NewStarY, CSporglooTileStar);
+  finally
+    ClientsList.UnlockList;
+  end;
 end;
 
 procedure TConnectedClient.ReceivedAPIMessage;
@@ -202,31 +310,32 @@ begin
       onPlayerPutAStar(FMsg.Msg9SessionID, FMsg.Msg9PlayerID, FMsg.Msg9NewStarX,
         FMsg.Msg9NewStarY);
   else
-    raise Exception.Create('Message ' + FMsg.MessageID.Tostring +
+    raise exception.Create('Message ' + FMsg.MessageID.Tostring +
       ' received by the server.');
   end;
 end;
 
 procedure TConnectedClient.SendAPIMessage;
 var
-  MsgSize: integer;
+  TerminatorPosition: integer;
 begin
   if not assigned(FSocket) then
     exit;
 
-  MsgSize := 0;
-  while (MsgSize < CSportglooBufferLength) and
-    (FMsg.Buffer[MsgSize] <> CSportglooAPIMessageTerminator) do
-    inc(MsgSize);
+  TerminatorPosition := 0;
+  while (TerminatorPosition < CSporglooAPIBufferLength) and
+    (FMsg.Buffer[TerminatorPosition] <> CSporglooAPIMessageTerminator) do
+    inc(TerminatorPosition);
 
-  if not(MsgSize < CSportglooBufferLength) then
-    raise Exception.Create('Wrong buffer size. Please increase it.');
+  if not(TerminatorPosition < CSporglooAPIBufferLength) then
+    raise exception.Create('Wrong buffer size. Please increase it.');
 
-  FSocket.Send(FMsg.Buffer, MsgSize);
+  FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
 end;
 
 procedure TConnectedClient.SendClientLoginResponse(const DeviceID,
-  SessionID: string; const PlayerX, PlayerY: TSporglooAPINumber);
+  SessionID: string; const PlayerX, PlayerY, Score, StarsCount,
+  LifeLevel: TSporglooAPINumber);
 begin
   FMsg.Clear;
   FMsg.MessageID := 4;
@@ -234,6 +343,9 @@ begin
   StringToAlpha16(SessionID, FMsg.Msg4SessionID);
   FMsg.Msg4PlayerX := PlayerX;
   FMsg.Msg4Playery := PlayerY;
+  FMsg.Msg4Score := Score;
+  FMsg.Msg4StarsCount := StarsCount;
+  FMsg.Msg4LifeLevel := LifeLevel;
   SendAPIMessage;
 end;
 
