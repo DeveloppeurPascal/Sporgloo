@@ -10,7 +10,7 @@ const
   CSporglooAPIMessageTerminator = 0;
   CSporglooAPIBufferLength = 250;
 
-  CSporglooTileSize = 32;
+  CSporglooTileSize = 64;
 
 implementation
 
