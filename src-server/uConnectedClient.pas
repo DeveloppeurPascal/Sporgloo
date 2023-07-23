@@ -340,7 +340,7 @@ begin
   if not(TerminatorPosition < CSporglooAPIBufferLength) then
     raise exception.Create('Wrong buffer size. Please increase it.');
 
-  SentBytes := FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
+  SentBytes := FSocket.Send(FMsg.Buffer, 0, TerminatorPosition + 1);
   if (SentBytes <> TerminatorPosition + 1) then
     raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
       ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
