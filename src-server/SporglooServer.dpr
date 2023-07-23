@@ -21,7 +21,11 @@ begin
   ReportMemoryLeaksOnShutdown := true;
 {$ENDIF}
   try
-    GameServer := TListeningServer.Create('127.0.0.1', 80);
+    // LocalHost
+    // GameServer := TListeningServer.Create('127.0.0.1', 80);
+    // Sporgloo VPS (temporary address)
+//    GameServer := TListeningServer.Create('141.94.221.190', 80);
+        GameServer := TListeningServer.Create('0.0.0.0', 8080);
     try
       // TODO : change IP and port depending on the server
       // TODO : check if IPv6 is available and open a listening server for it too
