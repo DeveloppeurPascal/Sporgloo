@@ -73,7 +73,9 @@ var
   RecCount: integer;
   i: integer;
 begin
+{$IFDEF DEBUG}
   NameThreadForDebugging('SporglooAPIClient');
+{$ENDIF}
   FSocket := Tsocket.Create(tsockettype.tcp, tencoding.UTF8);
   try
     FSocket.Connect('', FIP, '', FPort);
@@ -213,6 +215,7 @@ end;
 procedure TSporglooAPIClient.SendAPIMessage;
 var
   TerminatorPosition: integer;
+  SentBytes: word;
 begin
   if not assigned(FSocket) then
     exit;
@@ -225,7 +228,11 @@ begin
   if not(TerminatorPosition < CSporglooAPIBufferLength) then
     raise exception.Create('Wrong buffer size. Please increase it.');
 
-  FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
+  SentBytes := FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
+  if (SentBytes <> TerminatorPosition + 1) then
+    raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
+      ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
+      .Tostring + ').');
 end;
 
 procedure TSporglooAPIClient.SendClientLogin(const DeviceID, PlayerID: string);
