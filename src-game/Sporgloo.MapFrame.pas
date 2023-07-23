@@ -31,6 +31,7 @@ type
     procedure DrawMapCell(AX, AY: TSporglooAPINumber;
       ATileID: TSporglooAPIShort);
     procedure DrawAPlayer(AX, AY: TSporglooAPINumber);
+    procedure DrawAStar(AX, AY: TSporglooAPINumber);
   public
     constructor Create(AOwner: TComponent); override;
   end;
@@ -84,6 +85,35 @@ begin
   end;
 end;
 
+procedure TMapFrame.DrawAStar(AX, AY: TSporglooAPINumber);
+var
+  x, y, w, h: single;
+  BitmapScale: single;
+  bmp: tbitmap;
+  Session: TSporglooSession;
+begin
+  BitmapScale := MapImage.Bitmap.BitmapScale;
+
+  Session := TGameData.Current.Session;
+
+  w := 58;
+  x := abs(Session.MapRangeX - AX) * CSporglooTileSize +
+    (CSporglooTileSize - w) / 2;
+  h := 58;
+  y := abs(Session.MapRangey - AY) * CSporglooTileSize +
+    (CSporglooTileSize - h) / 2;
+
+  bmp := dmSporglooImages.MapImages.Bitmap(tsizef.Create(w * BitmapScale,
+    h * BitmapScale), 2); // Image index 2 - star, original size (113x113)
+  MapImage.Bitmap.Canvas.BeginScene;
+  try
+    MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
+      rectf(x, y, x + w + 1 * BitmapScale, y + h + 1 * BitmapScale), 1);
+  finally
+    MapImage.Bitmap.Canvas.EndScene;
+  end;
+end;
+
 procedure TMapFrame.DrawMapCell(AX, AY: TSporglooAPINumber;
   ATileID: TSporglooAPIShort);
 var
@@ -107,10 +137,8 @@ begin
   case ATileID of
     CSporglooTileNone:
       TileImgIndex := 1;
-    CSporglooTilePath:
+    CSporglooTilePath, CSporglooTileStar:
       TileImgIndex := 0;
-    CSporglooTileStar:
-      TileImgIndex := 2;
   else
     raise exception.Create('Tile ID ' + ATileID.ToString + ' non supported.');
   end;
@@ -129,6 +157,9 @@ begin
 
     if (AX = Player.PlayerX) and (AY = Player.PlayerY) then
       DrawAPlayer(AX, AY);
+
+    if ATileID = CSporglooTileStar then
+      DrawAStar(AX, AY);
 
   finally
     MapImage.Bitmap.Canvas.EndScene;
