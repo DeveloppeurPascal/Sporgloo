@@ -32,7 +32,9 @@ implementation
 
 uses
   System.Generics.Collections,
-  uConfig;
+  System.Messaging,
+  uConfig,
+  Sporgloo.Messaging;
 
 var
   GameDataInstance: TGameData;
@@ -86,6 +88,8 @@ begin
 
   APIClient.SendMapRefresh(Session.MapRangeX, Session.MapRangeY,
     Session.MapRangeColNumber, Session.MapRangeRowNumber);
+
+  TMessageManager.DefaultManager.SendMessage(Self, TMapUpdateMessage.Create);
 end;
 
 initialization
