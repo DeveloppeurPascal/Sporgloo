@@ -16,20 +16,53 @@ uses
   FMX.Edit,
   FMX.Controls.Presentation,
   FMX.StdCtrls,
-  Sporgloo.MapFrame;
+  Sporgloo.MapFrame,
+  FMX.Layouts,
+  Sporgloo.Types;
 
 type
+{$SCOPEDENUMS ON}
+  TPageType = (None, Home, Game, NewGame, Credits, Scores, Options);
+
   TfrmMain = class(TForm)
     MapFrame1: TMapFrame;
+    HomePage: TLayout;
+    GamePage: TLayout;
+    NewGamePage: TLayout;
+    CreditsPage: TLayout;
+    ScorePage: TLayout;
+    OptionsPage: TLayout;
+    WaitPage: TLayout;
+    WaitAnimation: TAniIndicator;
+    btnNewGame: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure btnNewGameClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure GamePageMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
   private
-    { Déclarations privées }
+    FActivePage: TPageType;
+    procedure SetActivePage(const Value: TPageType);
+    procedure SetLifeLevel(const Value: TSporglooAPINumber);
+    procedure SetScore(const Value: TSporglooAPINumber);
+    procedure SetStarsCount(const Value: TSporglooAPINumber);
+    function GetLifeLevel: TSporglooAPINumber;
+    function GetScore: TSporglooAPINumber;
+    function GetStarsCount: TSporglooAPINumber;
+    property ActivePage: TPageType read FActivePage write SetActivePage;
+    procedure ShowGameTitle(isVisible: boolean = true);
+    procedure InitializeGamePage;
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
   public
     { Déclarations publiques }
+    property Score: TSporglooAPINumber read GetScore write SetScore;
+    property LifeLevel: TSporglooAPINumber read GetLifeLevel write SetLifeLevel;
+    property StarsCount: TSporglooAPINumber read GetStarsCount
+      write SetStarsCount;
   end;
 
 var
@@ -47,8 +80,15 @@ uses
   Sporgloo.Messaging,
   uClientSocket;
 
+procedure TfrmMain.btnNewGameClick(Sender: TObject);
+begin
+  ActivePage := TPageType.Game;
+end;
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+  ActivePage := TPageType.None;
+
 {$IFDEF RELEASE}
   FullScreen := true;
 {$ENDIF}
@@ -62,6 +102,8 @@ begin
       TGameData.Current.APIClient := tSporglooAPIClient.Create
         (tconfig.Current.ServerIPv4, tconfig.Current.ServerIPv4port);
       // TODO : add a connection on IPv6 if available
+
+      ActivePage := TPageType.Home;
     end);
 end;
 
@@ -69,6 +111,160 @@ procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   if assigned(TGameData.Current.APIClient) then
     TGameData.Current.APIClient.Terminate;
+end;
+
+procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
+var KeyChar: Char; Shift: TShiftState);
+begin
+  if (Key = vkEscape) or (Key = vkHardwareBack) then
+  begin
+    if ActivePage = TPageType.Game then
+    begin
+      // TODO : déclencher l'enregistrement des données
+      ActivePage := TPageType.Home;
+    end
+    else
+      close;
+  end;
+end;
+
+procedure TfrmMain.GamePageMouseDown(Sender: TObject; Button: TMouseButton;
+Shift: TShiftState; X, Y: Single);
+var
+  MapX, MapY: TSporglooAPINumber;
+  GameData: TGameData;
+begin
+  GameData := TGameData.Current;
+  MapX := trunc(X / CSporglooTileSize) + GameData.Session.MapRangeX;
+  MapY := trunc(Y / CSporglooTileSize) + GameData.Session.MapRangeY;
+  if (GameData.Map.GetTileID(MapX, MapY) <> CSporglooTileStar) and
+    (StarsCount > 0) then
+  begin
+    StarsCount := StarsCount - 1;
+    GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,
+      GameData.Session.PlayerID, MapX, MapY);
+    // TODO : Add the star in a waiting list of server's ACK
+    GameData.Map.SetTileID(MapX, MapY, CSporglooTileStar);
+    TMessageManager.DefaultManager.SendMessage(self,
+      TMapCellUpdateMessage.Create(TSporglooMapCell.Create(MapX, MapY,
+      CSporglooTileStar)));
+  end;
+end;
+
+function TfrmMain.GetLifeLevel: TSporglooAPINumber;
+begin
+  result := TGameData.Current.Player.LifeLevel;
+end;
+
+function TfrmMain.GetScore: TSporglooAPINumber;
+begin
+  result := TGameData.Current.Player.Score;
+end;
+
+function TfrmMain.GetStarsCount: TSporglooAPINumber;
+begin
+  result := TGameData.Current.Player.StarsCount;
+end;
+
+procedure TfrmMain.InitializeGamePage;
+begin
+  // TODO : initialize the "new game" screen
+end;
+
+procedure TfrmMain.SetActivePage(const Value: TPageType);
+  procedure ShowPage(Const Page: TLayout);
+  begin
+    Page.Visible := true;
+    Page.BringToFront;
+  end;
+  procedure HidePage(Const Page: TLayout);
+  begin
+    Page.Visible := false;
+  end;
+
+begin
+  ShowGameTitle(false);
+  if Value = TPageType.None then
+  begin
+    ShowGameTitle;
+    ShowPage(WaitPage);
+    WaitAnimation.Enabled := true;
+  end
+  else
+  begin
+    WaitAnimation.Enabled := false;
+    HidePage(WaitPage);
+  end;
+
+  if Value = TPageType.Home then
+  begin
+    ShowGameTitle;
+    ShowPage(HomePage);
+  end
+  else
+    HidePage(HomePage);
+
+  if Value = TPageType.Game then
+  begin
+    InitializeGamePage;
+    ShowPage(GamePage);
+  end
+  else
+    HidePage(GamePage);
+
+  if Value = TPageType.NewGame then
+  begin
+    // TODO : initialize the "new game" screen
+    ShowPage(NewGamePage);
+  end
+  else
+    HidePage(NewGamePage);
+
+  if Value = TPageType.Credits then
+    ShowPage(CreditsPage)
+  else
+    HidePage(CreditsPage);
+
+  if Value = TPageType.Scores then
+  begin
+    // TODO : load scores from the server (or the local cache)
+    ShowPage(ScorePage);
+  end
+  else
+    HidePage(ScorePage);
+
+  if Value = TPageType.Options then
+  begin
+    // TODO : Initialize the options page from config settings
+    ShowPage(OptionsPage);
+  end
+  else
+    HidePage(OptionsPage);
+
+  FActivePage := Value;
+end;
+
+procedure TfrmMain.SetLifeLevel(const Value: TSporglooAPINumber);
+begin
+  TGameData.Current.Player.LifeLevel := Value;
+  // TODO : refresh screen if displayed
+end;
+
+procedure TfrmMain.SetScore(const Value: TSporglooAPINumber);
+begin
+  TGameData.Current.Player.Score := Value;
+  // TODO : refresh screen if displayed
+end;
+
+procedure TfrmMain.SetStarsCount(const Value: TSporglooAPINumber);
+begin
+  TGameData.Current.Player.StarsCount := Value;
+  // TODO : refresh screen if displayed
+end;
+
+procedure TfrmMain.ShowGameTitle(isVisible: boolean);
+begin
+  // TODO : add the game title
 end;
 
 procedure TfrmMain.SubscribeToLostServerMessage;

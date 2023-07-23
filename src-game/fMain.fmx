@@ -9,11 +9,78 @@ object frmMain: TfrmMain
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   DesignerMasterStyle = 0
   inline MapFrame1: TMapFrame
-    Align = Client
+    Align = Contents
+    HitTest = False
     Size.Width = 640.000000000000000000
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
+    inherited MapImage: TImage
+      Size.Width = 640.000000000000000000
+      Size.Height = 480.000000000000000000
+    end
+  end
+  object HomePage: TLayout
+    Align = Contents
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    object btnNewGame: TButton
+      Align = Center
+      TabOrder = 0
+      Text = 'Play'
+      OnClick = btnNewGameClick
+    end
+  end
+  object GamePage: TLayout
+    Align = Contents
+    Cursor = crCross
+    HitTest = True
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    OnMouseDown = GamePageMouseDown
+  end
+  object NewGamePage: TLayout
+    Align = Contents
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+  end
+  object CreditsPage: TLayout
+    Align = Contents
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+  end
+  object ScorePage: TLayout
+    Align = Contents
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+  end
+  object OptionsPage: TLayout
+    Align = Contents
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+  end
+  object WaitPage: TLayout
+    Align = Contents
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 8
+    object WaitAnimation: TAniIndicator
+      Align = Center
+    end
   end
 end
