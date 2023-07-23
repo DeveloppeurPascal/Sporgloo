@@ -13,14 +13,26 @@ type
     procedure SetPlayerID(const Value: string);
     function GetDeviceID: string;
     function GetPlayerID: string;
+    procedure SetServerIPv4(const Value: string);
+    procedure SetServerIPv4Port(const Value: word);
+    procedure SetServerIPv6(const Value: string);
+    procedure SetServerIPv6Port(const Value: word);
+    function GetServerIPv4: string;
+    function GetServerIPv4Port: word;
+    function GetServerIPv6: string;
+    function GetServerIPv6Port: word;
   protected
   public
     property DeviceID: string read GetDeviceID write SetDeviceID;
     property PlayerID: string read GetPlayerID write SetPlayerID;
     // TODO : add music on/off
     // TODO : add music volume
-    // TODO : add Server IP
-    // TODO : add Server Port
+    property ServerIPv4: string read GetServerIPv4 write SetServerIPv4;
+    property ServerIPv4Port: word read GetServerIPv4Port
+      write SetServerIPv4Port;
+    property ServerIPv6: string read GetServerIPv6 write SetServerIPv6;
+    property ServerIPv6Port: word read GetServerIPv6Port
+      write SetServerIPv6Port;
     class function Current: TConfig;
     constructor Create;
     destructor Destroy; override;
@@ -88,6 +100,35 @@ begin
   result := FParams.getValue('PlayerID', '');
 end;
 
+function TConfig.GetServerIPv4: string;
+begin
+{$IFDEF RELEASE}
+  result := FParams.getValue('ServerIPv4', '141.94.221.190');
+  // VPS Sporgloo (temporary address)
+{$ELSE}
+  result := FParams.getValue('ServerIPv4', '127.0.0.1');
+{$ENDIF}
+end;
+
+function TConfig.GetServerIPv4Port: word;
+begin
+  result := FParams.getValue('ServerIPv4Port', 8080);
+end;
+
+function TConfig.GetServerIPv6: string;
+begin
+  raise Exception.Create('No IPv6 server available.');
+  // TODO : add IPv6 setup for the server
+  result := FParams.getValue('ServerIPv6', '');
+end;
+
+function TConfig.GetServerIPv6Port: word;
+begin
+  raise Exception.Create('No IPv6 server available.');
+  // TODO : add IPv6 setup for the server
+  result := FParams.getValue('ServerIPv6Port', 8080);
+end;
+
 procedure TConfig.SetDeviceID(const Value: string);
 begin
   FParams.setValue('DeviceID', Value);
@@ -97,6 +138,30 @@ end;
 procedure TConfig.SetPlayerID(const Value: string);
 begin
   FParams.setValue('PlayerID', Value);
+  FParams.Save;
+end;
+
+procedure TConfig.SetServerIPv4(const Value: string);
+begin
+  FParams.setValue('ServerIPv4', Value);
+  FParams.Save;
+end;
+
+procedure TConfig.SetServerIPv4Port(const Value: word);
+begin
+  FParams.setValue('ServerIPv4Port', Value);
+  FParams.Save;
+end;
+
+procedure TConfig.SetServerIPv6(const Value: string);
+begin
+  FParams.setValue('ServerIPv6', Value);
+  FParams.Save;
+end;
+
+procedure TConfig.SetServerIPv6Port(const Value: word);
+begin
+  FParams.setValue('ServerIPv6Port', Value);
   FParams.Save;
 end;
 
