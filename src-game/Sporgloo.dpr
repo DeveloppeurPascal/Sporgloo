@@ -22,7 +22,8 @@ uses
   Sporgloo.Types in '..\src-common-api\Sporgloo.Types.pas',
   Sporgloo.Database in '..\src-common-api\Sporgloo.Database.pas',
   Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas',
-  Sporgloo.Messaging in 'Sporgloo.Messaging.pas';
+  Sporgloo.Messaging in 'Sporgloo.Messaging.pas',
+  Sporgloo.MapFrame in 'Sporgloo.MapFrame.pas' {MapFrame: TFrame};
 
 {$R *.res}
 
