@@ -95,7 +95,9 @@ begin
               end
               else
                 FMsg.Push(Buffer[i]);
-          end;
+          end
+          else
+            sleep(100);
         end
       else; // TODO : can't connect to the server
     finally
