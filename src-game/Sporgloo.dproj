@@ -473,6 +473,7 @@
         <DCCReference Include="..\src-common-api\Sporgloo.Types.pas"/>
         <DCCReference Include="..\src-common-api\Sporgloo.Database.pas"/>
         <DCCReference Include="..\src-common-api\Sporgloo.Consts.pas"/>
+        <DCCReference Include="Sporgloo.Messaging.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
