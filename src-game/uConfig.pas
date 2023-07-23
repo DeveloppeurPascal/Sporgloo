@@ -75,7 +75,14 @@ end;
 class function TConfig.Current: TConfig;
 begin
   if not assigned(ConfigInstance) then
+  begin
     ConfigInstance := TConfig.Create;
+
+    // pprem
+    // TODO : à supprimer
+    ConfigInstance.SetDeviceID('');
+    ConfigInstance.SetPlayerID('');
+  end;
   result := ConfigInstance;
 end;
 
@@ -97,13 +104,7 @@ end;
 
 function TConfig.GetPlayerID: string;
 begin
-{$IFDEF DEBUG}
-  result := '';
-  // result := FParams.getValue('PlayerID', '');
-  // TODO : for remporaty DEBUG only,
-{$ELSE}
   result := FParams.getValue('PlayerID', '');
-{$ENDIF}
 end;
 
 function TConfig.GetServerIPv4: string;
@@ -112,7 +113,9 @@ begin
   result := FParams.getValue('ServerIPv4', '141.94.221.190');
   // VPS Sporgloo (temporary address)
 {$ELSE}
-  result := FParams.getValue('ServerIPv4', '127.0.0.1');
+  // TODO : for local tests
+  // result := FParams.getValue('ServerIPv4', '127.0.0.1');
+  result := FParams.getValue('ServerIPv4', '141.94.221.190');
 {$ENDIF}
 end;
 
