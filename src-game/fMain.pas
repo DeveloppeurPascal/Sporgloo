@@ -43,11 +43,10 @@ begin
       GameData: TGameData;
     begin
       GameData := TGameData.Current;
-      GameData.APIClient := tSporglooAPIClient.Create('127.0.0.1', 80);
-      // TODO : update IP+Port depending on server infos
+      GameData.APIClient := tSporglooAPIClient.Create
+        (tconfig.Current.ServerIPv4, tconfig.Current.ServerIPv4port);
 
       // TODO : if connexion failed, retry after a user confirmation or close the program
-              sleep(200);
       DeviceID := GameData.Player.DeviceID;
       if DeviceID.IsEmpty then
         raise Exception.Create('Unknow device ID !');
