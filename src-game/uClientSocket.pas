@@ -44,6 +44,8 @@ type
       Const PlayerX, PlayerY: TSporglooAPINumber);
     procedure SendPlayerPutAStar(Const SessionID, PlayerID: string;
       Const NewStarX, NewStarY: TSporglooAPINumber);
+
+    function isConnected: boolean;
   end;
 
 implementation
@@ -130,6 +132,11 @@ begin
   end;
 end;
 
+function TSporglooAPIClient.isConnected: boolean;
+begin
+  result := assigned(FSocket) and (tsocketstate.connected in FSocket.State);
+end;
+
 procedure TSporglooAPIClient.onClientLoginResponse(const DeviceID,
   SessionID: TSporglooAPIAlpha16; const PlayerX, PlayerY, Score, StarsCount,
   LifeLevel: TSporglooAPINumber);
@@ -180,7 +187,9 @@ procedure TSporglooAPIClient.onMapCell(const MapX, MapY: TSporglooAPINumber;
 const MapTileID: TSporglooAPIShort);
 begin
   TGameData.Current.Map.SetTileID(MapX, MapY, MapTileID);
-  // TODO : refresh the map cell
+  TMessageManager.DefaultManager.SendMessage(Self,
+    TMapCellUpdateMessage.Create(TSporglooMapCell.Create(MapX, MapY,
+    MapTileID)));
 end;
 
 procedure TSporglooAPIClient.onOtherPlayerMove(const PlayerID
@@ -243,6 +252,9 @@ var
 begin
   if not assigned(FSocket) then
     exit;
+
+  if not(tsocketstate.connected in FSocket.State) then
+    raise exception.Create('Server is not connected.');
 
   TerminatorPosition := 0;
   while (TerminatorPosition < CSporglooAPIBufferLength) and
