@@ -15,12 +15,13 @@ uses
   FMX.Dialogs,
   FMX.Edit,
   FMX.Controls.Presentation,
-  FMX.StdCtrls;
+  FMX.StdCtrls,
+  Sporgloo.MapFrame;
 
 type
   TfrmMain = class(TForm)
+    MapFrame1: TMapFrame;
     procedure FormCreate(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
     { Déclarations privées }
@@ -39,7 +40,6 @@ implementation
 {$R *.fmx}
 
 uses
-  System.Math,
   System.Messaging,
   uConfig,
   uGameData,
@@ -69,20 +69,6 @@ procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   if assigned(TGameData.Current.APIClient) then
     TGameData.Current.APIClient.Terminate;
-end;
-
-procedure TfrmMain.FormResize(Sender: TObject);
-var
-  GameData: TGameData;
-  W, H: single;
-begin
-  GameData := TGameData.Current;
-  W := clientwidth / CSporglootilesize;
-  H := ClientHeight / CSporglootilesize;
-  GameData.Session.MapRangeX := GameData.Player.PlayerX - ceil(W);
-  GameData.Session.MapRangey := GameData.Player.Playery - ceil(H);
-  GameData.Session.MapRangeColNumber := ceil(W);
-  GameData.Session.MapRangeRowNumber := ceil(H);
 end;
 
 procedure TfrmMain.SubscribeToLostServerMessage;

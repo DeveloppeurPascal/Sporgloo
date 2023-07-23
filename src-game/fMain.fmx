@@ -9,6 +9,11 @@ object frmMain: TfrmMain
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnResize = FormResize
   DesignerMasterStyle = 0
+  inline MapFrame1: TMapFrame
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+  end
 end
