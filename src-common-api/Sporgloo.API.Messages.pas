@@ -79,13 +79,13 @@ procedure TSporglooAPIMessage.Push(O: byte);
 begin
   inc(BufferPos);
   if (BufferPos >= SizeOf(Buffer)) then
-    BufferPos := 0;
+    Reset;
   Buffer[BufferPos] := O;
 end;
 
 procedure TSporglooAPIMessage.Reset;
 begin
-  BufferPos := 0;
+  BufferPos := -1;
 end;
 
 procedure TSporglooAPIMessage.SetMessageID(const Value: TSporglooAPIShort);
