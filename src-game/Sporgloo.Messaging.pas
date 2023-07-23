@@ -4,7 +4,8 @@ interface
 
 uses
   System.Messaging,
-  uClientSocket;
+  uClientSocket,
+  Sporgloo.Types;
 
 type
   /// <summary>
@@ -19,12 +20,17 @@ type
   TLostServerMessage = class(TMessage<TSporglooAPIClient>)
   end;
 
+  /// <summary>
+  /// This message is sent by the client/server API to send
+  /// the new TileID to the subscribers
+  /// </summary>
+  TMapCellUpdateMessage = class(TMessage<TSporglooMapCell>)
+  end;
+
 implementation
 
 initialization
 
-
 finalization
-
 
 end.
