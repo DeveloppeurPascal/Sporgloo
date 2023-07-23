@@ -77,6 +77,8 @@ type
     FMapRangeX: TSporglooAPINumber;
     FMapRangeY: TSporglooAPINumber;
     FDeviceID: string;
+    FMapRangeXMax: TSporglooAPINumber;
+    FMapRangeYMax: TSporglooAPINumber;
     procedure SetDeviceID(const Value: string);
     procedure SetMapRangeColNumber(const Value: TSporglooAPINumber);
     procedure SetMapRangeRowNumber(const Value: TSporglooAPINumber);
@@ -95,6 +97,9 @@ type
       write SetMapRangeColNumber;
     property MapRangeRowNumber: TSporglooAPINumber read FMapRangeRowNumber
       write SetMapRangeRowNumber;
+    property MapRangeXMax: TSporglooAPINumber read FMapRangeXMax;
+    property MapRangeYMax: TSporglooAPINumber read FMapRangeYMax;
+    constructor Create;
   end;
 
   TSporglooSessionsList = class(TObjectDictionary<string, TSporglooSession>)
@@ -228,6 +233,19 @@ end;
 
 { TSporglooSession }
 
+constructor TSporglooSession.Create;
+begin
+  FDeviceID := '';
+  FPlayerID := '';
+  FSessionID := '';
+  FMapRangeX := 0;
+  FMapRangeY := 0;
+  FMapRangeColNumber := 0;
+  FMapRangeRowNumber := 0;
+  FMapRangeXMax := 0;
+  FMapRangeYMax := 0;
+end;
+
 procedure TSporglooSession.SetDeviceID(const Value: string);
 begin
   FDeviceID := Value;
@@ -237,22 +255,26 @@ procedure TSporglooSession.SetMapRangeColNumber(const Value
   : TSporglooAPINumber);
 begin
   FMapRangeColNumber := Value;
+  FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1;
 end;
 
 procedure TSporglooSession.SetMapRangeRowNumber(const Value
   : TSporglooAPINumber);
 begin
   FMapRangeRowNumber := Value;
+  FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1;
 end;
 
 procedure TSporglooSession.SetMapRangeX(const Value: TSporglooAPINumber);
 begin
   FMapRangeX := Value;
+  FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1;
 end;
 
 procedure TSporglooSession.SetMapRangeY(const Value: TSporglooAPINumber);
 begin
   FMapRangeY := Value;
+  FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1;
 end;
 
 procedure TSporglooSession.SetPlayerID(const Value: string);
