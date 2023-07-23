@@ -27,6 +27,12 @@ type
   TMapCellUpdateMessage = class(TMessage<TSporglooMapCell>)
   end;
 
+  /// <summary>
+  /// Used to force the redraw of the map on screen
+  /// </summary>
+  TMapUpdateMessage = class(TMessage)
+  end;
+
 implementation
 
 initialization
