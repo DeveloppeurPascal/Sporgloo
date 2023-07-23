@@ -50,10 +50,12 @@ implementation
 
 uses
   System.SysUtils,
+  System.Messaging,
   uConfig,
   uGameData,
   Sporgloo.Database,
-  Sporgloo.Consts;
+  Sporgloo.Consts,
+  Sporgloo.Messaging;
 
 { TSporglooAPIClient }
 
@@ -82,6 +84,13 @@ begin
     try
       FMsg.Reset;
       if (tsocketstate.connected in FSocket.State) then
+      begin
+        TThread.Queue(nil,
+          procedure
+          begin
+            TMessageManager.DefaultManager.SendMessage(Self,
+              TServerConnectedMessage.Create(Self));
+          end);
         while not TThread.CheckTerminated do
         begin
           RecCount := FSocket.Receive(Buffer);
@@ -98,12 +107,25 @@ begin
           end
           else
             sleep(100);
-        end
-      else; // TODO : can't connect to the server
+        end;
+      end
+      else
+        TThread.Queue(nil,
+          procedure
+          begin
+            TMessageManager.DefaultManager.SendMessage(Self,
+              TLostServerMessage.Create(Self));
+          end);
     finally
       FSocket.Close;
     end;
   finally
+    TThread.Queue(nil,
+      procedure
+      begin
+        TMessageManager.DefaultManager.SendMessage(Self,
+          TLostServerMessage.Create(Self));
+      end);
     freeandnil(FSocket);
   end;
 end;
@@ -155,7 +177,7 @@ begin
 end;
 
 procedure TSporglooAPIClient.onMapCell(const MapX, MapY: TSporglooAPINumber;
-  const MapTileID: TSporglooAPIShort);
+const MapTileID: TSporglooAPIShort);
 begin
   TGameData.Current.Map.SetTileID(MapX, MapY, MapTileID);
   // TODO : refresh the map cell
@@ -230,7 +252,7 @@ begin
   if not(TerminatorPosition < CSporglooAPIBufferLength) then
     raise exception.Create('Wrong buffer size. Please increase it.');
 
-  SentBytes := FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
+  SentBytes := FSocket.Send(FMsg.Buffer, 0, TerminatorPosition + 1);
   if (SentBytes <> TerminatorPosition + 1) then
     raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
       ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
@@ -267,7 +289,7 @@ begin
 end;
 
 procedure TSporglooAPIClient.SendPlayerMove(const SessionID, PlayerID: string;
-  const PlayerX, PlayerY: TSporglooAPINumber);
+const PlayerX, PlayerY: TSporglooAPINumber);
 begin
   FMsg.Clear;
   FMsg.MessageID := 7;
