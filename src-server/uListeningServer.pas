@@ -38,24 +38,32 @@ procedure TListeningServer.Execute;
 var
   ServerSocket, ClientSocket: TSocket;
 begin
+{$IFDEF DEBUG}
   NameThreadForDebugging('SporglooAPIServer');
+{$ENDIF}
   ServerSocket := TSocket.Create(tsockettype.tcp, tencoding.UTF8);
   try
     ServerSocket.Listen(FIP, '', FPort);
     try
+{$IFDEF DEBUG}
       if (tsocketstate.client in ServerSocket.State) then
         writeln('tsocketstate.client');
       if (tsocketstate.listening in ServerSocket.State) then
         writeln('tsocketstate.listening');
       if (tsocketstate.connected in ServerSocket.State) then
         writeln('tsocketstate.connected');
-      // TODO : remove trace log, the server must be in "listening" mode
+{$ENDIF}
       while not TThread.CheckTerminated do
       begin
         try
           ClientSocket := ServerSocket.accept(100); // wait 0.1 second max
           if assigned(ClientSocket) then
+          begin
+{$IFDEF DEBUG}
+            writeln('new game client connected');
+{$ENDIF}
             TConnectedClient.Create(ClientSocket);
+          end;
         except
           on e: exception do
             writeln('Server except: ' + e.Message);
