@@ -23,7 +23,8 @@ uses
   Sporgloo.Database in '..\src-common-api\Sporgloo.Database.pas',
   Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas',
   Sporgloo.Messaging in 'Sporgloo.Messaging.pas',
-  Sporgloo.MapFrame in 'Sporgloo.MapFrame.pas' {MapFrame: TFrame};
+  Sporgloo.MapFrame in 'Sporgloo.MapFrame.pas' {MapFrame: TFrame},
+  Sporgloo.Images in 'Sporgloo.Images.pas' {dmSporglooImages: TDataModule};
 
 {$R *.res}
 
@@ -31,6 +32,7 @@ begin
   GlobalUseSkia := True;
   Application.Initialize;
   Application.FormFactor.Orientations := [TFormOrientation.Portrait, TFormOrientation.InvertedPortrait, TFormOrientation.Landscape, TFormOrientation.InvertedLandscape];
+  Application.CreateForm(TdmSporglooImages, dmSporglooImages);
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.
