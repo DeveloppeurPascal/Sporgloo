@@ -10,8 +10,8 @@ X => définir l'interface client/serveur (API)
 X => coder l'API
 X => coder le format de stockage des données côté joueur
 X => coder le format de stockage des données côté serveur
-=> coder du moteur d'affichage de la map
-=> faire le dessin du background du jeu (map en mode automatique, sans déplacement ni interaction du joueur)
+X => coder du moteur d'affichage de la map
+X => faire le dessin du background du jeu (map en mode automatique, sans déplacement ni interaction du joueur)
 => faire un TFrame pour un bouton de menu
 => faire un TFrame pour la boite de dialogue avec ou sans titre
 => faire un TFrame pour un champ de saisie
@@ -21,9 +21,9 @@ X => coder le format de stockage des données côté serveur
 ==> écran des scores (hall of fame) : background du jeu, boite de dialogue avec titre, liste des scores à l'intérieur (plus tard aussi les pseudos après modération)
 ==> écran des crédits du jeu : background du jeu, boite de dialogue avec titre, texte
 ==> écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
-==> écran du jeu (début de partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
+==> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
 ==> écran du jeu (jeu en cours) : background du jeu, curseur souris ou contrôleur de jeu, boutons pause / play/pause musique, play/pause bruitages, score, niveau de vie, nombre de pastilles (= étoiles) dispos, actions du joueur, actions du personnage
 X => choix des éléments visuels de la map
-=> coder le jeu en interaction avec la souris / écran tactile (avec ou sans curseur sur l'écran, prise en compte des clicks)
+X => coder le jeu en interaction avec la souris / écran tactile (avec ou sans curseur sur l'écran, prise en compte des clicks)
 => coder le jeu en interaction avec les contrôleurs de jeu (simuler un curseur à l'écran)
 => coder la boucle de musique en fond sonore
