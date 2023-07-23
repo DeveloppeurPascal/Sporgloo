@@ -3,7 +3,6 @@ object MapFrame: TMapFrame
   Size.Width = 320.000000000000000000
   Size.Height = 240.000000000000000000
   Size.PlatformDefault = False
-  OnResized = FrameResized
   object TimerMapRefresh: TTimer
     Interval = 100
     OnTimer = TimerMapRefreshTimer
@@ -21,5 +20,6 @@ object MapFrame: TMapFrame
     Size.Height = 240.000000000000000000
     Size.PlatformDefault = False
     WrapMode = Original
+    OnResized = MapImageResized
   end
 end
