@@ -96,7 +96,10 @@ var
   RecCount: integer;
   i: integer;
 begin
-  NameThreadForDebugging('ConnectedClient');
+{$IFDEF DEBUG}
+  NameThreadForDebugging('ConnectedClient_' + FSocket.RemoteAddress);
+  writeln('ConnectedClient_' + FSocket.RemoteAddress);
+{$ENDIF}
   FMsg.Reset;
   while not TThread.CheckTerminated do
   begin
@@ -295,6 +298,10 @@ end;
 
 procedure TConnectedClient.ReceivedAPIMessage;
 begin
+{$IFDEF DEBUG}
+  writeln('Message ' + FMsg.MessageID.Tostring + ' received from ' +
+    FSocket.RemoteAddress);
+{$ENDIF}
   case FMsg.MessageID of
     1:
       onClientRegister(FMsg.Msg1DeviceID);
@@ -318,6 +325,7 @@ end;
 procedure TConnectedClient.SendAPIMessage;
 var
   TerminatorPosition: integer;
+  SentBytes: word;
 begin
   if not assigned(FSocket) then
     exit;
@@ -330,7 +338,11 @@ begin
   if not(TerminatorPosition < CSporglooAPIBufferLength) then
     raise exception.Create('Wrong buffer size. Please increase it.');
 
-  FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
+  SentBytes := FSocket.Send(FMsg.Buffer, TerminatorPosition + 1);
+  if (SentBytes <> TerminatorPosition + 1) then
+    raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
+      ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
+      .Tostring + ').');
 end;
 
 procedure TConnectedClient.SendClientLoginResponse(const DeviceID,
