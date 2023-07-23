@@ -191,9 +191,13 @@ procedure TSporglooAPIClient.onMapCell(const MapX, MapY: TSporglooAPINumber;
 const MapTileID: TSporglooAPIShort);
 begin
   TGameData.Current.Map.SetTileID(MapX, MapY, MapTileID);
-  TMessageManager.DefaultManager.SendMessage(Self,
-    TMapCellUpdateMessage.Create(TSporglooMapCell.Create(MapX, MapY,
-    MapTileID)));
+  TThread.synchronize(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(Self,
+        TMapCellUpdateMessage.Create(TSporglooMapCell.Create(MapX, MapY,
+        MapTileID)));
+    end);
 end;
 
 procedure TSporglooAPIClient.onOtherPlayerMove(const PlayerID
