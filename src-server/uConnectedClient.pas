@@ -332,6 +332,9 @@ begin
   if not assigned(FSocket) then
     exit;
 
+  if not(tsocketstate.connected in FSocket.State) then
+    raise exception.Create('Client is not connected.');
+
   TerminatorPosition := 0;
   while (TerminatorPosition < CSporglooAPIBufferLength) and
     (FMsg.Buffer[TerminatorPosition] <> CSporglooAPIMessageTerminator) do
