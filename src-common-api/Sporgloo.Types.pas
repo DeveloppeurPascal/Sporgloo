@@ -7,6 +7,23 @@ type
   TSporglooAPIAlpha16 = array [0 .. 15] of byte;
   TSporglooAPIShort = byte;
 
+  TSporglooMapCell = class
+  private
+    FTileID: TSporglooAPIShort;
+    FX: TSporglooAPINumber;
+    FY: TSporglooAPINumber;
+    procedure SetTileID(const Value: TSporglooAPIShort);
+    procedure SetX(const Value: TSporglooAPINumber);
+    procedure SetY(const Value: TSporglooAPINumber);
+  protected
+  public
+    property X: TSporglooAPINumber read FX write SetX;
+    property Y: TSporglooAPINumber read FY write SetY;
+    property TileID: TSporglooAPIShort read FTileID write SetTileID;
+    constructor Create(X: TSporglooAPINumber; Y: TSporglooAPINumber;
+      TileID: TSporglooAPIShort);
+  end;
+
 procedure Alpha16ToString(Const Source: TSporglooAPIAlpha16;
   var Destination: string);
 procedure StringToAlpha16(Const Source: string;
@@ -65,6 +82,31 @@ begin
         break;
     end;
   end;
+end;
+
+{ TSporglooMapCell }
+
+constructor TSporglooMapCell.Create(X, Y: TSporglooAPINumber;
+  TileID: TSporglooAPIShort);
+begin
+  FX := X;
+  FY := Y;
+  FTileID := TileID;
+end;
+
+procedure TSporglooMapCell.SetTileID(const Value: TSporglooAPIShort);
+begin
+  FTileID := Value;
+end;
+
+procedure TSporglooMapCell.SetX(const Value: TSporglooAPINumber);
+begin
+  FX := Value;
+end;
+
+procedure TSporglooMapCell.SetY(const Value: TSporglooAPINumber);
+begin
+  FY := Value;
 end;
 
 initialization
