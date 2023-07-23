@@ -23,6 +23,8 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    function isServerConnected: boolean;
+
     procedure RefreshMap;
   end;
 
@@ -70,6 +72,11 @@ begin
   Session.Free;
   Player.Free;
   inherited;
+end;
+
+function TGameData.isServerConnected: boolean;
+begin
+  result := assigned(APIClient) and APIClient.isConnected;
 end;
 
 procedure TGameData.RefreshMap;
