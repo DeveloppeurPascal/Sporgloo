@@ -207,7 +207,7 @@ function TSporglooMap.GetTileID(X, Y: TSporglooAPINumber): TSporglooAPIshort;
 var
   FRow: TSporglooMapRow;
 begin
-  if (not FCell.TryGetValue(X, FRow)) and (not FRow.TryGetValue(Y, result)) then
+  if (not FCell.TryGetValue(X, FRow)) or (not FRow.TryGetValue(Y, result)) then
     result := 0;
 end;
 
@@ -255,26 +255,38 @@ procedure TSporglooSession.SetMapRangeColNumber(const Value
   : TSporglooAPINumber);
 begin
   FMapRangeColNumber := Value;
-  FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1;
+  if FMapRangeColNumber > 0 then
+    FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
+  else
+    FMapRangeXMax := FMapRangeX;
 end;
 
 procedure TSporglooSession.SetMapRangeRowNumber(const Value
   : TSporglooAPINumber);
 begin
   FMapRangeRowNumber := Value;
-  FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1;
+  if FMapRangeRowNumber > 0 then
+    FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
+  else
+    FMapRangeYMax := FMapRangeY;
 end;
 
 procedure TSporglooSession.SetMapRangeX(const Value: TSporglooAPINumber);
 begin
   FMapRangeX := Value;
-  FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1;
+  if FMapRangeColNumber > 0 then
+    FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
+  else
+    FMapRangeXMax := FMapRangeX;
 end;
 
 procedure TSporglooSession.SetMapRangeY(const Value: TSporglooAPINumber);
 begin
   FMapRangeY := Value;
-  FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1;
+  if FMapRangeRowNumber > 0 then
+    FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
+  else
+    FMapRangeYMax := FMapRangeY;
 end;
 
 procedure TSporglooSession.SetPlayerID(const Value: string);
