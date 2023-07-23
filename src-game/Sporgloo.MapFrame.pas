@@ -14,11 +14,14 @@ uses
   FMX.Forms,
   FMX.Dialogs,
   FMX.StdCtrls,
-  Sporgloo.Types;
+  Sporgloo.Types,
+  Sporgloo.Images,
+  FMX.Objects;
 
 type
   TMapFrame = class(TFrame)
     TimerMapRefresh: TTimer;
+    MapImage: TImage;
     procedure FrameResized(Sender: TObject);
     procedure TimerMapRefreshTimer(Sender: TObject);
   private
@@ -97,12 +100,12 @@ end;
 
 procedure TMapFrame.TimerMapRefreshTimer(Sender: TObject);
 begin
-  if not Enabled then
+  if not TimerMapRefresh.Enabled then
     exit;
 
   if TGameData.Current.isServerConnected then
   begin
-    Enabled := false;
+    TimerMapRefresh.Enabled := false;
     TGameData.Current.refreshmap;
   end;
 end;

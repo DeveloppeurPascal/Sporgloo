@@ -1,4 +1,5 @@
 object MapFrame: TMapFrame
+  HitTest = False
   Size.Width = 320.000000000000000000
   Size.Height = 240.000000000000000000
   Size.PlatformDefault = False
@@ -8,5 +9,17 @@ object MapFrame: TMapFrame
     OnTimer = TimerMapRefreshTimer
     Left = 144
     Top = 104
+  end
+  object MapImage: TImage
+    MultiResBitmap = <
+      item
+      end>
+    Align = Client
+    Locked = True
+    HitTest = False
+    Size.Width = 320.000000000000000000
+    Size.Height = 240.000000000000000000
+    Size.PlatformDefault = False
+    WrapMode = Original
   end
 end
