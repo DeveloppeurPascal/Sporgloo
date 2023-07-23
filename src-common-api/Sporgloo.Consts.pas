@@ -8,7 +8,7 @@ const
   CSporglooTileStar = 2;
 
   CSporglooAPIMessageTerminator = 0;
-  CSporglooAPIBufferLength = 255;
+  CSporglooAPIBufferLength = 250;
 
   CSporglooTileSize = 32;
 
