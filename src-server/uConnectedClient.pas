@@ -195,6 +195,9 @@ begin
     player.StarsCount := 12; // TODO : use a constant for stars count start
     player.LifeLevel := 24; // TODO : use a const for life level start
     TServerData.Current.Players.Add(player.PlayerID, player);
+    TServerData.Current.Map.SetTileID(player.PlayerX, player.PlayerY,
+      CSporglooTilePath);
+    // TODO : send to all clients this new TileID
   end;
 
   SendClientRegisterResponse(player.DeviceID, player.PlayerID);
@@ -312,14 +315,10 @@ begin
 {$IFDEF DEBUG}
   writeln('Message ' + FMsg.MessageID.Tostring + ' received from ' +
     FSocket.RemoteAddress);
-  writeln(sizeof(FMsg.Buffer));
-  for var i: integer := 0 to sizeof(FMsg.Buffer) - 1 do
-    // if FMsg.Buffer[i] = CSporglooAPIMessageTerminator then
-    // break
-    // else
-    // TODO : to fix
-    write(FMsg.Buffer[i], #9);
-  writeln;
+//  writeln(sizeof(FMsg.Buffer));
+//  for var i: integer := 0 to sizeof(FMsg.Buffer) - 1 do
+//    write(FMsg.Buffer[i], #9);
+//  writeln;
 {$ENDIF}
   case FMsg.MessageID of
     1:
@@ -398,6 +397,9 @@ end;
 procedure TConnectedClient.SendMapCell(const MapX, MapY: TSporglooAPINumber;
   const MapTileID: TSporglooAPIShort);
 begin
+  if (MapTileID = CSporglooTileNone) then
+    exit;
+
 {$IFDEF DEBUG}
   writeln('=> ', MapX, ',', MapY, '=', MapTileID);
 {$ENDIF}
