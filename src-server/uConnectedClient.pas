@@ -215,7 +215,6 @@ begin
   for x := MapX to MapX + ColNumber - 1 do
     for y := MapY to MapY + RowNumber - 1 do
       SendMapCell(x, y, TServerData.Current.Map.GetTileID(x, y));
-  // TODO : send the sessionID with the demand and store the size of displayed map for this session
 end;
 
 procedure TConnectedClient.onPlayerMove(const SessionID,
@@ -256,10 +255,14 @@ begin
   // TODO : to optimize this feature, store the new coordinates in a list and have a separate check for it
   List := ClientsList.LockList;
   try // TODO : try with TParallel.for()
-    for i := 0 to List.count - 1 do
+    for i := List.count - 1 downto 0 do
       if (List[i] <> self) then
-        List[i].SendOtherPlayerMove(player.PlayerID, player.PlayerX,
-          player.PlayerY);
+        try // TODO : lock the element before using its socket (access violation possible)
+          List[i].SendOtherPlayerMove(player.PlayerID, player.PlayerX,
+            player.PlayerY);
+        except
+          List.Remove(List[i]);
+        end;
   finally
     ClientsList.UnlockList;
   end;
@@ -302,9 +305,13 @@ begin
   // TODO : to optimize this feature, store the changes in a list and have a separate check for it
   List := ClientsList.LockList;
   try // TODO : try with TParallel.for()
-    for i := 0 to List.count - 1 do
+    for i := List.count - 1 downto 0 do
       if (List[i] <> self) then
-        List[i].SendMapCell(NewStarX, NewStarY, CSporglooTileStar);
+        try // TODO : lock the element before using its socket (access violation possible)
+          List[i].SendMapCell(NewStarX, NewStarY, CSporglooTileStar);
+        except
+          List.Remove(List[i]);
+        end;
   finally
     ClientsList.UnlockList;
   end;
@@ -315,10 +322,10 @@ begin
 {$IFDEF DEBUG}
   writeln('Message ' + FMsg.MessageID.Tostring + ' received from ' +
     FSocket.RemoteAddress);
-//  writeln(sizeof(FMsg.Buffer));
-//  for var i: integer := 0 to sizeof(FMsg.Buffer) - 1 do
-//    write(FMsg.Buffer[i], #9);
-//  writeln;
+  // writeln(sizeof(FMsg.Buffer));
+  // for var i: integer := 0 to sizeof(FMsg.Buffer) - 1 do
+  // write(FMsg.Buffer[i], #9);
+  // writeln;
 {$ENDIF}
   case FMsg.MessageID of
     1:
