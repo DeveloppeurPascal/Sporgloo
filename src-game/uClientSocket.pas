@@ -97,16 +97,20 @@ begin
         begin
           RecCount := FSocket.Receive(Buffer);
           if (RecCount > 0) then
-          begin
             for i := 0 to RecCount - 1 do
-              if (Buffer[i] = CSporglooAPIMessageTerminator) then
+            begin
+              FMsg.Push(Buffer[i]);
+              if (FMsg.BufferPos >= sizeof(FMsg.Buffer)) then
+              // TODO : to fix
+              // if (Buffer[i] = CSporglooAPIMessageTerminator) then
               begin
-                ReceivedAPIMessage;
+                try
+                  ReceivedAPIMessage;
+                except
+                end;
                 FMsg.Reset;
-              end
-              else
-                FMsg.Push(Buffer[i]);
-          end
+              end;
+            end
           else
             sleep(100);
         end;
@@ -264,11 +268,13 @@ begin
   if not(TerminatorPosition < CSporglooAPIBufferLength) then
     raise exception.Create('Wrong buffer size. Please increase it.');
 
-  SentBytes := FSocket.Send(FMsg.Buffer, 0, TerminatorPosition + 1);
-  if (SentBytes <> TerminatorPosition + 1) then
-    raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
-      ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
-      .Tostring + ').');
+  // TODO : to fix
+  SentBytes := FSocket.Send(FMsg.Buffer, 0, sizeof(FMsg.Buffer));
+  // SentBytes := FSocket.Send(FMsg.Buffer, 0, TerminatorPosition + 1);
+  // if (SentBytes <> TerminatorPosition + 1) then
+  // raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
+  // ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
+  // .Tostring + ').');
 end;
 
 procedure TSporglooAPIClient.SendClientLogin(const DeviceID, PlayerID: string);

@@ -9,10 +9,11 @@ uses
 type
   TSporglooAPIMessage = record
   private
-    BufferPos: integer;
+    FBufferPos: integer;
     procedure SetMessageID(const Value: TSporglooAPIShort);
     function GetMessageID: TSporglooAPIShort;
   public
+    property BufferPos: integer read FBufferPos;
     property MessageID: TSporglooAPIShort read GetMessageID write SetMessageID;
     procedure Reset;
     procedure Clear;
@@ -66,6 +67,8 @@ procedure TSporglooAPIMessage.Clear;
 var
   i: integer;
 begin
+//  exit;
+  // TODO : à supprimer ou adapter si un "terminateur" réapparaît
   for i := 0 to CSporglooAPIBufferLength - 1 do
     Buffer[i] := CSporglooAPIMessageTerminator;
 end;
@@ -77,15 +80,15 @@ end;
 
 procedure TSporglooAPIMessage.Push(O: byte);
 begin
-  inc(BufferPos);
-  if (BufferPos >= SizeOf(Buffer)) then
+  if (FBufferPos >= SizeOf(Buffer)) then
     Reset;
-  Buffer[BufferPos] := O;
+  Buffer[FBufferPos] := O;
+  inc(FBufferPos);
 end;
 
 procedure TSporglooAPIMessage.Reset;
 begin
-  BufferPos := -1;
+  FBufferPos := 0;
 end;
 
 procedure TSporglooAPIMessage.SetMessageID(const Value: TSporglooAPIShort);

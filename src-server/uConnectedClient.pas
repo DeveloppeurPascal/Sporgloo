@@ -105,16 +105,25 @@ begin
   begin
     RecCount := FSocket.Receive(Buffer);
     if (RecCount > 0) then
-    begin
       for i := 0 to RecCount - 1 do
-        if (Buffer[i] = CSporglooAPIMessageTerminator) then
+      begin
+        FMsg.Push(Buffer[i]);
+        if (FMsg.BufferPos >= sizeof(FMsg.Buffer)) then
+        // TODO : to fix
+        // if (Buffer[i] = CSporglooAPIMessageTerminator) then
         begin
-          ReceivedAPIMessage;
+          try
+            ReceivedAPIMessage;
+          except
+{$IFDEF DEBUG}
+            on e: exception do
+              writeln('ConnectedClient_' + FSocket.RemoteAddress + ': ' +
+                e.Message);
+{$ENDIF}
+          end;
           FMsg.Reset;
-        end
-        else
-          FMsg.Push(Buffer[i]);
-    end
+        end;
+      end
     else
       sleep(100);
   end;
@@ -303,6 +312,14 @@ begin
 {$IFDEF DEBUG}
   writeln('Message ' + FMsg.MessageID.Tostring + ' received from ' +
     FSocket.RemoteAddress);
+  writeln(sizeof(FMsg.Buffer));
+  for var i: integer := 0 to sizeof(FMsg.Buffer) - 1 do
+    // if FMsg.Buffer[i] = CSporglooAPIMessageTerminator then
+    // break
+    // else
+    // TODO : to fix
+    write(FMsg.Buffer[i], #9);
+  writeln;
 {$ENDIF}
   case FMsg.MessageID of
     1:
@@ -343,11 +360,13 @@ begin
   if not(TerminatorPosition < CSporglooAPIBufferLength) then
     raise exception.Create('Wrong buffer size. Please increase it.');
 
-  SentBytes := FSocket.Send(FMsg.Buffer, 0, TerminatorPosition + 1);
-  if (SentBytes <> TerminatorPosition + 1) then
-    raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
-      ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
-      .Tostring + ').');
+  // TODO : to fix
+  SentBytes := FSocket.Send(FMsg.Buffer, 0, sizeof(FMsg.Buffer));
+  // SentBytes := FSocket.Send(FMsg.Buffer, 0, TerminatorPosition + 1);
+  // if (SentBytes <> TerminatorPosition + 1) then
+  // raise exception.Create('Sending message ' + FMsg.MessageID.Tostring +
+  // ' error (' + SentBytes.Tostring + '/' + (TerminatorPosition + 1)
+  // .Tostring + ').');
 end;
 
 procedure TConnectedClient.SendClientLoginResponse(const DeviceID,
@@ -379,6 +398,9 @@ end;
 procedure TConnectedClient.SendMapCell(const MapX, MapY: TSporglooAPINumber;
   const MapTileID: TSporglooAPIShort);
 begin
+{$IFDEF DEBUG}
+  writeln('=> ', MapX, ',', MapY, '=', MapTileID);
+{$ENDIF}
   FMsg.Clear;
   FMsg.MessageID := 6;
   FMsg.Msg6MapX := MapX;
