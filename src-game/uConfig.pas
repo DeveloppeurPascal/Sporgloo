@@ -97,7 +97,13 @@ end;
 
 function TConfig.GetPlayerID: string;
 begin
+{$IFDEF DEBUG}
+  result := '';
+  // result := FParams.getValue('PlayerID', '');
+  // TODO : for remporaty DEBUG only,
+{$ELSE}
   result := FParams.getValue('PlayerID', '');
+{$ENDIF}
 end;
 
 function TConfig.GetServerIPv4: string;
