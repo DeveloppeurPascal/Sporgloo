@@ -63,7 +63,8 @@ end;
 
 destructor TGameData.Destroy;
 begin
-  APIClient.Free;
+  // APIClient.Free;
+  // APIClient is a TThread with "FreeOnTerminate", don't free it again !
   OtherPlayers.Free;
   Map.Free;
   Session.Free;
