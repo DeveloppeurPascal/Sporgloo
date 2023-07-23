@@ -227,7 +227,10 @@ var
   LRow: TSporglooMapRow;
 begin
   if (not FCell.TryGetValue(X, LRow)) then
+  begin
     LRow := TSporglooMapRow.Create;
+    FCell.Add(X, LRow);
+  end;
   LRow.AddOrSetValue(Y, TileID);
 end;
 
