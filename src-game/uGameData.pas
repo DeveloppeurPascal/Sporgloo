@@ -5,14 +5,14 @@ interface
 uses
   Sporgloo.Types,
   Sporgloo.Database,
-  uClientSocket;
+  Sporgloo.Client;
 
 type
   TGameData = class
   private
   protected
   public
-    APIClient: tSporglooAPIClient;
+    APIClient: tSporglooClient;
 
     Player: TSporglooPlayer;
     Session: TSporglooSession;
