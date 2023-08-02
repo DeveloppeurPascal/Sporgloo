@@ -470,7 +470,6 @@
         <DCCReference Include="..\lib-externes\Delphi-Game-Engine\src\Gamolf.RTL.Joystick.pas"/>
         <DCCReference Include="..\lib-externes\Delphi-Game-Engine\src\iOSapi.GameController.pas"/>
         <DCCReference Include="..\lib-externes\Delphi-Game-Engine\src\Macapi.GameController.pas"/>
-        <DCCReference Include="uClientSocket.pas"/>
         <DCCReference Include="..\src-common-api\Sporgloo.API.Messages.pas"/>
         <DCCReference Include="uGameData.pas"/>
         <DCCReference Include="uConfig.pas"/>
@@ -488,6 +487,8 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\lib-externes\Socket-Messaging-Library\src-library\Olf.Net.Socket.Messaging.pas"/>
+        <DCCReference Include="Sporgloo.Client.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -824,6 +825,12 @@
                 <DeployFile LocalName="..\assets\icon\sporgloo-game.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
                         <RemoteName>Sporgloo.icns</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\Sporgloo.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>Sporgloo</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -15,7 +15,6 @@ uses
   Gamolf.RTL.Joystick in '..\lib-externes\Delphi-Game-Engine\src\Gamolf.RTL.Joystick.pas',
   iOSapi.GameController in '..\lib-externes\Delphi-Game-Engine\src\iOSapi.GameController.pas',
   Macapi.GameController in '..\lib-externes\Delphi-Game-Engine\src\Macapi.GameController.pas',
-  uClientSocket in 'uClientSocket.pas',
   Sporgloo.API.Messages in '..\src-common-api\Sporgloo.API.Messages.pas',
   uGameData in 'uGameData.pas',
   uConfig in 'uConfig.pas',
@@ -24,7 +23,9 @@ uses
   Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas',
   Sporgloo.Messaging in 'Sporgloo.Messaging.pas',
   Sporgloo.MapFrame in 'Sporgloo.MapFrame.pas' {MapFrame: TFrame},
-  Sporgloo.Images in 'Sporgloo.Images.pas' {dmSporglooImages: TDataModule};
+  Sporgloo.Images in 'Sporgloo.Images.pas' {dmSporglooImages: TDataModule},
+  Olf.Net.Socket.Messaging in '..\lib-externes\Socket-Messaging-Library\src-library\Olf.Net.Socket.Messaging.pas',
+  Sporgloo.Client in 'Sporgloo.Client.pas';
 
 {$R *.res}
 
