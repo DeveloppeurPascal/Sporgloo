@@ -98,6 +98,9 @@ var
   Session: TSporglooSession;
   msg: TClient_login_message;
 begin
+{$IFDEF DEBUG}
+  writeln('onClientLogin');
+{$ENDIF}
   if not(AMessage is TClient_login_message) then
     raise exception.Create('Not the client login message expected.');
 
@@ -143,6 +146,9 @@ var
   player: TSporglooPlayer;
   msg: TClient_register_message;
 begin
+{$IFDEF DEBUG}
+  writeln('onClientRegister');
+{$ENDIF}
   if not(AMessage is TClient_register_message) then
     raise exception.Create('Not the client register message expected.');
 
@@ -179,6 +185,9 @@ var
   X, Y: TSporglooAPINumber;
   msg: TMap_refresh_demand_message;
 begin
+{$IFDEF DEBUG}
+  writeln('onMapRefresh');
+{$ENDIF}
   if not(AMessage is TMap_refresh_demand_message) then
     raise exception.Create('Not the map refresh demand message expected.');
 
@@ -202,6 +211,9 @@ var
   player: TSporglooPlayer;
   msg: TPlayer_move_message;
 begin
+{$IFDEF DEBUG}
+  writeln('onPlayerMove');
+{$ENDIF}
   if not(AMessage is TPlayer_move_message) then
     raise exception.Create('Not the player move message expected.');
 
@@ -254,6 +266,9 @@ var
   player: TSporglooPlayer;
   msg: TPlayer_add_a_star_on_the_map_message;
 begin
+{$IFDEF DEBUG}
+  writeln('onPlayerPutAStar');
+{$ENDIF}
   if not(AMessage is TPlayer_add_a_star_on_the_map_message) then
     raise exception.Create('Not the player add a star message expected.');
 
