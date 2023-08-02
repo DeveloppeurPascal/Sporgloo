@@ -78,7 +78,7 @@ uses
   uGameData,
   Sporgloo.Consts,
   Sporgloo.Messaging,
-  uClientSocket;
+  Sporgloo.Client;
 
 procedure TfrmMain.btnNewGameClick(Sender: TObject);
 begin
@@ -99,7 +99,7 @@ begin
   tthread.ForceQueue(nil,
     procedure
     begin
-      TGameData.Current.APIClient := tSporglooAPIClient.Create
+      TGameData.Current.APIClient := tSporglooClient.Create
         (tconfig.Current.ServerIPv4, tconfig.Current.ServerIPv4port);
       // TODO : add a connection on IPv6 if available
 
@@ -110,7 +110,7 @@ end;
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   if assigned(TGameData.Current.APIClient) then
-    TGameData.Current.APIClient.Terminate;
+    TGameData.Current.APIClient.Free;
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
@@ -273,7 +273,7 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TLostServerMessage;
-      Client: tSporglooAPIClient;
+      Client: tSporglooClient;
       DeviceID, PlayerID: string;
       GameData: TGameData;
     begin
@@ -294,7 +294,7 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TServerConnectedMessage;
-      Client: tSporglooAPIClient;
+      Client: tSporglooClient;
       DeviceID, PlayerID: string;
       GameData: TGameData;
     begin
