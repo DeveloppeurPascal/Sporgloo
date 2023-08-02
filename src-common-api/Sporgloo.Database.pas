@@ -5,7 +5,7 @@ interface
 uses
   System.Classes,
   System.Generics.Collections,
-  Sporgloo.Types;
+  Sporgloo.Types, Olf.Net.Socket.Messaging;
 
 type
   TSporglooPlayer = class
@@ -79,6 +79,7 @@ type
     FDeviceID: string;
     FMapRangeXMax: TSporglooAPINumber;
     FMapRangeYMax: TSporglooAPINumber;
+    FSocketClient: TOlfSocketMessagingServerConnectedClient;
     procedure SetDeviceID(const Value: string);
     procedure SetMapRangeColNumber(const Value: TSporglooAPINumber);
     procedure SetMapRangeRowNumber(const Value: TSporglooAPINumber);
@@ -86,11 +87,15 @@ type
     procedure SetMapRangeY(const Value: TSporglooAPINumber);
     procedure SetPlayerID(const Value: string);
     procedure SetSessionID(const Value: string);
+    procedure SetSocketClient(const Value
+      : TOlfSocketMessagingServerConnectedClient);
   protected
   public
     property DeviceID: string read FDeviceID write SetDeviceID;
     property PlayerID: string read FPlayerID write SetPlayerID;
     property SessionID: string read FSessionID write SetSessionID;
+    property SocketClient: TOlfSocketMessagingServerConnectedClient
+      read FSocketClient write SetSocketClient;
     property MapRangeX: TSporglooAPINumber read FMapRangeX write SetMapRangeX;
     property MapRangeY: TSporglooAPINumber read FMapRangeY write SetMapRangeY;
     property MapRangeColNumber: TSporglooAPINumber read FMapRangeColNumber
@@ -247,6 +252,7 @@ begin
   FMapRangeRowNumber := 0;
   FMapRangeXMax := 0;
   FMapRangeYMax := 0;
+  FSocketClient := nil;
 end;
 
 procedure TSporglooSession.SetDeviceID(const Value: string);
@@ -300,6 +306,12 @@ end;
 procedure TSporglooSession.SetSessionID(const Value: string);
 begin
   FSessionID := Value;
+end;
+
+procedure TSporglooSession.SetSocketClient(const Value
+  : TOlfSocketMessagingServerConnectedClient);
+begin
+  FSocketClient := Value;
 end;
 
 end.
