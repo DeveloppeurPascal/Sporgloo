@@ -22,6 +22,7 @@ This project depends on :
 
 * [DeveloppeurPascal/Delphi-Game-Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) in the subfolder ./lib-externes/Delphi-Game-Engine
 * [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) in the subfolder ./lib-externes/librairies
+* [DeveloppeurPascal/Socket-Messaging-Library](https://github.com/DeveloppeurPascal/Socket-Messaging-Library) in the subfolder ./lib-externes/Socket-Messaging-Library
 
 Sporgloo uses the library [Skia4Delphi](https://skia4delphi.org) installed from GetIt in Delphi IDE.
 

@@ -22,6 +22,7 @@ Ce dépôt de code dépend des dépôts suivants :
 
 * [DeveloppeurPascal/Delphi-Game-Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) dans le sous-dossier ./lib-externes/Delphi-Game-Engine
 * [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) dans le sous-dossier ./lib-externes/librairies
+* [DeveloppeurPascal/Socket-Messaging-Library](https://github.com/DeveloppeurPascal/Socket-Messaging-Library) dans le sous-dossier ./lib-externes/Socket-Messaging-Library
 
 Il utilise aussi la librairie [Skia4Delphi](https://skia4delphi.org) installée depuis GetIt directement dans Delphi.
 
