@@ -114,8 +114,8 @@ begin
   // VPS Sporgloo (temporary address)
 {$ELSE}
   // TODO : for local tests
-  // result := FParams.getValue('ServerIPv4', '127.0.0.1');
-  result := FParams.getValue('ServerIPv4', '141.94.221.190');
+   result := FParams.getValue('ServerIPv4', '127.0.0.1');
+//  result := FParams.getValue('ServerIPv4', '141.94.221.190');
 {$ENDIF}
 end;
 
