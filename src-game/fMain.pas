@@ -18,7 +18,8 @@ uses
   FMX.StdCtrls,
   Sporgloo.MapFrame,
   FMX.Layouts,
-  Sporgloo.Types;
+  Sporgloo.Types,
+  Olf.Net.Socket.Messaging;
 
 type
 {$SCOPEDENUMS ON}
@@ -54,6 +55,8 @@ type
     property ActivePage: TPageType read FActivePage write SetActivePage;
     procedure ShowGameTitle(isVisible: boolean = true);
     procedure InitializeGamePage;
+    procedure DoClientConnected(AClient: TOlfSMSrvConnectedClient);
+    procedure DoClientLostConnection(AClient: TOlfSMSrvConnectedClient);
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
@@ -85,6 +88,32 @@ begin
   ActivePage := TPageType.Game;
 end;
 
+procedure TfrmMain.DoClientConnected(AClient: TOlfSMSrvConnectedClient);
+begin
+  if not(AClient is tsporglooclient) then
+    exit;
+
+  TThread.ForceQueue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(self,
+        TServerConnectedMessage.Create(AClient as tsporglooclient));
+    end);
+end;
+
+procedure TfrmMain.DoClientLostConnection(AClient: TOlfSMSrvConnectedClient);
+begin
+  if not(AClient is tsporglooclient) then
+    exit;
+
+  TThread.ForceQueue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(self,
+        TLostServerMessage.Create(AClient as tsporglooclient));
+    end);
+end;
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   ActivePage := TPageType.None;
@@ -96,13 +125,15 @@ begin
   SubscribeToServerConnectedMessage;
   SubscribeToLostServerMessage;
 
-  tthread.ForceQueue(nil,
+  TThread.ForceQueue(nil,
     procedure
     begin
-      TGameData.Current.APIClient := tSporglooClient.Create
+      TGameData.Current.APIClient := tsporglooclient.Create
         (tconfig.Current.ServerIPv4, tconfig.Current.ServerIPv4port);
       // TODO : add a connection on IPv6 if available
-
+      TGameData.Current.APIClient.onConnected := DoClientConnected;
+      TGameData.Current.APIClient.onLostConnection := DoClientLostConnection;
+      TGameData.Current.APIClient.Connect;
       ActivePage := TPageType.Home;
     end);
 end;
@@ -273,7 +304,7 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TLostServerMessage;
-      Client: tSporglooClient;
+      Client: tsporglooclient;
       DeviceID, PlayerID: string;
       GameData: TGameData;
     begin
@@ -294,7 +325,7 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TServerConnectedMessage;
-      Client: tSporglooClient;
+      Client: tsporglooclient;
       DeviceID, PlayerID: string;
       GameData: TGameData;
     begin
