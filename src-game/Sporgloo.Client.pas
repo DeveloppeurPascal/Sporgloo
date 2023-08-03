@@ -8,7 +8,7 @@ uses
   Sporgloo.Types;
 
 type
-  TSporglooClient = class(TOlfSocketMessagingClient)
+  TSporglooClient = class(TOlfSMClient)
   private
   protected
     procedure onClientRegisterResponse(Const AFromGame
@@ -32,8 +32,6 @@ type
   public
     constructor Create(AServerIP: string; AServerPort: word); override;
     destructor Destroy; override;
-
-    function isConnected: boolean;
 
     procedure SendClientRegister(Const DeviceID: string); overload;
     procedure SendClientRegister(Const AToGame
@@ -84,15 +82,6 @@ begin
   SubscribeToMessage(8, onPlayerMoveResponse);
   SubscribeToMessage(10, onPlayerPutAStarResponse);
   SubscribeToMessage(11, onOtherPlayerMove);
-
-  Connect(AServerIP, AServerPort);
-  if (tsocketstate.connected in Socket.State) then
-    TThread.ForceQueue(nil,
-      procedure
-      begin
-        TMessageManager.DefaultManager.SendMessage(self,
-          TServerConnectedMessage.Create(self));
-      end);
 end;
 
 destructor TSporglooClient.Destroy;
@@ -101,14 +90,9 @@ begin
   inherited;
 end;
 
-function TSporglooClient.isConnected: boolean;
-begin
-  result := assigned(Socket) and (tsocketstate.connected in Socket.State);
-end;
-
 procedure TSporglooClient.onClientLoginResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-const AMessage: TOlfSocketMessage);
+  const AMessage: TOlfSocketMessage);
 var
   LDeviceID, LSessionID: string;
   LGameData: TGameData;
@@ -140,7 +124,7 @@ end;
 
 procedure TSporglooClient.onClientRegisterResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-const AMessage: TOlfSocketMessage);
+  const AMessage: TOlfSocketMessage);
 var
   LDeviceID, LPlayerID: string;
   msg: TClient_register_response_message;
@@ -168,7 +152,7 @@ end;
 
 procedure TSporglooClient.onMapCell(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-const AMessage: TOlfSocketMessage);
+  const AMessage: TOlfSocketMessage);
 var
   msg: TMap_cell_message;
 begin
