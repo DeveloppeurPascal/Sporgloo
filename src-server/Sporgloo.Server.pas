@@ -11,7 +11,7 @@ uses
   System.Generics.Collections;
 
 type
-  TSporglooServer = class(TOlfSocketMessagingServer)
+  TSporglooServer = class(TOlfSMServer)
   private
   protected
     SporglooPlayers: TSporglooPlayersList;
