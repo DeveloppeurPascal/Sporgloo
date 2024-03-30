@@ -48,8 +48,7 @@ begin
   Player.PlayerID := TConfig.Current.PlayerID;
 
   Session := TSporglooSession.Create;
-  Session.DeviceID := TConfig.Current.DeviceID;
-  Session.PlayerID := TConfig.Current.PlayerID;
+  Session.Player := Player;
 
   Map := TSporglooMap.Create;
 
