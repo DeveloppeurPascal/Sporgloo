@@ -257,6 +257,7 @@ begin
     exit;
   if msg.RowNumber < 1 then
     exit;
+  // TODO : envoyer un message avec toutes les données plutôt que X messages pour chaque case
   for X := msg.X to msg.X + msg.ColNumber - 1 do
     for Y := msg.Y to msg.Y + msg.RowNumber - 1 do
       SendMapCell(AFromGame, X, Y, SporglooMap.GetTileID(X, Y));
