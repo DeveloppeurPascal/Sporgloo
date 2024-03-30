@@ -20,7 +20,9 @@ uses
   FMX.Layouts,
   Sporgloo.Types,
   Olf.Net.Socket.Messaging,
-  Olf.FMX.TextImageFrame;
+  Olf.FMX.TextImageFrame,
+  cGrayBox,
+  cYellowMenuButton;
 
 type
 {$SCOPEDENUMS ON}
@@ -36,17 +38,20 @@ type
     OptionsPage: TLayout;
     WaitPage: TLayout;
     WaitAnimation: TAniIndicator;
-    btnNewGame: TButton;
     txtImgTitre: TOlfFMXTextImageFrame;
     lGameTitle: TLayout;
     Layout1: TLayout;
+    cadGrayBox1: TcadGrayBox;
+    btnPlay: TcadYellowMenuButton;
+    btnQuit: TcadYellowMenuButton;
     procedure FormCreate(Sender: TObject);
-    procedure btnNewGameClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure GamePageMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Single);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnPlayClick(Sender: TObject);
+    procedure btnQuitClick(Sender: TObject);
   private
     FActivePage: TPageType;
     procedure SetActivePage(const Value: TPageType);
@@ -59,6 +64,7 @@ type
     property ActivePage: TPageType read FActivePage write SetActivePage;
     procedure ShowGameTitle(isVisible: boolean = true);
     procedure InitializeGamePage;
+    procedure InitializeHomePage;
     procedure DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
     procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
   protected
@@ -90,9 +96,14 @@ uses
   Sporgloo.API.Messages,
   udmAdobeStock_526775911;
 
-procedure TfrmMain.btnNewGameClick(Sender: TObject);
+procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
   ActivePage := TPageType.Game;
+end;
+
+procedure TfrmMain.btnQuitClick(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TfrmMain.DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
@@ -178,7 +189,7 @@ begin
       ActivePage := TPageType.Home;
     end
     else
-      close;
+      Close;
   end;
 end;
 
@@ -225,6 +236,12 @@ begin
   // TODO : initialize the "new game" screen
 end;
 
+procedure TfrmMain.InitializeHomePage;
+begin
+  btnPlay.txtImage.Text := 'PLAY';
+  btnQuit.txtImage.Text := 'QUIT';
+end;
+
 procedure TfrmMain.SetActivePage(const Value: TPageType);
   procedure ShowPage(Const Page: TLayout);
   begin
@@ -253,6 +270,7 @@ begin
   if Value = TPageType.Home then
   begin
     ShowGameTitle;
+    InitializeHomePage;
     ShowPage(HomePage);
   end
   else
