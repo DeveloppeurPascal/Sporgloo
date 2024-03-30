@@ -3,11 +3,8 @@ program Sporgloo;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  Skia.FMX,
+  FMX.Skia,
   fMain in 'fMain.pas' {frmMain},
-  Olf.FMX.TextImageFrame in '..\lib-externes\librairies\Olf.FMX.TextImageFrame.pas' {OlfFMXTextImageFrame: TFrame},
-  Olf.RTL.Params in '..\lib-externes\librairies\Olf.RTL.Params.pas',
-  u_urlOpen in '..\lib-externes\librairies\u_urlOpen.pas',
   Gamolf.FMX.Joystick in '..\lib-externes\Delphi-Game-Engine\src\Gamolf.FMX.Joystick.pas',
   Gamolf.FMX.MusicLoop in '..\lib-externes\Delphi-Game-Engine\src\Gamolf.FMX.MusicLoop.pas',
   Gamolf.RTL.Joystick.DirectInput.Win in '..\lib-externes\Delphi-Game-Engine\src\Gamolf.RTL.Joystick.DirectInput.Win.pas',
@@ -24,8 +21,11 @@ uses
   Sporgloo.Messaging in 'Sporgloo.Messaging.pas',
   Sporgloo.MapFrame in 'Sporgloo.MapFrame.pas' {MapFrame: TFrame},
   Sporgloo.Images in 'Sporgloo.Images.pas' {dmSporglooImages: TDataModule},
-  Olf.Net.Socket.Messaging in '..\lib-externes\Socket-Messaging-Library\src-library\Olf.Net.Socket.Messaging.pas',
-  Sporgloo.Client in 'Sporgloo.Client.pas';
+  Sporgloo.Client in 'Sporgloo.Client.pas',
+  Olf.Net.Socket.Messaging in '..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas',
+  Olf.FMX.TextImageFrame in '..\lib-externes\librairies\src\Olf.FMX.TextImageFrame.pas' {OlfFMXTextImageFrame: TFrame},
+  Olf.RTL.Params in '..\lib-externes\librairies\src\Olf.RTL.Params.pas',
+  u_urlOpen in '..\lib-externes\librairies\src\u_urlOpen.pas';
 
 {$R *.res}
 

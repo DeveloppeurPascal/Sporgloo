@@ -55,8 +55,8 @@ type
     property ActivePage: TPageType read FActivePage write SetActivePage;
     procedure ShowGameTitle(isVisible: boolean = true);
     procedure InitializeGamePage;
-    procedure DoClientConnected(AClient: TOlfSMSrvConnectedClient);
-    procedure DoClientLostConnection(AClient: TOlfSMSrvConnectedClient);
+    procedure DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
+    procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
@@ -88,7 +88,7 @@ begin
   ActivePage := TPageType.Game;
 end;
 
-procedure TfrmMain.DoClientConnected(AClient: TOlfSMSrvConnectedClient);
+procedure TfrmMain.DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
 begin
   if not(AClient is tsporglooclient) then
     exit;
@@ -101,7 +101,7 @@ begin
     end);
 end;
 
-procedure TfrmMain.DoClientLostConnection(AClient: TOlfSMSrvConnectedClient);
+procedure TfrmMain.DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
 begin
   if not(AClient is tsporglooclient) then
     exit;

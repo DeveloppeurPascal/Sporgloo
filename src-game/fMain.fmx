@@ -32,6 +32,7 @@ object frmMain: TfrmMain
       Align = Center
       TabOrder = 0
       Text = 'Play'
+      TextSettings.Trimming = None
       OnClick = btnNewGameClick
     end
   end
