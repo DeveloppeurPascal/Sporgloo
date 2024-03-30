@@ -201,6 +201,7 @@ procedure TSporglooServer.onClientRegister(const AFromGame
 const msg: TClientRegisterMessage);
 var
   player: TSporglooPlayer;
+  Session: TSporglooSession;
 begin
 {$IFDEF DEBUG}
   writeln('onClientRegister');
@@ -227,7 +228,19 @@ begin
     player.LifeLevel := CStartLifeLevel;
     SporglooPlayers.Add(player.PlayerID, player);
     SporglooMap.SetTileID(player.PlayerX, player.PlayerY, CSporglooTilePath);
-    // TODO : send to all clients this new TileID
+
+    // TODO : to optimize this feature, send the changes from an other thread and only for session where it should be visible
+    for Session in SporglooSessions.Values do
+      if assigned(Session.SocketClient) and (Session.SocketClient <> AFromGame)
+      then
+        try
+          SendOtherPlayerMove(Session.SocketClient, player.PlayerID,
+            player.PlayerX, player.PlayerY);
+          SendMapCell(Session.SocketClient, player.PlayerX, player.PlayerY,
+            CSporglooTilePath);
+        except
+          // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
+        end;
   end;
 
   SendClientRegisterResponse(AFromGame, player.DeviceID, player.PlayerID);
@@ -299,7 +312,7 @@ begin
 
   SendPlayerMoveResponse(AFromGame);
 
-  // TODO : to optimize this feature, store the new coordinates in a list and have a separate check for it
+  // TODO : to optimize this feature, send the changes from an other thread and only for session where it should be visible
   for Session in SporglooSessions.Values do
     if assigned(Session.SocketClient) and (Session.SocketClient <> AFromGame)
     then
@@ -346,7 +359,7 @@ begin
     SporglooMap.SetTileID(msg.X, msg.Y, CSporglooTileStar);
     Session.player.StarsCount := Session.player.StarsCount - 1;
 
-    // TODO : to optimize this feature, store the changes in a list and have a separate check for it
+    // TODO : to optimize this feature, send the changes from an other thread and only for session where it should be visible
     for Session in SporglooSessions.Values do
       if assigned(Session.SocketClient) and (Session.SocketClient <> AFromGame)
       then
