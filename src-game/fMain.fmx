@@ -8,7 +8,7 @@ object frmMain: TfrmMain
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
+  OnClose = FormClose
   OnKeyDown = FormKeyDown
   DesignerMasterStyle = 0
   inline MapFrame1: TMapFrame

@@ -126,6 +126,7 @@ type
     property MapRangeYMax: TSporglooAPINumber read FMapRangeYMax;
     property Player: TSporglooPlayer read FPlayer write SetPlayer;
     constructor Create;
+    destructor Destroy; override;
   end;
 
   TSporglooSessionsList = class(TObjectDictionary<string, TSporglooSession>)
@@ -139,7 +140,8 @@ implementation
 { TSporglooPlayer }
 
 uses
-  Olf.RTL.Streams;
+  Olf.RTL.Streams,
+  Sporgloo.API.Messages;
 
 procedure TSporglooPlayer.LoadFromStream(AStream: TStream);
 var
@@ -356,6 +358,22 @@ begin
   FMapRangeYMax := 0;
   FSocketClient := nil;
   FPlayer := nil;
+end;
+
+destructor TSporglooSession.Destroy;
+var
+  msg: TLogoffMessage;
+begin
+  if assigned(FSocketClient) then
+  begin
+    msg := TLogoffMessage.Create;
+    try
+      FSocketClient.SendMessage(msg);
+    finally
+      msg.Free;
+    end;
+  end;
+  inherited;
 end;
 
 procedure TSporglooSession.SetMapRangeColNumber(const Value

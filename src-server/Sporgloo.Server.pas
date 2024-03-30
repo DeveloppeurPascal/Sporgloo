@@ -34,6 +34,8 @@ type
     procedure onPlayerPutAStar(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
       Const msg: TPlayerAddAStarOnTheMapMessage);
+    procedure onLogoff(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient; Const msg: TLogoffMessage);
 
     procedure onErrorMessage(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient; Const msg: TErrorMessage);
@@ -88,6 +90,7 @@ begin
   onReceivePlayerMoveMessage := onPlayerMove;
   onReceivePlayerAddAStarOnTheMapMessage := onPlayerPutAStar;
   onReceiveErrorMessage := onErrorMessage;
+  onReceiveLogoffMessage := onLogoff;
 
   SporglooPlayers := TSporglooPlayersList.Create([doownsvalues]);
   SporglooMap := TSporglooMap.Create;
@@ -273,6 +276,45 @@ begin
     ' received from a client.');
 {$ENDIF}
   // TODO : manage the received error
+end;
+
+procedure TSporglooServer.onLogoff(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient; const msg: TLogoffMessage);
+var
+  SessionID: string;
+{$IFDEF DEBUG}
+  nb: integer;
+{$ENDIF}
+begin
+  if assigned(AFromGame.tagobject) and (AFromGame.tagobject is TSporglooSession)
+  then
+  begin
+{$IFDEF DEBUG}
+    writeln('onLogOff');
+    writeln('nb sessions = ', SporglooSessions.count);
+    nb := 0;
+    ForEachConnectedClient(
+      procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
+      begin
+        AtomicIncrement(nb);
+      end);
+    writeln('nb = ', nb);
+{$ENDIF}
+    SessionID := (AFromGame.tagobject as TSporglooSession).SessionID;
+    (AFromGame.tagobject as TSporglooSession).SocketClient := nil;
+    AFromGame.Free;
+    SporglooSessions.Remove(SessionID);
+{$IFDEF DEBUG}
+    writeln('nb sessions = ', SporglooSessions.count);
+    nb := 0;
+    ForEachConnectedClient(
+      procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
+      begin
+        AtomicIncrement(nb);
+      end);
+    writeln('nb = ', nb);
+{$ENDIF}
+  end;
 end;
 
 procedure TSporglooServer.onMapRefresh(const AFromGame

@@ -29,6 +29,8 @@ type
     procedure onOtherPlayerMove(Const AFromServer
       : TOlfSocketMessagingServerConnectedClient;
       Const msg: TOtherPlayerMoveMessage);
+    procedure onLogoff(Const AFromServer
+      : TOlfSocketMessagingServerConnectedClient; Const msg: TLogoffMessage);
 
     procedure onErrorMessage(Const AFromServer
       : TOlfSocketMessagingServerConnectedClient; Const msg: TErrorMessage);
@@ -71,6 +73,7 @@ begin
   onReceiveServerAcceptTheStarAddingMessage := onPlayerPutAStarResponse;
   onReceiveOtherPlayerMoveMessage := onOtherPlayerMove;
   OnReceiveErrorMessage := onErrorMessage;
+  onReceiveLogoffMessage := onLogoff;
 end;
 
 procedure TSporglooClient.onClientLoginResponse(const AFromServer
@@ -121,6 +124,17 @@ procedure TSporglooClient.onErrorMessage(const AFromServer
   : TOlfSocketMessagingServerConnectedClient; const msg: TErrorMessage);
 begin
   // TODO : manage the received error
+end;
+
+procedure TSporglooClient.onLogoff(const AFromServer
+  : TOlfSocketMessagingServerConnectedClient; const msg: TLogoffMessage);
+begin
+  TThread.ForceQueue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(self,
+        TDisconnectMessage.Create);
+    end);
 end;
 
 procedure TSporglooClient.onMapCell(const AFromServer

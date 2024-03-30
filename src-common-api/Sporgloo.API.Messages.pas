@@ -12,7 +12,7 @@
 // ****************************************
 // File generator : Socket Messaging Code Generator (v1.1)
 // Website : https://smcodegenerator.olfsoftware.fr/ 
-// Generation date : 30/03/2024 12:19:02
+// Generation date : 30/03/2024 21:35:23
 // 
 // Don't do any change on this file. They will be erased by next generation !
 // ****************************************
@@ -182,6 +182,18 @@ type
     /// Contains the reason of denying client's connection.
     /// </remarks>
     property ErrorCode: integer read FErrorCode write SetErrorCode;
+    constructor Create; override;
+    procedure LoadFromStream(Stream: TStream); override;
+    procedure SaveToStream(Stream: TStream); override;
+    function GetNewInstance: TOlfSMMessage; override;
+  end;
+
+  /// <summary>
+  /// Message ID 13: Logoff
+  /// </summary>
+  TLogoffMessage = class(TOlfSMMessage)
+  private
+  public
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
@@ -401,6 +413,8 @@ type
       Const AMessage: TOlfSMMessage);
     procedure onReceiveMessage12(Const ASender: TOlfSMSrvConnectedClient;
       Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage13(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
     procedure onReceiveMessage5(Const ASender: TOlfSMSrvConnectedClient;
       Const AMessage: TOlfSMMessage);
     procedure onReceiveMessage9(Const ASender: TOlfSMSrvConnectedClient;
@@ -414,6 +428,8 @@ type
       : TOlfSMReceivedMessageEvent<TClientRegisterMessage>;
     onReceiveErrorMessage
       : TOlfSMReceivedMessageEvent<TErrorMessage>;
+    onReceiveLogoffMessage
+      : TOlfSMReceivedMessageEvent<TLogoffMessage>;
     onReceiveMapRefreshDemandMessage
       : TOlfSMReceivedMessageEvent<TMapRefreshDemandMessage>;
     onReceivePlayerAddAStarOnTheMapMessage
@@ -432,6 +448,8 @@ type
       Const AMessage: TOlfSMMessage);
     procedure onReceiveMessage12(Const ASender: TOlfSMSrvConnectedClient;
       Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage13(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
     procedure onReceiveMessage6(Const ASender: TOlfSMSrvConnectedClient;
       Const AMessage: TOlfSMMessage);
     procedure onReceiveMessage11(Const ASender: TOlfSMSrvConnectedClient;
@@ -447,6 +465,8 @@ type
       : TOlfSMReceivedMessageEvent<TClientRegisterResponseMessage>;
     onReceiveErrorMessage
       : TOlfSMReceivedMessageEvent<TErrorMessage>;
+    onReceiveLogoffMessage
+      : TOlfSMReceivedMessageEvent<TLogoffMessage>;
     onReceiveMapCellMessage
       : TOlfSMReceivedMessageEvent<TMapCellMessage>;
     onReceiveOtherPlayerMoveMessage
@@ -534,6 +554,7 @@ begin
   Server.RegisterMessageToReceive(TClientLoginMessage.Create);
   Server.RegisterMessageToReceive(TClientRegisterMessage.Create);
   Server.RegisterMessageToReceive(TErrorMessage.Create);
+  Server.RegisterMessageToReceive(TLogoffMessage.Create);
   Server.RegisterMessageToReceive(TMapRefreshDemandMessage.Create);
   Server.RegisterMessageToReceive(TPlayerAddAStarOnTheMapMessage.Create);
   Server.RegisterMessageToReceive(TPlayerMoveMessage.Create);
@@ -544,6 +565,7 @@ begin
   Client.RegisterMessageToReceive(TClientLoginResponseMessage.Create);
   Client.RegisterMessageToReceive(TClientRegisterResponseMessage.Create);
   Client.RegisterMessageToReceive(TErrorMessage.Create);
+  Client.RegisterMessageToReceive(TLogoffMessage.Create);
   Client.RegisterMessageToReceive(TMapCellMessage.Create);
   Client.RegisterMessageToReceive(TOtherPlayerMoveMessage.Create);
   Client.RegisterMessageToReceive(TPlayerMoveResponseMessage.Create);
@@ -559,6 +581,7 @@ begin
   SubscribeToMessage(3, onReceiveMessage3);
   SubscribeToMessage(1, onReceiveMessage1);
   SubscribeToMessage(12, onReceiveMessage12);
+  SubscribeToMessage(13, onReceiveMessage13);
   SubscribeToMessage(5, onReceiveMessage5);
   SubscribeToMessage(9, onReceiveMessage9);
   SubscribeToMessage(7, onReceiveMessage7);
@@ -592,6 +615,16 @@ begin
   if not assigned(onReceiveErrorMessage) then
     exit;
   onReceiveErrorMessage(ASender, AMessage as TErrorMessage);
+end;
+
+procedure TSporglooSocketMessagesServer.onReceiveMessage13(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TLogoffMessage) then
+    exit;
+  if not assigned(onReceiveLogoffMessage) then
+    exit;
+  onReceiveLogoffMessage(ASender, AMessage as TLogoffMessage);
 end;
 
 procedure TSporglooSocketMessagesServer.onReceiveMessage5(const ASender: TOlfSMSrvConnectedClient;
@@ -635,6 +668,7 @@ begin
   SubscribeToMessage(4, onReceiveMessage4);
   SubscribeToMessage(2, onReceiveMessage2);
   SubscribeToMessage(12, onReceiveMessage12);
+  SubscribeToMessage(13, onReceiveMessage13);
   SubscribeToMessage(6, onReceiveMessage6);
   SubscribeToMessage(11, onReceiveMessage11);
   SubscribeToMessage(8, onReceiveMessage8);
@@ -669,6 +703,16 @@ begin
   if not assigned(onReceiveErrorMessage) then
     exit;
   onReceiveErrorMessage(ASender, AMessage as TErrorMessage);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage13(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TLogoffMessage) then
+    exit;
+  if not assigned(onReceiveLogoffMessage) then
+    exit;
+  onReceiveLogoffMessage(ASender, AMessage as TLogoffMessage);
 end;
 
 procedure TSporglooSocketMessagesClient.onReceiveMessage6(const ASender: TOlfSMSrvConnectedClient;
@@ -962,6 +1006,31 @@ end;
 procedure TErrorMessage.SetErrorCode(const Value: integer);
 begin
   FErrorCode := Value;
+end;
+
+{$ENDREGION}
+
+{$REGION 'TLogoffMessage' }
+
+constructor TLogoffMessage.Create;
+begin
+  inherited;
+  MessageID := 13;
+end;
+
+function TLogoffMessage.GetNewInstance: TOlfSMMessage;
+begin
+  result := TLogoffMessage.Create;
+end;
+
+procedure TLogoffMessage.LoadFromStream(Stream: TStream);
+begin
+  inherited;
+end;
+
+procedure TLogoffMessage.SaveToStream(Stream: TStream);
+begin
+  inherited;
 end;
 
 {$ENDREGION}

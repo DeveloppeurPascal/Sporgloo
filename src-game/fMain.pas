@@ -37,12 +37,12 @@ type
     WaitAnimation: TAniIndicator;
     btnNewGame: TButton;
     procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure btnNewGameClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure GamePageMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Single);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     FActivePage: TPageType;
     procedure SetActivePage(const Value: TPageType);
@@ -60,6 +60,7 @@ type
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
+    procedure SubscribeToDisconnect;
   public
     { Déclarations publiques }
     property Score: TSporglooAPINumber read GetScore write SetScore;
@@ -81,7 +82,8 @@ uses
   uGameData,
   Sporgloo.Consts,
   Sporgloo.Messaging,
-  Sporgloo.Client;
+  Sporgloo.Client,
+  Sporgloo.API.Messages;
 
 procedure TfrmMain.btnNewGameClick(Sender: TObject);
 begin
@@ -115,6 +117,26 @@ begin
     end);
 end;
 
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  msg: TLogoffMessage;
+begin
+  if assigned(TGameData.Current.APIClient) then
+  begin
+    msg := TLogoffMessage.Create;
+    try
+      try
+        TGameData.Current.APIClient.SendMessage(msg);
+      except
+      end;
+    finally
+      msg.free;
+    end;
+    TGameData.Current.APIClient.free;
+    TGameData.Current.APIClient := nil;
+  end;
+end;
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   ActivePage := TPageType.None;
@@ -125,6 +147,7 @@ begin
   //
   SubscribeToServerConnectedMessage;
   SubscribeToLostServerMessage;
+  SubscribeToDisconnect;
 
   TThread.ForceQueue(nil,
     procedure
@@ -137,12 +160,6 @@ begin
       TGameData.Current.APIClient.Connect;
       ActivePage := TPageType.Home;
     end);
-end;
-
-procedure TfrmMain.FormDestroy(Sender: TObject);
-begin
-  if assigned(TGameData.Current.APIClient) then
-    TGameData.Current.APIClient.Free;
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
@@ -299,22 +316,44 @@ begin
   // TODO : add the game title
 end;
 
+procedure TfrmMain.SubscribeToDisconnect;
+begin
+  TMessageManager.DefaultManager.SubscribeToMessage(TDisconnectMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    begin
+      if not(M is TDisconnectMessage) then
+        exit;
+      if assigned(TGameData.Current.APIClient) then
+      begin
+        TGameData.Current.APIClient.free;
+        TGameData.Current.APIClient := nil;
+      end;
+{$IFDEF DEBUG}
+      ShowMessage('Serveur disconnected');
+{$ENDIF}
+      // TODO : afficher un message à l'utilisateur pour lui indiquer que le serveur a demandé la déconnexion
+    end);
+end;
+
 procedure TfrmMain.SubscribeToLostServerMessage;
 begin
   TMessageManager.DefaultManager.SubscribeToMessage(TLostServerMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      Msg: TLostServerMessage;
+      msg: TLostServerMessage;
       // Client: tsporglooclient;
     begin
       if not(M is TLostServerMessage) then
         exit;
-      Msg := M as TLostServerMessage;
-      if not assigned(Msg.Value) then
+      msg := M as TLostServerMessage;
+      if not assigned(msg.Value) then
         exit;
       // Client := Msg.Value;
 
       // TODO : if connexion failed, retry after a user confirmation or close the program
+{$IFDEF DEBUG}
+      ShowMessage('Serveur lost');
+{$ENDIF}
     end);
 end;
 
@@ -323,17 +362,17 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TServerConnectedMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      Msg: TServerConnectedMessage;
+      msg: TServerConnectedMessage;
       Client: tsporglooclient;
       DeviceID, PlayerID: string;
       GameData: TGameData;
     begin
       if not(M is TServerConnectedMessage) then
         exit;
-      Msg := M as TServerConnectedMessage;
-      if not assigned(Msg.Value) then
+      msg := M as TServerConnectedMessage;
+      if not assigned(msg.Value) then
         exit;
-      Client := Msg.Value;
+      Client := msg.Value;
 
       GameData := TGameData.Current;
 

@@ -40,6 +40,12 @@ type
   TOtherPlayerUpdateMessage = class(TObjectMessage<TSporglooPlayer>)
   end;
 
+  /// <summary>
+  /// Sent from the client or the server to close the loop and the connection
+  /// </summary>
+  TDisconnectMessage = class(TMessage)
+  end;
+
 implementation
 
 end.
