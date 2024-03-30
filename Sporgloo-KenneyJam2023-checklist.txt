@@ -1,7 +1,4 @@
-=> faire un TFrame pour un bouton de menu
-=> faire un TFrame pour la boite de dialogue avec ou sans titre
 => faire un TFrame pour un champ de saisie
-=> faire un TFrame pour le titre du jeu
 => coder les écrans du jeu : 
 ==> écran d'accueil/menu : background du jeu, boite de dialogue avec boutons de menu
 ==> écran des scores (hall of fame) : background du jeu, boite de dialogue avec titre, liste des scores à l'intérieur (plus tard aussi les pseudos après modération)
@@ -27,7 +24,6 @@
 - tests iOS (sur tablette)
 - changer le stockage du jeu côté serveur (mettre une base de données au lieu du stockage en mémoire) (#35)
 - changer l'UI, ajouter boites de dialogue, actions entre joueurs et revoir le fonctionnement global du jeu
-- ajouter un message de clôture de connexion à la sortie du client (fermeture du jeu) (#26)
 - permettre au joueur de choisir un avatar pour son personnage
 
 
@@ -35,5 +31,4 @@
 
 - ajouter les infos sur les joueurs au niveau de la grille de jeu (pour simplifier les affichages et tests partout)
 - ajouter un message permettant l'envoi d'une série de cases de la grille plutôt que une par une => optimisation du dessin et des échanges
-- ajouter un message de déconnexion "propre" d'un client/joueur => coupure de la session
 - optimisation des mises à jour : stocker la zone d'affichage autour du joueur pour chaque session (zone max retournée à chaque refresh de la carte), sur les trucs à envoyer en masse faire une file d'attente et traiter l'envoi sur un autre thread ou en idle
