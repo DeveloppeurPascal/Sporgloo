@@ -96,27 +96,23 @@ type
   private
     FMapRangeColNumber: TSporglooAPINumber;
     FSessionID: string;
-    FPlayerID: string;
     FMapRangeRowNumber: TSporglooAPINumber;
     FMapRangeX: TSporglooAPINumber;
     FMapRangeY: TSporglooAPINumber;
-    FDeviceID: string;
     FMapRangeXMax: TSporglooAPINumber;
     FMapRangeYMax: TSporglooAPINumber;
     FSocketClient: TOlfSocketMessagingServerConnectedClient;
-    procedure SetDeviceID(const Value: string);
+    FPlayer: TSporglooPlayer;
     procedure SetMapRangeColNumber(const Value: TSporglooAPINumber);
     procedure SetMapRangeRowNumber(const Value: TSporglooAPINumber);
     procedure SetMapRangeX(const Value: TSporglooAPINumber);
     procedure SetMapRangeY(const Value: TSporglooAPINumber);
-    procedure SetPlayerID(const Value: string);
     procedure SetSessionID(const Value: string);
     procedure SetSocketClient(const Value
       : TOlfSocketMessagingServerConnectedClient);
+    procedure SetPlayer(const Value: TSporglooPlayer);
   protected
   public
-    property DeviceID: string read FDeviceID write SetDeviceID;
-    property PlayerID: string read FPlayerID write SetPlayerID;
     property SessionID: string read FSessionID write SetSessionID;
     property SocketClient: TOlfSocketMessagingServerConnectedClient
       read FSocketClient write SetSocketClient;
@@ -128,6 +124,7 @@ type
       write SetMapRangeRowNumber;
     property MapRangeXMax: TSporglooAPINumber read FMapRangeXMax;
     property MapRangeYMax: TSporglooAPINumber read FMapRangeYMax;
+    property Player: TSporglooPlayer read FPlayer write SetPlayer;
     constructor Create;
   end;
 
@@ -259,7 +256,7 @@ procedure TSporglooPlayersList.LoadFromStream(AStream: TStream);
 var
   VersionNum: integer;
   nb: int64;
-  player: TSporglooPlayer;
+  Player: TSporglooPlayer;
 begin
   if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
     VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
@@ -269,9 +266,9 @@ begin
 
   while (nb > 0) do
   begin
-    player := TSporglooPlayer.Create;
-    player.LoadFromStream(AStream);
-    add(player.PlayerID, player);
+    Player := TSporglooPlayer.Create;
+    Player.LoadFromStream(AStream);
+    add(Player.PlayerID, Player);
     dec(nb);
   end;
 end;
@@ -350,8 +347,6 @@ end;
 
 constructor TSporglooSession.Create;
 begin
-  FDeviceID := '';
-  FPlayerID := '';
   FSessionID := '';
   FMapRangeX := 0;
   FMapRangeY := 0;
@@ -360,11 +355,7 @@ begin
   FMapRangeXMax := 0;
   FMapRangeYMax := 0;
   FSocketClient := nil;
-end;
-
-procedure TSporglooSession.SetDeviceID(const Value: string);
-begin
-  FDeviceID := Value;
+  FPlayer := nil;
 end;
 
 procedure TSporglooSession.SetMapRangeColNumber(const Value
@@ -405,9 +396,9 @@ begin
     FMapRangeYMax := FMapRangeY;
 end;
 
-procedure TSporglooSession.SetPlayerID(const Value: string);
+procedure TSporglooSession.SetPlayer(const Value: TSporglooPlayer);
 begin
-  FPlayerID := Value;
+  FPlayer := Value;
 end;
 
 procedure TSporglooSession.SetSessionID(const Value: string);
