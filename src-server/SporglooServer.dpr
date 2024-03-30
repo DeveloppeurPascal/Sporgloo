@@ -11,7 +11,9 @@ uses
   Sporgloo.Server in 'Sporgloo.Server.pas',
   Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas',
   Olf.Net.Socket.Messaging
-    in '..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas';
+    in '..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas',
+  Olf.RTL.Streams in '..\lib-externes\librairies\src\Olf.RTL.Streams.pas',
+  Olf.RTL.Params in '..\lib-externes\librairies\src\Olf.RTL.Params.pas';
 
 var
   GameServer: TSporglooServer;
@@ -26,7 +28,6 @@ begin
       // TODO : change IP and port depending on the server
       // TODO : check if IPv6 is available and open a listening server for it too
       GameServer.Listen;
-      readln;
     finally
       GameServer.Free;
     end;

@@ -13,6 +13,7 @@ uses
 type
   TSporglooServer = class(TSporglooSocketMessagesServer)
   private
+    function GetGameDataFileName: string;
   protected
     SporglooPlayers: TSporglooPlayersList;
     SporglooMap: TSporglooMap;
@@ -60,6 +61,9 @@ type
       : TOlfSocketMessagingServerConnectedClient;
       const AErrorCode: TSporglooErrorCode; const AErrorText: string;
       const ARaiseException: boolean = true);
+
+    procedure LoadGameData;
+    procedure SaveGameData;
   public
     constructor Create(AIP: string; APort: Word); override;
     destructor Destroy; override;
@@ -69,7 +73,9 @@ implementation
 
 uses
   System.Classes,
-  System.SysUtils;
+  System.SysUtils,
+  System.IOutils,
+  Olf.RTL.Params;
 
 { TSporglooServer }
 
@@ -86,14 +92,62 @@ begin
   SporglooPlayers := TSporglooPlayersList.Create([doownsvalues]);
   SporglooMap := TSporglooMap.Create;
   SporglooSessions := TSporglooSessionsList.Create([doownsvalues]);
+
+  LoadGameData;
+
+  tthread.createanonymousthread(
+    procedure
+    begin
+      while not tthread.CheckTerminated do
+      begin
+        // TODO : utiliser plutôt un timer oou de préférence un stockage des changements en base de données, traités par un thread secondaire
+        sleep(1000 * 60); // attente 1 minute
+        SaveGameData;
+{$IFDEF DEBUG}
+        writeln('DB saved');
+{$ENDIF}
+      end;
+    end).start;
 end;
 
 destructor TSporglooServer.Destroy;
 begin
+  SaveGameData;
+
   SporglooSessions.Free;
   SporglooMap.Free;
   SporglooPlayers.Free;
   inherited;
+end;
+
+function TSporglooServer.GetGameDataFileName: string;
+var
+  FilePath: string;
+begin
+  FilePath := tpath.GetDirectoryName(tparams.getFilePath);
+{$IFDEF DEBUG}
+  result := tpath.combine(FilePath, 'Sporgloo-debug.dta');
+{$ELSE}
+  result := tpath.combine(FilePath, 'Sporgloo.dta');
+{$ENDIF}
+end;
+
+procedure TSporglooServer.LoadGameData;
+var
+  fs: tfilestream;
+  FileName: string;
+begin
+  FileName := GetGameDataFileName;
+  if (not FileName.IsEmpty) and tfile.Exists(FileName) then
+  begin
+    fs := tfilestream.Create(FileName, fmOpenRead);
+    try
+      SporglooPlayers.LoadFromStream(fs);
+      SporglooMap.LoadFromStream(fs);
+    finally
+      fs.Free;
+    end;
+  end;
 end;
 
 procedure TSporglooServer.onClientLogin(const AFromGame
@@ -145,7 +199,7 @@ end;
 
 procedure TSporglooServer.onClientRegister(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-  const msg: TClientRegisterMessage);
+const msg: TClientRegisterMessage);
 var
   player: TSporglooPlayer;
 begin
@@ -192,7 +246,7 @@ end;
 
 procedure TSporglooServer.onMapRefresh(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-  const msg: TMapRefreshDemandMessage);
+const msg: TMapRefreshDemandMessage);
 var
   X, Y: TSporglooAPINumber;
 begin
@@ -261,7 +315,7 @@ end;
 
 procedure TSporglooServer.onPlayerPutAStar(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-  const msg: TPlayerAddAStarOnTheMapMessage);
+const msg: TPlayerAddAStarOnTheMapMessage);
 var
   Session: TSporglooSession;
   player: TSporglooPlayer;
@@ -309,9 +363,34 @@ begin
       end;
 end;
 
+procedure TSporglooServer.SaveGameData;
+var
+  fs: tfilestream;
+  FileName: string;
+  Folder: string;
+begin
+  FileName := GetGameDataFileName;
+  if not FileName.IsEmpty then
+  begin
+    Folder := tpath.GetDirectoryName(FileName);
+    if (not Folder.IsEmpty) then
+    begin
+      if not TDirectory.Exists(Folder) then
+        TDirectory.CreateDirectory(Folder);
+      fs := tfilestream.Create(FileName, fmcreate + fmOpenWrite);
+      try
+        SporglooPlayers.SaveToStream(fs);
+        SporglooMap.SaveToStream(fs);
+      finally
+        fs.Free;
+      end;
+    end;
+  end;
+end;
+
 procedure TSporglooServer.SendClientLoginResponse(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const DeviceID, SessionID: string;
-  const X, Y, Score, Stars, Life: TSporglooAPINumber);
+const X, Y, Score, Stars, Life: TSporglooAPINumber);
 var
   msg: TClientLoginResponseMessage;
 begin
@@ -347,8 +426,8 @@ end;
 
 procedure TSporglooServer.SendErrorMessage(const AToGame
   : TOlfSocketMessagingServerConnectedClient;
-  const AErrorCode: TSporglooErrorCode; const AErrorText: string;
-  const ARaiseException: boolean);
+const AErrorCode: TSporglooErrorCode; const AErrorText: string;
+const ARaiseException: boolean);
 var
   msg: TErrorMessage;
 begin
@@ -368,7 +447,7 @@ end;
 
 procedure TSporglooServer.SendMapCell(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const X, Y: TSporglooAPINumber;
-  const TileID: TSporglooAPIShort);
+const TileID: TSporglooAPIShort);
 var
   msg: TMapCellMessage;
 begin
@@ -391,7 +470,7 @@ end;
 
 procedure TSporglooServer.SendOtherPlayerMove(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const PlayerID: string;
-  const X, Y: TSporglooAPINumber);
+const X, Y: TSporglooAPINumber);
 var
   msg: TOtherPlayerMoveMessage;
 begin
@@ -433,5 +512,9 @@ begin
     msg.Free;
   end;
 end;
+
+initialization
+
+tparams.InitDefaultFileNameV2('Gamolf', 'SporglooServer');
 
 end.
