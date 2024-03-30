@@ -76,16 +76,16 @@ uses
 constructor TSporglooServer.Create(AIP: string; APort: Word);
 begin
   inherited;
-  SporglooPlayers := TSporglooPlayersList.Create([doownsvalues]);
-  SporglooMap := TSporglooMap.Create;
-  SporglooSessions := TSporglooSessionsList.Create([doownsvalues]);
-
   onReceiveClientRegisterMessage := onClientRegister;
   onReceiveClientLoginMessage := onClientLogin;
   onReceiveMapRefreshDemandMessage := onMapRefresh;
   onReceivePlayerMoveMessage := onPlayerMove;
   onReceivePlayerAddAStarOnTheMapMessage := onPlayerPutAStar;
   onReceiveErrorMessage := onErrorMessage;
+
+  SporglooPlayers := TSporglooPlayersList.Create([doownsvalues]);
+  SporglooMap := TSporglooMap.Create;
+  SporglooSessions := TSporglooSessionsList.Create([doownsvalues]);
 end;
 
 destructor TSporglooServer.Destroy;
