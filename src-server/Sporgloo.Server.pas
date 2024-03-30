@@ -100,7 +100,7 @@ begin
     begin
       while not tthread.CheckTerminated do
       begin
-        // TODO : utiliser plutôt un timer oou de préférence un stockage des changements en base de données, traités par un thread secondaire
+        // TODO : utiliser plutôt un timer ou de préférence un stockage des changements en base de données, traités par un thread secondaire
         sleep(1000 * 60); // attente 1 minute
         SaveGameData;
 {$IFDEF DEBUG}
@@ -223,8 +223,8 @@ begin
     player.PlayerY := 0;
     // TODO : change the coordinates if an other player is here too
     player.Score := 0;
-    player.StarsCount := 12; // TODO : use a constant for stars count start
-    player.LifeLevel := 24; // TODO : use a const for life level start
+    player.StarsCount := CStartStarsCount;
+    player.LifeLevel := CStartLifeLevel;
     SporglooPlayers.Add(player.PlayerID, player);
     SporglooMap.SetTileID(player.PlayerX, player.PlayerY, CSporglooTilePath);
     // TODO : send to all clients this new TileID

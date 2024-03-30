@@ -13,6 +13,9 @@ const
 
   CSporglooIDSize = 16;
 
+  CStartStarsCount = 12;
+  CStartLifeLevel = 24;
+
 type
 {$SCOPEDENUMS ON}
   TSporglooErrorCode = (NoError = 0, WrongDeviceID = 1, WrongPlayerID = 2,
