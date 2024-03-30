@@ -115,6 +115,3 @@ Infos (stockées) de la map :
 => on ne stocke que les éléments modifiés (les chemins et plus tard les PNJ)
 - la liste des pastilles disponibles sur la map (x,y)
 - la liste des joueurs disponibles sur la map (x,y, ID)
-
-
------
