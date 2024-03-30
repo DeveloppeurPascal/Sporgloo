@@ -10,8 +10,7 @@ uses
   Sporgloo.Database in '..\src-common-api\Sporgloo.Database.pas',
   Sporgloo.Server in 'Sporgloo.Server.pas',
   Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas',
-  Olf.Net.Socket.Messaging
-    in '..\lib-externes\Socket-Messaging-Library\src-library\Olf.Net.Socket.Messaging.pas';
+  Olf.Net.Socket.Messaging in '..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas';
 
 var
   GameServer: TSporglooServer;

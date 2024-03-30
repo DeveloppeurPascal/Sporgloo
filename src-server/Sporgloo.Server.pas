@@ -96,15 +96,15 @@ var
   LDeviceID, LPlayerID: string;
   player: TSporglooPlayer;
   Session: TSporglooSession;
-  msg: TClient_login_message;
+  msg: TClientLoginMessage;
 begin
 {$IFDEF DEBUG}
   writeln('onClientLogin');
 {$ENDIF}
-  if not(AMessage is TClient_login_message) then
+  if not(AMessage is TClientLoginMessage) then
     raise exception.Create('Not the client login message expected.');
 
-  msg := AMessage as TClient_login_message;
+  msg := AMessage as TClientLoginMessage;
 
   Alpha16ToString(msg.DeviceID, LDeviceID);
   if LDeviceID.IsEmpty then
@@ -144,15 +144,15 @@ procedure TSporglooServer.onClientRegister(const AFromGame
 var
   LDeviceID: string;
   player: TSporglooPlayer;
-  msg: TClient_register_message;
+  msg: TClientRegisterMessage;
 begin
 {$IFDEF DEBUG}
   writeln('onClientRegister');
 {$ENDIF}
-  if not(AMessage is TClient_register_message) then
+  if not(AMessage is TClientRegisterMessage) then
     raise exception.Create('Not the client register message expected.');
 
-  msg := AMessage as TClient_register_message;
+  msg := AMessage as TClientRegisterMessage;
 
   Alpha16ToString(msg.DeviceID, LDeviceID);
   if LDeviceID.IsEmpty then
@@ -183,15 +183,15 @@ procedure TSporglooServer.onMapRefresh(const AFromGame
   const AMessage: TOlfSocketMessage);
 var
   X, Y: TSporglooAPINumber;
-  msg: TMap_refresh_demand_message;
+  msg: TMapRefreshDemandMessage;
 begin
 {$IFDEF DEBUG}
   writeln('onMapRefresh');
 {$ENDIF}
-  if not(AMessage is TMap_refresh_demand_message) then
+  if not(AMessage is TMapRefreshDemandMessage) then
     raise exception.Create('Not the map refresh demand message expected.');
 
-  msg := AMessage as TMap_refresh_demand_message;
+  msg := AMessage as TMapRefreshDemandMessage;
 
   if msg.ColNumber < 1 then
     exit;
@@ -209,15 +209,15 @@ var
   LSessionID, LPlayerID: string;
   Session: TSporglooSession;
   player: TSporglooPlayer;
-  msg: TPlayer_move_message;
+  msg: TPlayerMoveMessage;
 begin
 {$IFDEF DEBUG}
   writeln('onPlayerMove');
 {$ENDIF}
-  if not(AMessage is TPlayer_move_message) then
+  if not(AMessage is TPlayerMoveMessage) then
     raise exception.Create('Not the player move message expected.');
 
-  msg := AMessage as TPlayer_move_message;
+  msg := AMessage as TPlayerMoveMessage;
 
   Alpha16ToString(msg.SessionID, LSessionID);
   if LSessionID.IsEmpty then
@@ -264,15 +264,15 @@ var
   LSessionID, LPlayerID: string;
   Session: TSporglooSession;
   player: TSporglooPlayer;
-  msg: TPlayer_add_a_star_on_the_map_message;
+  msg: TPlayerAddAStarOnTheMapMessage;
 begin
 {$IFDEF DEBUG}
   writeln('onPlayerPutAStar');
 {$ENDIF}
-  if not(AMessage is TPlayer_add_a_star_on_the_map_message) then
+  if not(AMessage is TPlayerAddAStarOnTheMapMessage) then
     raise exception.Create('Not the player add a star message expected.');
 
-  msg := AMessage as TPlayer_add_a_star_on_the_map_message;
+  msg := AMessage as TPlayerAddAStarOnTheMapMessage;
 
   Alpha16ToString(msg.SessionID, LSessionID);
   if LSessionID.IsEmpty then
@@ -314,10 +314,10 @@ procedure TSporglooServer.SendClientLoginResponse(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const DeviceID, SessionID: string;
   const X, Y, Score, Stars, Life: TSporglooAPINumber);
 var
-  msg: TClient_login_response_message;
+  msg: TClientLoginResponseMessage;
   LDeviceID, LSessionID: TSporglooAPIAlpha16;
 begin
-  msg := TClient_login_response_message.Create;
+  msg := TClientLoginResponseMessage.Create;
   try
     StringToAlpha16(DeviceID, LDeviceID);
     msg.DeviceID := LDeviceID;
@@ -337,10 +337,10 @@ end;
 procedure TSporglooServer.SendClientRegisterResponse(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const DeviceID, PlayerID: string);
 var
-  msg: TClient_register_response_message;
+  msg: TClientRegisterResponseMessage;
   LDeviceID, LPlayerID: TSporglooAPIAlpha16;
 begin
-  msg := TClient_register_response_message.Create;
+  msg := TClientRegisterResponseMessage.Create;
   try
     StringToAlpha16(DeviceID, LDeviceID);
     msg.DeviceID := LDeviceID;
@@ -356,7 +356,7 @@ procedure TSporglooServer.SendMapCell(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const X, Y: TSporglooAPINumber;
   const TileID: TSporglooAPIShort);
 var
-  msg: TMap_cell_message;
+  msg: TMapCellMessage;
 begin
   if (TileID = CSporglooTileNone) then
     exit;
@@ -364,7 +364,7 @@ begin
 {$IFDEF DEBUG}
   writeln('=> ', X, ',', Y, '=', TileID);
 {$ENDIF}
-  msg := TMap_cell_message.Create;
+  msg := TMapCellMessage.Create;
   try
     msg.X := X;
     msg.Y := Y;
@@ -379,10 +379,10 @@ procedure TSporglooServer.SendOtherPlayerMove(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const PlayerID: string;
   const X, Y: TSporglooAPINumber);
 var
-  msg: TOther_player_move_message;
+  msg: TOtherPlayerMoveMessage;
   LPlayerID: TSporglooAPIAlpha16;
 begin
-  msg := TOther_player_move_message.Create;
+  msg := TOtherPlayerMoveMessage.Create;
   try
     StringToAlpha16(PlayerID, LPlayerID);
     msg.PlayerID := LPlayerID;
@@ -397,9 +397,9 @@ end;
 procedure TSporglooServer.SendPlayerMoveResponse(Const AToGame
   : TOlfSocketMessagingServerConnectedClient);
 var
-  msg: TPlayer_move_response;
+  msg: TPlayerMoveResponseMessage;
 begin
-  msg := TPlayer_move_response.Create;
+  msg := TPlayerMoveResponseMessage.Create;
   try
     AToGame.SendMessage(msg);
   finally
@@ -410,9 +410,9 @@ end;
 procedure TSporglooServer.SendPlayerPutAStarResponse(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; const X, Y: TSporglooAPINumber);
 var
-  msg: TServer_accept_the_star_adding_message;
+  msg: TServerAcceptTheStarAddingMessage;
 begin
-  msg := TServer_accept_the_star_adding_message.Create;
+  msg := TServerAcceptTheStarAddingMessage.Create;
   try
     msg.X := X;
     msg.Y := Y;
