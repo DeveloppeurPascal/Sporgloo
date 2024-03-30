@@ -3,37 +3,45 @@
 // ****************************************
 // * Sporgloo Socket Messages
 // ****************************************
-//
+// 
 // Sporgloo is a multiplayer game.
-//
+// 
 // This file defines the messages exchanged
 // between the game program and the server.
-//
+// 
 // ****************************************
-// File generator : Socket Message Generator (v1.0)
-// Website : https://socketmessaging.developpeur-pascal.fr/
-// Generation date : 02/08/2023 17:03:03
-//
+// File generator : Socket Messaging Code Generator (v1.1)
+// Website : https://smcodegenerator.olfsoftware.fr/ 
+// Generation date : 30/03/2024 10:59:35
+// 
 // Don't do any change on this file. They will be erased by next generation !
 // ****************************************
+
+// To compile this unit you need Olf.Net.Socket.Messaging.pas from
+// https://github.com/DeveloppeurPascal/Socket-Messaging-Library
+//
+// Direct link to the file :
+// https://raw.githubusercontent.com/DeveloppeurPascal/Socket-Messaging-Library/main/src/Olf.Net.Socket.Messaging.pas
 
 interface
 
 uses
+  Sporgloo.Types,
   System.Classes,
-  Olf.Net.Socket.Messaging,
-  Sporgloo.Types;
+  Olf.Net.Socket.Messaging;
 
 type
   /// <summary>
-  /// Client login message
+  /// Message ID 3: Client login message
   /// </summary>
-  TClient_login_message = class(TOlfSocketMessage)
+  TClientLoginMessage = class(TOlfSMMessage)
   private
     FDeviceID: TSporglooAPIAlpha16;
     FPlayerID: TSporglooAPIAlpha16;
+    FVersionAPI: integer;
     procedure SetDeviceID(const Value: TSporglooAPIAlpha16);
     procedure SetPlayerID(const Value: TSporglooAPIAlpha16);
+    procedure SetVersionAPI(const Value: integer);
   public
     /// <summary>
     /// Device unique identifier
@@ -43,16 +51,20 @@ type
     /// Player unique identifier
     /// </summary>
     property PlayerID: TSporglooAPIAlpha16 read FPlayerID write SetPlayerID;
+    /// <summary>
+    /// Version API
+    /// </summary>
+    property VersionAPI: integer read FVersionAPI write SetVersionAPI;
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Client login response message
+  /// Message ID 4: Client login response message
   /// </summary>
-  TClient_login_response_message = class(TOlfSocketMessage)
+  TClientLoginResponseMessage = class(TOlfSMMessage)
   private
     FDeviceID: TSporglooAPIAlpha16;
     FSessionID: TSporglooAPIAlpha16;
@@ -100,31 +112,54 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Client register message
+  /// Message ID 12: Client not allowed to connect
   /// </summary>
-  TClient_register_message = class(TOlfSocketMessage)
+  /// <remarks>
+  /// Sent by the server if the client is not
+  /// allowed to connect. (wrong API Version,
+  /// banned client, server down, ...)
+  /// </remarks>
+  TClientNotAllowedToConnectMessage = class(TOlfSMMessage)
+  private
+  public
+    constructor Create; override;
+    procedure LoadFromStream(Stream: TStream); override;
+    procedure SaveToStream(Stream: TStream); override;
+    function GetNewInstance: TOlfSMMessage; override;
+  end;
+
+  /// <summary>
+  /// Message ID 1: Client register message
+  /// </summary>
+  TClientRegisterMessage = class(TOlfSMMessage)
   private
     FDeviceID: TSporglooAPIAlpha16;
+    FVersionAPI: integer;
     procedure SetDeviceID(const Value: TSporglooAPIAlpha16);
+    procedure SetVersionAPI(const Value: integer);
   public
     /// <summary>
     /// Device unique identifier
     /// </summary>
     property DeviceID: TSporglooAPIAlpha16 read FDeviceID write SetDeviceID;
+    /// <summary>
+    /// Version API
+    /// </summary>
+    property VersionAPI: integer read FVersionAPI write SetVersionAPI;
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Client register response message
+  /// Message ID 2: Client register response message
   /// </summary>
-  TClient_register_response_message = class(TOlfSocketMessage)
+  TClientRegisterResponseMessage = class(TOlfSMMessage)
   private
     FDeviceID: TSporglooAPIAlpha16;
     FPlayerID: TSporglooAPIAlpha16;
@@ -142,13 +177,13 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Map cell message
+  /// Message ID 6: Map cell message
   /// </summary>
-  TMap_cell_message = class(TOlfSocketMessage)
+  TMapCellMessage = class(TOlfSMMessage)
   private
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
@@ -172,13 +207,13 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Map refresh demand message
+  /// Message ID 5: Map refresh demand message
   /// </summary>
-  TMap_refresh_demand_message = class(TOlfSocketMessage)
+  TMapRefreshDemandMessage = class(TOlfSMMessage)
   private
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
@@ -208,13 +243,13 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Other player move message
+  /// Message ID 11: Other player move message
   /// </summary>
-  TOther_player_move_message = class(TOlfSocketMessage)
+  TOtherPlayerMoveMessage = class(TOlfSMMessage)
   private
     FPlayerID: TSporglooAPIAlpha16;
     FX: TSporglooAPINumber;
@@ -238,13 +273,13 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Player add a star on the map message
+  /// Message ID 9: Player add a star on the map message
   /// </summary>
-  TPlayer_add_a_star_on_the_map_message = class(TOlfSocketMessage)
+  TPlayerAddAStarOnTheMapMessage = class(TOlfSMMessage)
   private
     FSessionID: TSporglooAPIAlpha16;
     FPlayerID: TSporglooAPIAlpha16;
@@ -274,13 +309,13 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Player move message
+  /// Message ID 7: Player move message
   /// </summary>
-  TPlayer_move_message = class(TOlfSocketMessage)
+  TPlayerMoveMessage = class(TOlfSMMessage)
   private
     FSessionID: TSporglooAPIAlpha16;
     FPlayerID: TSporglooAPIAlpha16;
@@ -310,25 +345,25 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Player move response
+  /// Message ID 8: Player move response
   /// </summary>
-  TPlayer_move_response = class(TOlfSocketMessage)
+  TPlayerMoveResponseMessage = class(TOlfSMMessage)
   private
   public
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
   /// <summary>
-  /// Server accept the star adding message
+  /// Message ID 10: Server accept the star adding message
   /// </summary>
-  TServer_accept_the_star_adding_message = class(TOlfSocketMessage)
+  TServerAcceptTheStarAddingMessage = class(TOlfSMMessage)
   private
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
@@ -346,82 +381,304 @@ type
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSocketMessage; override;
+    function GetNewInstance: TOlfSMMessage; override;
   end;
 
-procedure RegisterMessagesReceivedByTheServer(Const Server
-  : TOlfSocketMessagingServer);
-procedure RegisterMessagesReceivedByTheClient(Const Client
-  : TOlfSocketMessagingClient);
+  TSporglooSocketMessagesServer = class(TOlfSMServer)
+  private
+  protected
+    procedure onReceiveMessage3(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage1(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage5(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage9(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage7(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+  public
+    onReceiveClientLoginMessage
+      : TOlfSMReceivedMessageEvent<TClientLoginMessage>;
+    onReceiveClientRegisterMessage
+      : TOlfSMReceivedMessageEvent<TClientRegisterMessage>;
+    onReceiveMapRefreshDemandMessage
+      : TOlfSMReceivedMessageEvent<TMapRefreshDemandMessage>;
+    onReceivePlayerAddAStarOnTheMapMessage
+      : TOlfSMReceivedMessageEvent<TPlayerAddAStarOnTheMapMessage>;
+    onReceivePlayerMoveMessage
+      : TOlfSMReceivedMessageEvent<TPlayerMoveMessage>;
+    constructor Create; override;
+  end;
+
+  TSporglooSocketMessagesClient = class(TOlfSMClient)
+  private
+  protected
+    procedure onReceiveMessage4(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage12(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage2(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage6(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage11(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage8(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+    procedure onReceiveMessage10(Const ASender: TOlfSMSrvConnectedClient;
+      Const AMessage: TOlfSMMessage);
+  public
+    onReceiveClientLoginResponseMessage
+      : TOlfSMReceivedMessageEvent<TClientLoginResponseMessage>;
+    onReceiveClientNotAllowedToConnectMessage
+      : TOlfSMReceivedMessageEvent<TClientNotAllowedToConnectMessage>;
+    onReceiveClientRegisterResponseMessage
+      : TOlfSMReceivedMessageEvent<TClientRegisterResponseMessage>;
+    onReceiveMapCellMessage
+      : TOlfSMReceivedMessageEvent<TMapCellMessage>;
+    onReceiveOtherPlayerMoveMessage
+      : TOlfSMReceivedMessageEvent<TOtherPlayerMoveMessage>;
+    onReceivePlayerMoveResponseMessage
+      : TOlfSMReceivedMessageEvent<TPlayerMoveResponseMessage>;
+    onReceiveServerAcceptTheStarAddingMessage
+      : TOlfSMReceivedMessageEvent<TServerAcceptTheStarAddingMessage>;
+    constructor Create; override;
+  end;
+
+procedure RegisterMessagesReceivedByTheServer(Const Server: TOlfSMServer);
+procedure RegisterMessagesReceivedByTheClient(Const Client: TOlfSMClient);
 
 implementation
 
 uses
   System.SysUtils;
 
-procedure RegisterMessagesReceivedByTheServer(Const Server
-  : TOlfSocketMessagingServer);
+procedure RegisterMessagesReceivedByTheServer(Const Server: TOlfSMServer);
 begin
-  Server.RegisterMessageToReceive(TClient_login_message.Create);
-  Server.RegisterMessageToReceive(TClient_register_message.Create);
-  Server.RegisterMessageToReceive(TMap_refresh_demand_message.Create);
-  Server.RegisterMessageToReceive(TPlayer_add_a_star_on_the_map_message.Create);
-  Server.RegisterMessageToReceive(TPlayer_move_message.Create);
+  Server.RegisterMessageToReceive(TClientLoginMessage.Create);
+  Server.RegisterMessageToReceive(TClientRegisterMessage.Create);
+  Server.RegisterMessageToReceive(TMapRefreshDemandMessage.Create);
+  Server.RegisterMessageToReceive(TPlayerAddAStarOnTheMapMessage.Create);
+  Server.RegisterMessageToReceive(TPlayerMoveMessage.Create);
 end;
 
-procedure RegisterMessagesReceivedByTheClient(Const Client
-  : TOlfSocketMessagingClient);
+procedure RegisterMessagesReceivedByTheClient(Const Client: TOlfSMClient);
 begin
-  Client.RegisterMessageToReceive(TClient_login_response_message.Create);
-  Client.RegisterMessageToReceive(TClient_register_response_message.Create);
-  Client.RegisterMessageToReceive(TMap_cell_message.Create);
-  Client.RegisterMessageToReceive(TOther_player_move_message.Create);
-  Client.RegisterMessageToReceive(TPlayer_move_response.Create);
-  Client.RegisterMessageToReceive(TServer_accept_the_star_adding_message.Create);
+  Client.RegisterMessageToReceive(TClientLoginResponseMessage.Create);
+  Client.RegisterMessageToReceive(TClientNotAllowedToConnectMessage.Create);
+  Client.RegisterMessageToReceive(TClientRegisterResponseMessage.Create);
+  Client.RegisterMessageToReceive(TMapCellMessage.Create);
+  Client.RegisterMessageToReceive(TOtherPlayerMoveMessage.Create);
+  Client.RegisterMessageToReceive(TPlayerMoveResponseMessage.Create);
+  Client.RegisterMessageToReceive(TServerAcceptTheStarAddingMessage.Create);
 end;
 
-{ TClient_login_message }
+{$REGION 'TSporglooSocketMessagesServer'}
 
-constructor TClient_login_message.Create;
+constructor TSporglooSocketMessagesServer.Create;
+begin
+  inherited;
+  RegisterMessagesReceivedByTheServer(self);
+  SubscribeToMessage(3, onReceiveMessage3);
+  SubscribeToMessage(1, onReceiveMessage1);
+  SubscribeToMessage(5, onReceiveMessage5);
+  SubscribeToMessage(9, onReceiveMessage9);
+  SubscribeToMessage(7, onReceiveMessage7);
+end;
+
+procedure TSporglooSocketMessagesServer.onReceiveMessage3(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TClientLoginMessage) then
+    exit;
+  if not assigned(onReceiveClientLoginMessage) then
+    exit;
+  onReceiveClientLoginMessage(ASender, AMessage as TClientLoginMessage);
+end;
+
+procedure TSporglooSocketMessagesServer.onReceiveMessage1(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TClientRegisterMessage) then
+    exit;
+  if not assigned(onReceiveClientRegisterMessage) then
+    exit;
+  onReceiveClientRegisterMessage(ASender, AMessage as TClientRegisterMessage);
+end;
+
+procedure TSporglooSocketMessagesServer.onReceiveMessage5(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TMapRefreshDemandMessage) then
+    exit;
+  if not assigned(onReceiveMapRefreshDemandMessage) then
+    exit;
+  onReceiveMapRefreshDemandMessage(ASender, AMessage as TMapRefreshDemandMessage);
+end;
+
+procedure TSporglooSocketMessagesServer.onReceiveMessage9(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TPlayerAddAStarOnTheMapMessage) then
+    exit;
+  if not assigned(onReceivePlayerAddAStarOnTheMapMessage) then
+    exit;
+  onReceivePlayerAddAStarOnTheMapMessage(ASender, AMessage as TPlayerAddAStarOnTheMapMessage);
+end;
+
+procedure TSporglooSocketMessagesServer.onReceiveMessage7(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TPlayerMoveMessage) then
+    exit;
+  if not assigned(onReceivePlayerMoveMessage) then
+    exit;
+  onReceivePlayerMoveMessage(ASender, AMessage as TPlayerMoveMessage);
+end;
+
+{$ENDREGION}
+
+{$REGION 'TSporglooSocketMessagesClient'}
+
+constructor TSporglooSocketMessagesClient.Create;
+begin
+  inherited;
+  RegisterMessagesReceivedByTheClient(self);
+  SubscribeToMessage(4, onReceiveMessage4);
+  SubscribeToMessage(12, onReceiveMessage12);
+  SubscribeToMessage(2, onReceiveMessage2);
+  SubscribeToMessage(6, onReceiveMessage6);
+  SubscribeToMessage(11, onReceiveMessage11);
+  SubscribeToMessage(8, onReceiveMessage8);
+  SubscribeToMessage(10, onReceiveMessage10);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage4(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TClientLoginResponseMessage) then
+    exit;
+  if not assigned(onReceiveClientLoginResponseMessage) then
+    exit;
+  onReceiveClientLoginResponseMessage(ASender, AMessage as TClientLoginResponseMessage);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage12(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TClientNotAllowedToConnectMessage) then
+    exit;
+  if not assigned(onReceiveClientNotAllowedToConnectMessage) then
+    exit;
+  onReceiveClientNotAllowedToConnectMessage(ASender, AMessage as TClientNotAllowedToConnectMessage);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage2(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TClientRegisterResponseMessage) then
+    exit;
+  if not assigned(onReceiveClientRegisterResponseMessage) then
+    exit;
+  onReceiveClientRegisterResponseMessage(ASender, AMessage as TClientRegisterResponseMessage);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage6(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TMapCellMessage) then
+    exit;
+  if not assigned(onReceiveMapCellMessage) then
+    exit;
+  onReceiveMapCellMessage(ASender, AMessage as TMapCellMessage);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage11(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TOtherPlayerMoveMessage) then
+    exit;
+  if not assigned(onReceiveOtherPlayerMoveMessage) then
+    exit;
+  onReceiveOtherPlayerMoveMessage(ASender, AMessage as TOtherPlayerMoveMessage);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage8(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TPlayerMoveResponseMessage) then
+    exit;
+  if not assigned(onReceivePlayerMoveResponseMessage) then
+    exit;
+  onReceivePlayerMoveResponseMessage(ASender, AMessage as TPlayerMoveResponseMessage);
+end;
+
+procedure TSporglooSocketMessagesClient.onReceiveMessage10(const ASender: TOlfSMSrvConnectedClient;
+const AMessage: TOlfSMMessage);
+begin
+  if not(AMessage is TServerAcceptTheStarAddingMessage) then
+    exit;
+  if not assigned(onReceiveServerAcceptTheStarAddingMessage) then
+    exit;
+  onReceiveServerAcceptTheStarAddingMessage(ASender, AMessage as TServerAcceptTheStarAddingMessage);
+end;
+
+{$ENDREGION}
+
+{$REGION 'TClientLoginMessage' }
+
+constructor TClientLoginMessage.Create;
 begin
   inherited;
   MessageID := 3;
+  FVersionAPI := 0;
 end;
 
-function TClient_login_message.GetNewInstance: TOlfSocketMessage;
+function TClientLoginMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TClient_login_message.Create;
+  result := TClientLoginMessage.Create;
 end;
 
-procedure TClient_login_message.LoadFromStream(Stream: TStream);
+procedure TClientLoginMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
     raise exception.Create('Can''t load "DeviceID" value.');
   if (Stream.read(FPlayerID, sizeof(FPlayerID)) <> sizeof(FPlayerID)) then
     raise exception.Create('Can''t load "PlayerID" value.');
+  if (Stream.read(FVersionAPI, sizeof(FVersionAPI)) <> sizeof(FVersionAPI)) then
+    raise exception.Create('Can''t load "VersionAPI" value.');
 end;
 
-procedure TClient_login_message.SaveToStream(Stream: TStream);
+procedure TClientLoginMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FDeviceID, sizeof(FDeviceID));
   Stream.Write(FPlayerID, sizeof(FPlayerID));
+  Stream.Write(FVersionAPI, sizeof(FVersionAPI));
 end;
 
-procedure TClient_login_message.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
 begin
   FDeviceID := Value;
 end;
 
-procedure TClient_login_message.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
 begin
   FPlayerID := Value;
 end;
 
-{ TClient_login_response_message }
+procedure TClientLoginMessage.SetVersionAPI(const Value: integer);
+begin
+  FVersionAPI := Value;
+end;
 
-constructor TClient_login_response_message.Create;
+{$ENDREGION}
+
+{$REGION 'TClientLoginResponseMessage' }
+
+constructor TClientLoginResponseMessage.Create;
 begin
   inherited;
   MessageID := 4;
@@ -432,12 +689,12 @@ begin
   FLife := 0;
 end;
 
-function TClient_login_response_message.GetNewInstance: TOlfSocketMessage;
+function TClientLoginResponseMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TClient_login_response_message.Create;
+  result := TClientLoginResponseMessage.Create;
 end;
 
-procedure TClient_login_response_message.LoadFromStream(Stream: TStream);
+procedure TClientLoginResponseMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
@@ -456,7 +713,7 @@ begin
     raise exception.Create('Can''t load "Life" value.');
 end;
 
-procedure TClient_login_response_message.SaveToStream(Stream: TStream);
+procedure TClientLoginResponseMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FDeviceID, sizeof(FDeviceID));
@@ -468,86 +725,124 @@ begin
   Stream.Write(FLife, sizeof(FLife));
 end;
 
-procedure TClient_login_response_message.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginResponseMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
 begin
   FDeviceID := Value;
 end;
 
-procedure TClient_login_response_message.SetSessionID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginResponseMessage.SetSessionID(const Value: TSporglooAPIAlpha16);
 begin
   FSessionID := Value;
 end;
 
-procedure TClient_login_response_message.SetX(const Value: TSporglooAPINumber);
+procedure TClientLoginResponseMessage.SetX(const Value: TSporglooAPINumber);
 begin
   FX := Value;
 end;
 
-procedure TClient_login_response_message.SetY(const Value: TSporglooAPINumber);
+procedure TClientLoginResponseMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
 
-procedure TClient_login_response_message.SetScore(const Value: TSporglooAPINumber);
+procedure TClientLoginResponseMessage.SetScore(const Value: TSporglooAPINumber);
 begin
   FScore := Value;
 end;
 
-procedure TClient_login_response_message.SetStars(const Value: TSporglooAPINumber);
+procedure TClientLoginResponseMessage.SetStars(const Value: TSporglooAPINumber);
 begin
   FStars := Value;
 end;
 
-procedure TClient_login_response_message.SetLife(const Value: TSporglooAPINumber);
+procedure TClientLoginResponseMessage.SetLife(const Value: TSporglooAPINumber);
 begin
   FLife := Value;
 end;
 
-{ TClient_register_message }
+{$ENDREGION}
 
-constructor TClient_register_message.Create;
+{$REGION 'TClientNotAllowedToConnectMessage' }
+
+constructor TClientNotAllowedToConnectMessage.Create;
+begin
+  inherited;
+  MessageID := 12;
+end;
+
+function TClientNotAllowedToConnectMessage.GetNewInstance: TOlfSMMessage;
+begin
+  result := TClientNotAllowedToConnectMessage.Create;
+end;
+
+procedure TClientNotAllowedToConnectMessage.LoadFromStream(Stream: TStream);
+begin
+  inherited;
+end;
+
+procedure TClientNotAllowedToConnectMessage.SaveToStream(Stream: TStream);
+begin
+  inherited;
+end;
+
+{$ENDREGION}
+
+{$REGION 'TClientRegisterMessage' }
+
+constructor TClientRegisterMessage.Create;
 begin
   inherited;
   MessageID := 1;
+  FVersionAPI := 0;
 end;
 
-function TClient_register_message.GetNewInstance: TOlfSocketMessage;
+function TClientRegisterMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TClient_register_message.Create;
+  result := TClientRegisterMessage.Create;
 end;
 
-procedure TClient_register_message.LoadFromStream(Stream: TStream);
+procedure TClientRegisterMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
     raise exception.Create('Can''t load "DeviceID" value.');
+  if (Stream.read(FVersionAPI, sizeof(FVersionAPI)) <> sizeof(FVersionAPI)) then
+    raise exception.Create('Can''t load "VersionAPI" value.');
 end;
 
-procedure TClient_register_message.SaveToStream(Stream: TStream);
+procedure TClientRegisterMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FDeviceID, sizeof(FDeviceID));
+  Stream.Write(FVersionAPI, sizeof(FVersionAPI));
 end;
 
-procedure TClient_register_message.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientRegisterMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
 begin
   FDeviceID := Value;
 end;
 
-{ TClient_register_response_message }
+procedure TClientRegisterMessage.SetVersionAPI(const Value: integer);
+begin
+  FVersionAPI := Value;
+end;
 
-constructor TClient_register_response_message.Create;
+{$ENDREGION}
+
+{$REGION 'TClientRegisterResponseMessage' }
+
+constructor TClientRegisterResponseMessage.Create;
 begin
   inherited;
   MessageID := 2;
 end;
 
-function TClient_register_response_message.GetNewInstance: TOlfSocketMessage;
+function TClientRegisterResponseMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TClient_register_response_message.Create;
+  result := TClientRegisterResponseMessage.Create;
 end;
 
-procedure TClient_register_response_message.LoadFromStream(Stream: TStream);
+procedure TClientRegisterResponseMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
@@ -556,26 +851,28 @@ begin
     raise exception.Create('Can''t load "PlayerID" value.');
 end;
 
-procedure TClient_register_response_message.SaveToStream(Stream: TStream);
+procedure TClientRegisterResponseMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FDeviceID, sizeof(FDeviceID));
   Stream.Write(FPlayerID, sizeof(FPlayerID));
 end;
 
-procedure TClient_register_response_message.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientRegisterResponseMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
 begin
   FDeviceID := Value;
 end;
 
-procedure TClient_register_response_message.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TClientRegisterResponseMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
 begin
   FPlayerID := Value;
 end;
 
-{ TMap_cell_message }
+{$ENDREGION}
 
-constructor TMap_cell_message.Create;
+{$REGION 'TMapCellMessage' }
+
+constructor TMapCellMessage.Create;
 begin
   inherited;
   MessageID := 6;
@@ -584,12 +881,12 @@ begin
   FTileID := 0;
 end;
 
-function TMap_cell_message.GetNewInstance: TOlfSocketMessage;
+function TMapCellMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TMap_cell_message.Create;
+  result := TMapCellMessage.Create;
 end;
 
-procedure TMap_cell_message.LoadFromStream(Stream: TStream);
+procedure TMapCellMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
@@ -600,7 +897,7 @@ begin
     raise exception.Create('Can''t load "TileID" value.');
 end;
 
-procedure TMap_cell_message.SaveToStream(Stream: TStream);
+procedure TMapCellMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FX, sizeof(FX));
@@ -608,24 +905,26 @@ begin
   Stream.Write(FTileID, sizeof(FTileID));
 end;
 
-procedure TMap_cell_message.SetX(const Value: TSporglooAPINumber);
+procedure TMapCellMessage.SetX(const Value: TSporglooAPINumber);
 begin
   FX := Value;
 end;
 
-procedure TMap_cell_message.SetY(const Value: TSporglooAPINumber);
+procedure TMapCellMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
 
-procedure TMap_cell_message.SetTileID(const Value: TSporglooAPIShort);
+procedure TMapCellMessage.SetTileID(const Value: TSporglooAPIShort);
 begin
   FTileID := Value;
 end;
 
-{ TMap_refresh_demand_message }
+{$ENDREGION}
 
-constructor TMap_refresh_demand_message.Create;
+{$REGION 'TMapRefreshDemandMessage' }
+
+constructor TMapRefreshDemandMessage.Create;
 begin
   inherited;
   MessageID := 5;
@@ -635,12 +934,12 @@ begin
   FRowNumber := 0;
 end;
 
-function TMap_refresh_demand_message.GetNewInstance: TOlfSocketMessage;
+function TMapRefreshDemandMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TMap_refresh_demand_message.Create;
+  result := TMapRefreshDemandMessage.Create;
 end;
 
-procedure TMap_refresh_demand_message.LoadFromStream(Stream: TStream);
+procedure TMapRefreshDemandMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
@@ -653,7 +952,7 @@ begin
     raise exception.Create('Can''t load "RowNumber" value.');
 end;
 
-procedure TMap_refresh_demand_message.SaveToStream(Stream: TStream);
+procedure TMapRefreshDemandMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FX, sizeof(FX));
@@ -662,29 +961,31 @@ begin
   Stream.Write(FRowNumber, sizeof(FRowNumber));
 end;
 
-procedure TMap_refresh_demand_message.SetX(const Value: TSporglooAPINumber);
+procedure TMapRefreshDemandMessage.SetX(const Value: TSporglooAPINumber);
 begin
   FX := Value;
 end;
 
-procedure TMap_refresh_demand_message.SetY(const Value: TSporglooAPINumber);
+procedure TMapRefreshDemandMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
 
-procedure TMap_refresh_demand_message.SetColNumber(const Value: TSporglooAPINumber);
+procedure TMapRefreshDemandMessage.SetColNumber(const Value: TSporglooAPINumber);
 begin
   FColNumber := Value;
 end;
 
-procedure TMap_refresh_demand_message.SetRowNumber(const Value: TSporglooAPINumber);
+procedure TMapRefreshDemandMessage.SetRowNumber(const Value: TSporglooAPINumber);
 begin
   FRowNumber := Value;
 end;
 
-{ TOther_player_move_message }
+{$ENDREGION}
 
-constructor TOther_player_move_message.Create;
+{$REGION 'TOtherPlayerMoveMessage' }
+
+constructor TOtherPlayerMoveMessage.Create;
 begin
   inherited;
   MessageID := 11;
@@ -692,12 +993,12 @@ begin
   FY := 0;
 end;
 
-function TOther_player_move_message.GetNewInstance: TOlfSocketMessage;
+function TOtherPlayerMoveMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TOther_player_move_message.Create;
+  result := TOtherPlayerMoveMessage.Create;
 end;
 
-procedure TOther_player_move_message.LoadFromStream(Stream: TStream);
+procedure TOtherPlayerMoveMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FPlayerID, sizeof(FPlayerID)) <> sizeof(FPlayerID)) then
@@ -708,7 +1009,7 @@ begin
     raise exception.Create('Can''t load "Y" value.');
 end;
 
-procedure TOther_player_move_message.SaveToStream(Stream: TStream);
+procedure TOtherPlayerMoveMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FPlayerID, sizeof(FPlayerID));
@@ -716,24 +1017,26 @@ begin
   Stream.Write(FY, sizeof(FY));
 end;
 
-procedure TOther_player_move_message.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TOtherPlayerMoveMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
 begin
   FPlayerID := Value;
 end;
 
-procedure TOther_player_move_message.SetX(const Value: TSporglooAPINumber);
+procedure TOtherPlayerMoveMessage.SetX(const Value: TSporglooAPINumber);
 begin
   FX := Value;
 end;
 
-procedure TOther_player_move_message.SetY(const Value: TSporglooAPINumber);
+procedure TOtherPlayerMoveMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
 
-{ TPlayer_add_a_star_on_the_map_message }
+{$ENDREGION}
 
-constructor TPlayer_add_a_star_on_the_map_message.Create;
+{$REGION 'TPlayerAddAStarOnTheMapMessage' }
+
+constructor TPlayerAddAStarOnTheMapMessage.Create;
 begin
   inherited;
   MessageID := 9;
@@ -741,12 +1044,12 @@ begin
   FY := 0;
 end;
 
-function TPlayer_add_a_star_on_the_map_message.GetNewInstance: TOlfSocketMessage;
+function TPlayerAddAStarOnTheMapMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TPlayer_add_a_star_on_the_map_message.Create;
+  result := TPlayerAddAStarOnTheMapMessage.Create;
 end;
 
-procedure TPlayer_add_a_star_on_the_map_message.LoadFromStream(Stream: TStream);
+procedure TPlayerAddAStarOnTheMapMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FSessionID, sizeof(FSessionID)) <> sizeof(FSessionID)) then
@@ -759,7 +1062,7 @@ begin
     raise exception.Create('Can''t load "Y" value.');
 end;
 
-procedure TPlayer_add_a_star_on_the_map_message.SaveToStream(Stream: TStream);
+procedure TPlayerAddAStarOnTheMapMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FSessionID, sizeof(FSessionID));
@@ -768,29 +1071,31 @@ begin
   Stream.Write(FY, sizeof(FY));
 end;
 
-procedure TPlayer_add_a_star_on_the_map_message.SetSessionID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerAddAStarOnTheMapMessage.SetSessionID(const Value: TSporglooAPIAlpha16);
 begin
   FSessionID := Value;
 end;
 
-procedure TPlayer_add_a_star_on_the_map_message.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerAddAStarOnTheMapMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
 begin
   FPlayerID := Value;
 end;
 
-procedure TPlayer_add_a_star_on_the_map_message.SetX(const Value: TSporglooAPINumber);
+procedure TPlayerAddAStarOnTheMapMessage.SetX(const Value: TSporglooAPINumber);
 begin
   FX := Value;
 end;
 
-procedure TPlayer_add_a_star_on_the_map_message.SetY(const Value: TSporglooAPINumber);
+procedure TPlayerAddAStarOnTheMapMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
 
-{ TPlayer_move_message }
+{$ENDREGION}
 
-constructor TPlayer_move_message.Create;
+{$REGION 'TPlayerMoveMessage' }
+
+constructor TPlayerMoveMessage.Create;
 begin
   inherited;
   MessageID := 7;
@@ -798,12 +1103,12 @@ begin
   FY := 0;
 end;
 
-function TPlayer_move_message.GetNewInstance: TOlfSocketMessage;
+function TPlayerMoveMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TPlayer_move_message.Create;
+  result := TPlayerMoveMessage.Create;
 end;
 
-procedure TPlayer_move_message.LoadFromStream(Stream: TStream);
+procedure TPlayerMoveMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FSessionID, sizeof(FSessionID)) <> sizeof(FSessionID)) then
@@ -816,7 +1121,7 @@ begin
     raise exception.Create('Can''t load "Y" value.');
 end;
 
-procedure TPlayer_move_message.SaveToStream(Stream: TStream);
+procedure TPlayerMoveMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FSessionID, sizeof(FSessionID));
@@ -825,52 +1130,56 @@ begin
   Stream.Write(FY, sizeof(FY));
 end;
 
-procedure TPlayer_move_message.SetSessionID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerMoveMessage.SetSessionID(const Value: TSporglooAPIAlpha16);
 begin
   FSessionID := Value;
 end;
 
-procedure TPlayer_move_message.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerMoveMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
 begin
   FPlayerID := Value;
 end;
 
-procedure TPlayer_move_message.SetX(const Value: TSporglooAPINumber);
+procedure TPlayerMoveMessage.SetX(const Value: TSporglooAPINumber);
 begin
   FX := Value;
 end;
 
-procedure TPlayer_move_message.SetY(const Value: TSporglooAPINumber);
+procedure TPlayerMoveMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
 
-{ TPlayer_move_response }
+{$ENDREGION}
 
-constructor TPlayer_move_response.Create;
+{$REGION 'TPlayerMoveResponseMessage' }
+
+constructor TPlayerMoveResponseMessage.Create;
 begin
   inherited;
   MessageID := 8;
 end;
 
-function TPlayer_move_response.GetNewInstance: TOlfSocketMessage;
+function TPlayerMoveResponseMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TPlayer_move_response.Create;
+  result := TPlayerMoveResponseMessage.Create;
 end;
 
-procedure TPlayer_move_response.LoadFromStream(Stream: TStream);
-begin
-  inherited;
-end;
-
-procedure TPlayer_move_response.SaveToStream(Stream: TStream);
+procedure TPlayerMoveResponseMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
 end;
 
-{ TServer_accept_the_star_adding_message }
+procedure TPlayerMoveResponseMessage.SaveToStream(Stream: TStream);
+begin
+  inherited;
+end;
 
-constructor TServer_accept_the_star_adding_message.Create;
+{$ENDREGION}
+
+{$REGION 'TServerAcceptTheStarAddingMessage' }
+
+constructor TServerAcceptTheStarAddingMessage.Create;
 begin
   inherited;
   MessageID := 10;
@@ -878,12 +1187,12 @@ begin
   FY := 0;
 end;
 
-function TServer_accept_the_star_adding_message.GetNewInstance: TOlfSocketMessage;
+function TServerAcceptTheStarAddingMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TServer_accept_the_star_adding_message.Create;
+  result := TServerAcceptTheStarAddingMessage.Create;
 end;
 
-procedure TServer_accept_the_star_adding_message.LoadFromStream(Stream: TStream);
+procedure TServerAcceptTheStarAddingMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
@@ -892,21 +1201,23 @@ begin
     raise exception.Create('Can''t load "Y" value.');
 end;
 
-procedure TServer_accept_the_star_adding_message.SaveToStream(Stream: TStream);
+procedure TServerAcceptTheStarAddingMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FX, sizeof(FX));
   Stream.Write(FY, sizeof(FY));
 end;
 
-procedure TServer_accept_the_star_adding_message.SetX(const Value: TSporglooAPINumber);
+procedure TServerAcceptTheStarAddingMessage.SetX(const Value: TSporglooAPINumber);
 begin
   FX := Value;
 end;
 
-procedure TServer_accept_the_star_adding_message.SetY(const Value: TSporglooAPINumber);
+procedure TServerAcceptTheStarAddingMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
+
+{$ENDREGION}
 
 end.
