@@ -25,7 +25,7 @@ The server generate a PlayerID from a uniq ID (GUID or other) and store the Devi
 
 The server send a PlayerID to the client.
 
-If the server doesn't accept the client connection, it sends a message 12 "client not allowed to connect".
+If the server doesn't accept the client connection, it sends a message 12 (error message) with code "client not allowed to connect".
 
 ### Client login
 
@@ -43,7 +43,7 @@ Each time the game program starts, it asks for a SessionID to the server.
 The server generate a uniq ID as a SessionID and sent it to the client with last coordinates of the player.
 **TODO : add player data (score, life, ...)**
 
-If the server doesn't accept the client connection, it sends a message 12 "client not allowed to connect".
+If the server doesn't accept the client connection, it sends a message 12 (error message) with code "client not allowed to connect".
 
 ### Map refresh
 
