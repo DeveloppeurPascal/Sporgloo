@@ -5,11 +5,15 @@ interface
 uses
   System.Classes,
   System.Generics.Collections,
-  Sporgloo.Types, Olf.Net.Socket.Messaging;
+  Sporgloo.Types,
+  Olf.Net.Socket.Messaging;
 
 type
   TSporglooPlayer = class
-  private
+  private const
+    CVersion = 1;
+
+  var
     FLifeLevel: TSporglooAPINumber;
     FScore: TSporglooAPINumber;
     FPlayerID: string;
@@ -40,7 +44,8 @@ type
   end;
 
   TSporglooPlayersList = class(TObjectDictionary<string, TSporglooPlayer>)
-  private
+  private const
+    CVersion = 1;
   protected
   public
     function GetPlayerByDevice(ADeviceID: string): TSporglooPlayer;
@@ -50,13 +55,32 @@ type
     procedure SaveToStream(AStream: TStream);
   end;
 
-  TSporglooMapRow = TDictionary<TSporglooAPINumber, TSporglooAPIshort>;
-  TSporglooMapCol = TObjectDictionary<TSporglooAPINumber, TSporglooMapRow>;
+  TSporglooMapRow = class(TDictionary<TSporglooAPINumber, TSporglooAPIshort>)
+  private const
+    CVersion = 1;
+  protected
+  public
+    procedure LoadFromStream(AStream: TStream);
+    procedure SaveToStream(AStream: TStream);
+  end;
+
+  TSporglooMapCol = class(TObjectDictionary<TSporglooAPINumber,
+    TSporglooMapRow>)
+  private const
+    CVersion = 1;
+  protected
+  public
+    procedure LoadFromStream(AStream: TStream);
+    procedure SaveToStream(AStream: TStream);
+  end;
 
   TSporglooMap = class
-  private
-  protected
+  private const
+    CVersion = 1;
+
+  var
     FCell: TSporglooMapCol;
+  protected
   public
     function GetTileID(X, Y: TSporglooAPINumber): TSporglooAPIshort;
     procedure SetTileID(X, Y: TSporglooAPINumber; TileID: TSporglooAPIshort);
@@ -117,14 +141,60 @@ implementation
 
 { TSporglooPlayer }
 
+uses
+  Olf.RTL.Streams;
+
 procedure TSporglooPlayer.LoadFromStream(AStream: TStream);
+var
+  VersionNum: integer;
 begin
-  // TODO : à compléter
+  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+
+  if not((VersionNum >= 0) and (sizeof(FLifeLevel) = AStream.read(FLifeLevel,
+    sizeof(FLifeLevel)))) then
+    FLifeLevel := 0;
+
+  if not((VersionNum >= 0) and (sizeof(FScore) = AStream.read(FScore,
+    sizeof(FScore)))) then
+    FScore := 0;
+
+  if not(VersionNum >= 0) then
+    FPlayerID := ''
+  else
+    FPlayerID := LoadStringFromStream(AStream);
+
+  if not((VersionNum >= 0) and (sizeof(FPlayerX) = AStream.read(FPlayerX,
+    sizeof(FPlayerX)))) then
+    FPlayerX := 0;
+
+  if not((VersionNum >= 0) and (sizeof(FPlayerY) = AStream.read(FPlayerY,
+    sizeof(FPlayerY)))) then
+    FPlayerY := 0;
+
+  if not((VersionNum >= 0) and (sizeof(FStarsCount) = AStream.read(FStarsCount,
+    sizeof(FStarsCount)))) then
+    FStarsCount := 0;
+
+  if not(VersionNum >= 0) then
+    FDeviceID := ''
+  else
+    FDeviceID := LoadStringFromStream(AStream);
 end;
 
 procedure TSporglooPlayer.SaveToStream(AStream: TStream);
+var
+  VersionNum: integer;
 begin
-  // TODO : à compléter
+  VersionNum := CVersion;
+  AStream.Write(VersionNum, sizeof(VersionNum));
+  AStream.Write(FLifeLevel, sizeof(FLifeLevel));
+  AStream.Write(FScore, sizeof(FScore));
+  SaveStringToStream(FPlayerID, AStream);
+  AStream.Write(FPlayerX, sizeof(FPlayerX));
+  AStream.Write(FPlayerY, sizeof(FPlayerY));
+  AStream.Write(FStarsCount, sizeof(FStarsCount));
+  SaveStringToStream(FDeviceID, AStream);
 end;
 
 procedure TSporglooPlayer.SetDeviceID(const Value: string);
@@ -186,13 +256,38 @@ begin
 end;
 
 procedure TSporglooPlayersList.LoadFromStream(AStream: TStream);
+var
+  VersionNum: integer;
+  nb: int64;
+  player: TSporglooPlayer;
 begin
-  // TODO : à compléter
+  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+
+  if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb)))) then
+    nb := 0;
+
+  while (nb > 0) do
+  begin
+    player := TSporglooPlayer.Create;
+    player.LoadFromStream(AStream);
+    add(player.PlayerID, player);
+    dec(nb);
+  end;
 end;
 
 procedure TSporglooPlayersList.SaveToStream(AStream: TStream);
+var
+  VersionNum: integer;
+  nb: int64;
+  LKey: string;
 begin
-  // TODO : à compléter
+  VersionNum := CVersion;
+  AStream.Write(VersionNum, sizeof(VersionNum));
+  nb := Count;
+  AStream.Write(nb, sizeof(nb));
+  for LKey in keys do
+    items[LKey].SaveToStream(AStream);
 end;
 
 { TSporglooMap }
@@ -217,13 +312,25 @@ begin
 end;
 
 procedure TSporglooMap.LoadFromStream(AStream: TStream);
+var
+  VersionNum: integer;
 begin
-  // TODO : à compléter
+  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+
+  if not(VersionNum >= 0) then
+    FCell.Clear
+  else
+    FCell.LoadFromStream(AStream);
 end;
 
 procedure TSporglooMap.SaveToStream(AStream: TStream);
+var
+  VersionNum: integer;
 begin
-  // TODO : à compléter
+  VersionNum := CVersion;
+  AStream.Write(VersionNum, sizeof(VersionNum));
+  FCell.SaveToStream(AStream);
 end;
 
 procedure TSporglooMap.SetTileID(X, Y: TSporglooAPINumber;
@@ -234,7 +341,7 @@ begin
   if (not FCell.TryGetValue(X, LRow)) then
   begin
     LRow := TSporglooMapRow.Create;
-    FCell.Add(X, LRow);
+    FCell.add(X, LRow);
   end;
   LRow.AddOrSetValue(Y, TileID);
 end;
@@ -312,6 +419,99 @@ procedure TSporglooSession.SetSocketClient(const Value
   : TOlfSocketMessagingServerConnectedClient);
 begin
   FSocketClient := Value;
+end;
+
+{ TSporglooMapRow }
+
+procedure TSporglooMapRow.LoadFromStream(AStream: TStream);
+var
+  VersionNum: integer;
+  nb: int64;
+  LKey: TSporglooAPINumber;
+  LValue: TSporglooAPIshort;
+begin
+  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+
+  if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb)))) then
+    nb := 0;
+
+  Clear;
+  while (nb > 0) do
+  begin
+    if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
+      sizeof(LKey)))) then
+      LKey := 0;
+    if not((VersionNum >= 0) and (sizeof(LValue) = AStream.read(LValue,
+      sizeof(LValue)))) then
+      LValue := 0;
+    AddOrSetValue(LKey, LValue);
+    dec(nb);
+  end;
+end;
+
+procedure TSporglooMapRow.SaveToStream(AStream: TStream);
+var
+  VersionNum: integer;
+  nb: int64;
+  LKey: TSporglooAPINumber;
+  LValue: TSporglooAPIshort;
+begin
+  VersionNum := CVersion;
+  AStream.Write(VersionNum, sizeof(VersionNum));
+  nb := Count;
+  AStream.Write(nb, sizeof(nb));
+  for LKey in keys do
+  begin
+    AStream.Write(LKey, sizeof(LKey));
+    LValue := items[LKey];
+    AStream.Write(LValue, sizeof(LValue));
+  end;
+end;
+
+{ TSporglooMapCol }
+
+procedure TSporglooMapCol.LoadFromStream(AStream: TStream);
+var
+  VersionNum: integer;
+  nb: int64;
+  LKey: TSporglooAPINumber;
+  LValue: TSporglooMapRow;
+begin
+  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+
+  if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb)))) then
+    nb := 0;
+
+  Clear;
+  while (nb > 0) do
+  begin
+    if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
+      sizeof(LKey)))) then
+      LKey := 0;
+    LValue := TSporglooMapRow.Create;
+    LValue.LoadFromStream(AStream);
+    AddOrSetValue(LKey, LValue);
+    dec(nb);
+  end;
+end;
+
+procedure TSporglooMapCol.SaveToStream(AStream: TStream);
+var
+  VersionNum: integer;
+  nb: int64;
+  LKey: TSporglooAPINumber;
+begin
+  VersionNum := CVersion;
+  AStream.Write(VersionNum, sizeof(VersionNum));
+  nb := Count;
+  AStream.Write(nb, sizeof(nb));
+  for LKey in keys do
+  begin
+    AStream.Write(LKey, sizeof(LKey));
+    items[LKey].SaveToStream(AStream);
+  end;
 end;
 
 end.
