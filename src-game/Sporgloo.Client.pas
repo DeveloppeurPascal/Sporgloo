@@ -112,7 +112,7 @@ begin
 
   tconfig.Current.PlayerID := msg.PlayerID;
   TGameData.Current.Player.PlayerID := msg.PlayerID;
-  TGameData.Current.Session.PlayerID := msg.PlayerID;
+  TGameData.Current.Session.Player := TGameData.Current.Player;
 
   SendClientLogin(msg.DeviceID, msg.PlayerID);
 end;
