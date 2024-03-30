@@ -3,6 +3,7 @@ unit Sporgloo.Types;
 interface
 
 uses
+  System.SysUtils,
   Sporgloo.Consts;
 
 type
@@ -26,12 +27,23 @@ type
       TileID: TSporglooAPIShort);
   end;
 
+  TSporglooException = class(exception)
+  private
+    FErrorCode: TSporglooErrorCode;
+    function GetErrorText: string;
+  protected
+  public
+    property ErrorCode: TSporglooErrorCode read FErrorCode;
+    property ErrorText: string read GetErrorText;
+    constructor Create(const AErrorCode: TSporglooErrorCode;
+      const AErrorText: string);
+  end;
+
 function GetUniqID(ASizeID: byte = CSporglooIDSize): string;
 
 implementation
 
 uses
-  System.SysUtils,
   Sporgloo.API.Messages;
 
 function GetUniqID(ASizeID: byte): string;
@@ -75,6 +87,20 @@ end;
 procedure TSporglooMapCell.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
+end;
+
+{ TSporglooException }
+
+constructor TSporglooException.Create(const AErrorCode: TSporglooErrorCode;
+  const AErrorText: string);
+begin
+  inherited Create(AErrorText);
+  FErrorCode := AErrorCode;
+end;
+
+function TSporglooException.GetErrorText: string;
+begin
+  result := Message;
 end;
 
 initialization
