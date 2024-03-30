@@ -94,7 +94,6 @@ procedure TSporglooClient.onClientLoginResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
   const AMessage: TOlfSocketMessage);
 var
-  LDeviceID, LSessionID: string;
   LGameData: TGameData;
   msg: TClientLoginResponseMessage;
 begin
@@ -103,16 +102,14 @@ begin
 
   msg := AMessage as TClientLoginResponseMessage;
 
-  Alpha16ToString(msg.DeviceID, LDeviceID);
-  if (tconfig.Current.DeviceID <> LDeviceID) then
+  if (tconfig.Current.DeviceID <> msg.DeviceID) then
     raise exception.Create('Wrong DeviceID sent from the server.');
 
-  Alpha16ToString(msg.SessionID, LSessionID);
-  if LSessionID.IsEmpty then
+  if msg.SessionID.IsEmpty then
     raise exception.Create('No SessionID returned by the server.');
 
   LGameData := TGameData.Current;
-  LGameData.Session.SessionID := LSessionID;
+  LGameData.Session.SessionID := msg.SessionID;
   LGameData.Player.PlayerX := msg.X;
   LGameData.Player.PlayerY := msg.Y;
   LGameData.Player.Score := msg.Score;
@@ -126,7 +123,6 @@ procedure TSporglooClient.onClientRegisterResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
   const AMessage: TOlfSocketMessage);
 var
-  LDeviceID, LPlayerID: string;
   msg: TClientRegisterResponseMessage;
 begin
   if not(AMessage is TClientRegisterResponseMessage) then
@@ -135,19 +131,17 @@ begin
 
   msg := AMessage as TClientRegisterResponseMessage;
 
-  Alpha16ToString(msg.DeviceID, LDeviceID);
-  if (tconfig.Current.DeviceID <> LDeviceID) then
+  if (tconfig.Current.DeviceID <> msg.DeviceID) then
     raise exception.Create('Wrong DeviceID sent from the server.');
 
-  Alpha16ToString(msg.PlayerID, LPlayerID);
-  if LPlayerID.IsEmpty then
+  if msg.PlayerID.IsEmpty then
     raise exception.Create('No PlayerID returned by the server.');
 
-  tconfig.Current.PlayerID := LPlayerID;
-  TGameData.Current.Player.PlayerID := LPlayerID;
-  TGameData.Current.Session.PlayerID := LPlayerID;
+  tconfig.Current.PlayerID := msg.PlayerID;
+  TGameData.Current.Player.PlayerID := msg.PlayerID;
+  TGameData.Current.Session.PlayerID := msg.PlayerID;
 
-  SendClientLogin(AFromGame, LDeviceID, LPlayerID);
+  SendClientLogin(AFromGame, msg.DeviceID, msg.PlayerID);
 end;
 
 procedure TSporglooClient.onMapCell(const AFromGame
@@ -176,7 +170,6 @@ procedure TSporglooClient.onOtherPlayerMove(const AFromGame
 const AMessage: TOlfSocketMessage);
 var
   Player: TSporglooPlayer;
-  LPlayerID: string;
   msg: TOtherPlayerMoveMessage;
 begin
   if not(AMessage is TOtherPlayerMoveMessage) then
@@ -184,12 +177,11 @@ begin
 
   msg := AMessage as TOtherPlayerMoveMessage;
 
-  Alpha16ToString(msg.PlayerID, LPlayerID);
-  if not TGameData.Current.OtherPlayers.TryGetValue(LPlayerID, Player) then
+  if not TGameData.Current.OtherPlayers.TryGetValue(msg.PlayerID, Player) then
   begin
     Player := TSporglooPlayer.Create;
-    Player.PlayerID := LPlayerID;
-    TGameData.Current.OtherPlayers.add(LPlayerID, Player);
+    Player.PlayerID := msg.PlayerID;
+    TGameData.Current.OtherPlayers.add(msg.PlayerID, Player);
   end;
   Player.PlayerX := msg.X;
   Player.PlayerY := msg.Y;
@@ -227,15 +219,12 @@ end;
 procedure TSporglooClient.SendClientLogin(const AToGame
   : TOlfSocketMessagingServerConnectedClient; const DeviceID, PlayerID: string);
 var
-  LDeviceID, LPlayerID: TSporglooAPIAlpha16;
   msg: TClientLoginMessage;
 begin
   msg := TClientLoginMessage.Create;
   try
-    StringToAlpha16(DeviceID, LDeviceID);
-    msg.DeviceID := LDeviceID;
-    StringToAlpha16(PlayerID, LPlayerID);
-    msg.PlayerID := LPlayerID;
+    msg.DeviceID := DeviceID;
+    msg.PlayerID := PlayerID;
     AToGame.SendMessage(msg);
   finally
     msg.Free;
@@ -255,13 +244,11 @@ end;
 procedure TSporglooClient.SendClientRegister(const AToGame
   : TOlfSocketMessagingServerConnectedClient; const DeviceID: string);
 var
-  LDeviceID: TSporglooAPIAlpha16;
   msg: TClientRegisterMessage;
 begin
   msg := TClientRegisterMessage.Create;
   try
-    StringToAlpha16(DeviceID, LDeviceID);
-    msg.DeviceID := LDeviceID;
+    msg.DeviceID := DeviceID;
     AToGame.SendMessage(msg);
   finally
     msg.Free;
@@ -296,15 +283,12 @@ procedure TSporglooClient.SendPlayerMove(const AToGame
   : TOlfSocketMessagingServerConnectedClient; const SessionID, PlayerID: string;
 const X, Y: TSporglooAPINumber);
 var
-  LSessionID, LPlayerID: TSporglooAPIAlpha16;
   msg: TPlayerMoveMessage;
 begin
   msg := TPlayerMoveMessage.Create;
   try
-    StringToAlpha16(SessionID, LSessionID);
-    msg.SessionID := LSessionID;
-    StringToAlpha16(PlayerID, LPlayerID);
-    msg.PlayerID := LPlayerID;
+    msg.SessionID := SessionID;
+    msg.PlayerID := PlayerID;
     msg.X := X;
     msg.Y := Y;
     AToGame.SendMessage(msg);
@@ -323,15 +307,12 @@ procedure TSporglooClient.SendPlayerPutAStar(const AToGame
   : TOlfSocketMessagingServerConnectedClient; const SessionID, PlayerID: string;
 const X, Y: TSporglooAPINumber);
 var
-  LSessionID, LPlayerID: TSporglooAPIAlpha16;
   msg: TPlayerAddAStarOnTheMapMessage;
 begin
   msg := TPlayerAddAStarOnTheMapMessage.Create;
   try
-    StringToAlpha16(SessionID, LSessionID);
-    msg.SessionID := LSessionID;
-    StringToAlpha16(PlayerID, LPlayerID);
-    msg.PlayerID := LPlayerID;
+    msg.SessionID := SessionID;
+    msg.PlayerID := PlayerID;
     msg.X := X;
     msg.Y := Y;
     AToGame.SendMessage(msg);

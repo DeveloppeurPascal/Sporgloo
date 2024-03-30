@@ -12,7 +12,7 @@
 // ****************************************
 // File generator : Socket Messaging Code Generator (v1.1)
 // Website : https://smcodegenerator.olfsoftware.fr/ 
-// Generation date : 30/03/2024 10:59:35
+// Generation date : 30/03/2024 11:56:00
 // 
 // Don't do any change on this file. They will be erased by next generation !
 // ****************************************
@@ -36,21 +36,21 @@ type
   /// </summary>
   TClientLoginMessage = class(TOlfSMMessage)
   private
-    FDeviceID: TSporglooAPIAlpha16;
-    FPlayerID: TSporglooAPIAlpha16;
+    FDeviceID: string;
+    FPlayerID: string;
     FVersionAPI: integer;
-    procedure SetDeviceID(const Value: TSporglooAPIAlpha16);
-    procedure SetPlayerID(const Value: TSporglooAPIAlpha16);
+    procedure SetDeviceID(const Value: string);
+    procedure SetPlayerID(const Value: string);
     procedure SetVersionAPI(const Value: integer);
   public
     /// <summary>
     /// Device unique identifier
     /// </summary>
-    property DeviceID: TSporglooAPIAlpha16 read FDeviceID write SetDeviceID;
+    property DeviceID: string read FDeviceID write SetDeviceID;
     /// <summary>
     /// Player unique identifier
     /// </summary>
-    property PlayerID: TSporglooAPIAlpha16 read FPlayerID write SetPlayerID;
+    property PlayerID: string read FPlayerID write SetPlayerID;
     /// <summary>
     /// Version API
     /// </summary>
@@ -66,15 +66,15 @@ type
   /// </summary>
   TClientLoginResponseMessage = class(TOlfSMMessage)
   private
-    FDeviceID: TSporglooAPIAlpha16;
-    FSessionID: TSporglooAPIAlpha16;
+    FDeviceID: string;
+    FSessionID: string;
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
     FScore: TSporglooAPINumber;
     FStars: TSporglooAPINumber;
     FLife: TSporglooAPINumber;
-    procedure SetDeviceID(const Value: TSporglooAPIAlpha16);
-    procedure SetSessionID(const Value: TSporglooAPIAlpha16);
+    procedure SetDeviceID(const Value: string);
+    procedure SetSessionID(const Value: string);
     procedure SetX(const Value: TSporglooAPINumber);
     procedure SetY(const Value: TSporglooAPINumber);
     procedure SetScore(const Value: TSporglooAPINumber);
@@ -84,11 +84,11 @@ type
     /// <summary>
     /// Device unique identifier
     /// </summary>
-    property DeviceID: TSporglooAPIAlpha16 read FDeviceID write SetDeviceID;
+    property DeviceID: string read FDeviceID write SetDeviceID;
     /// <summary>
     /// Session unique identifier
     /// </summary>
-    property SessionID: TSporglooAPIAlpha16 read FSessionID write SetSessionID;
+    property SessionID: string read FSessionID write SetSessionID;
     /// <summary>
     /// X
     /// </summary>
@@ -137,15 +137,15 @@ type
   /// </summary>
   TClientRegisterMessage = class(TOlfSMMessage)
   private
-    FDeviceID: TSporglooAPIAlpha16;
+    FDeviceID: string;
     FVersionAPI: integer;
-    procedure SetDeviceID(const Value: TSporglooAPIAlpha16);
+    procedure SetDeviceID(const Value: string);
     procedure SetVersionAPI(const Value: integer);
   public
     /// <summary>
     /// Device unique identifier
     /// </summary>
-    property DeviceID: TSporglooAPIAlpha16 read FDeviceID write SetDeviceID;
+    property DeviceID: string read FDeviceID write SetDeviceID;
     /// <summary>
     /// Version API
     /// </summary>
@@ -161,19 +161,19 @@ type
   /// </summary>
   TClientRegisterResponseMessage = class(TOlfSMMessage)
   private
-    FDeviceID: TSporglooAPIAlpha16;
-    FPlayerID: TSporglooAPIAlpha16;
-    procedure SetDeviceID(const Value: TSporglooAPIAlpha16);
-    procedure SetPlayerID(const Value: TSporglooAPIAlpha16);
+    FDeviceID: string;
+    FPlayerID: string;
+    procedure SetDeviceID(const Value: string);
+    procedure SetPlayerID(const Value: string);
   public
     /// <summary>
     /// Device unique identifier
     /// </summary>
-    property DeviceID: TSporglooAPIAlpha16 read FDeviceID write SetDeviceID;
+    property DeviceID: string read FDeviceID write SetDeviceID;
     /// <summary>
     /// Player unique identifier
     /// </summary>
-    property PlayerID: TSporglooAPIAlpha16 read FPlayerID write SetPlayerID;
+    property PlayerID: string read FPlayerID write SetPlayerID;
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
@@ -251,17 +251,17 @@ type
   /// </summary>
   TOtherPlayerMoveMessage = class(TOlfSMMessage)
   private
-    FPlayerID: TSporglooAPIAlpha16;
+    FPlayerID: string;
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
-    procedure SetPlayerID(const Value: TSporglooAPIAlpha16);
+    procedure SetPlayerID(const Value: string);
     procedure SetX(const Value: TSporglooAPINumber);
     procedure SetY(const Value: TSporglooAPINumber);
   public
     /// <summary>
     /// Player unique identifier
     /// </summary>
-    property PlayerID: TSporglooAPIAlpha16 read FPlayerID write SetPlayerID;
+    property PlayerID: string read FPlayerID write SetPlayerID;
     /// <summary>
     /// X
     /// </summary>
@@ -281,23 +281,23 @@ type
   /// </summary>
   TPlayerAddAStarOnTheMapMessage = class(TOlfSMMessage)
   private
-    FSessionID: TSporglooAPIAlpha16;
-    FPlayerID: TSporglooAPIAlpha16;
+    FSessionID: string;
+    FPlayerID: string;
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
-    procedure SetSessionID(const Value: TSporglooAPIAlpha16);
-    procedure SetPlayerID(const Value: TSporglooAPIAlpha16);
+    procedure SetSessionID(const Value: string);
+    procedure SetPlayerID(const Value: string);
     procedure SetX(const Value: TSporglooAPINumber);
     procedure SetY(const Value: TSporglooAPINumber);
   public
     /// <summary>
     /// Session unique identifier
     /// </summary>
-    property SessionID: TSporglooAPIAlpha16 read FSessionID write SetSessionID;
+    property SessionID: string read FSessionID write SetSessionID;
     /// <summary>
     /// Player unique identifier
     /// </summary>
-    property PlayerID: TSporglooAPIAlpha16 read FPlayerID write SetPlayerID;
+    property PlayerID: string read FPlayerID write SetPlayerID;
     /// <summary>
     /// X
     /// </summary>
@@ -317,23 +317,23 @@ type
   /// </summary>
   TPlayerMoveMessage = class(TOlfSMMessage)
   private
-    FSessionID: TSporglooAPIAlpha16;
-    FPlayerID: TSporglooAPIAlpha16;
+    FSessionID: string;
+    FPlayerID: string;
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
-    procedure SetSessionID(const Value: TSporglooAPIAlpha16);
-    procedure SetPlayerID(const Value: TSporglooAPIAlpha16);
+    procedure SetSessionID(const Value: string);
+    procedure SetPlayerID(const Value: string);
     procedure SetX(const Value: TSporglooAPINumber);
     procedure SetY(const Value: TSporglooAPINumber);
   public
     /// <summary>
     /// Session unique identifier
     /// </summary>
-    property SessionID: TSporglooAPIAlpha16 read FSessionID write SetSessionID;
+    property SessionID: string read FSessionID write SetSessionID;
     /// <summary>
     /// Player unique identifier
     /// </summary>
-    property PlayerID: TSporglooAPIAlpha16 read FPlayerID write SetPlayerID;
+    property PlayerID: string read FPlayerID write SetPlayerID;
     /// <summary>
     /// X
     /// </summary>
@@ -453,6 +453,69 @@ implementation
 
 uses
   System.SysUtils;
+
+{$REGION 'code from Olf.RTL.Streams'}
+
+procedure SaveStringToStream(AString: string; AStream: TStream;
+  AEncoding: TEncoding); overload;
+// From unit Olf.RTL.Streams.pas in repository :
+// https://github.com/DeveloppeurPascal/librairies
+var
+  StrLen: int64; // typeof(System.Classes.TStream.size)
+  StrStream: TStringStream;
+begin
+  StrStream := TStringStream.Create(AString, AEncoding);
+  try
+    StrLen := StrStream.Size;
+    AStream.write(StrLen, sizeof(StrLen));
+    if (StrLen > 0) then
+    begin
+      StrStream.Position := 0;
+      AStream.CopyFrom(StrStream);
+    end;
+  finally
+    StrStream.Free;
+  end;
+end;
+
+procedure SaveStringToStream(AString: string; AStream: TStream); overload;
+// From unit Olf.RTL.Streams.pas in repository :
+// https://github.com/DeveloppeurPascal/librairies
+begin
+  SaveStringToStream(AString, AStream, TEncoding.UTF8);
+end;
+
+function LoadStringFromStream(AStream: TStream; AEncoding: TEncoding)
+  : string; overload;
+// From unit Olf.RTL.Streams.pas in repository :
+// https://github.com/DeveloppeurPascal/librairies
+var
+  StrLen: int64; // typeof(System.Classes.TStream.size)
+  StrStream: TStringStream;
+begin
+  AStream.Read(StrLen, sizeof(StrLen));
+  if (StrLen > 0) then
+  begin
+    StrStream := TStringStream.Create('', AEncoding);
+    try
+      StrStream.CopyFrom(AStream, StrLen);
+      result := StrStream.DataString;
+    finally
+      StrStream.Free;
+    end;
+  end
+  else
+    result := '';
+end;
+
+function LoadStringFromStream(AStream: TStream): string; overload;
+// From unit Olf.RTL.Streams.pas in repository :
+// https://github.com/DeveloppeurPascal/librairies
+begin
+  result := LoadStringFromStream(AStream, TEncoding.UTF8);
+end;
+
+{$ENDREGION}
 
 procedure RegisterMessagesReceivedByTheServer(Const Server: TOlfSMServer);
 begin
@@ -632,6 +695,8 @@ constructor TClientLoginMessage.Create;
 begin
   inherited;
   MessageID := 3;
+  FDeviceID := '';
+  FPlayerID := '';
   FVersionAPI := 0;
 end;
 
@@ -643,10 +708,8 @@ end;
 procedure TClientLoginMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
-  if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
-    raise exception.Create('Can''t load "DeviceID" value.');
-  if (Stream.read(FPlayerID, sizeof(FPlayerID)) <> sizeof(FPlayerID)) then
-    raise exception.Create('Can''t load "PlayerID" value.');
+  FDeviceID := LoadStringFromStream(Stream);
+  FPlayerID := LoadStringFromStream(Stream);
   if (Stream.read(FVersionAPI, sizeof(FVersionAPI)) <> sizeof(FVersionAPI)) then
     raise exception.Create('Can''t load "VersionAPI" value.');
 end;
@@ -654,17 +717,17 @@ end;
 procedure TClientLoginMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
-  Stream.Write(FDeviceID, sizeof(FDeviceID));
-  Stream.Write(FPlayerID, sizeof(FPlayerID));
+  SaveStringToStream(FDeviceID, Stream);
+  SaveStringToStream(FPlayerID, Stream);
   Stream.Write(FVersionAPI, sizeof(FVersionAPI));
 end;
 
-procedure TClientLoginMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginMessage.SetDeviceID(const Value: string);
 begin
   FDeviceID := Value;
 end;
 
-procedure TClientLoginMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginMessage.SetPlayerID(const Value: string);
 begin
   FPlayerID := Value;
 end;
@@ -682,6 +745,8 @@ constructor TClientLoginResponseMessage.Create;
 begin
   inherited;
   MessageID := 4;
+  FDeviceID := '';
+  FSessionID := '';
   FX := 0;
   FY := 0;
   FScore := 0;
@@ -697,10 +762,8 @@ end;
 procedure TClientLoginResponseMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
-  if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
-    raise exception.Create('Can''t load "DeviceID" value.');
-  if (Stream.read(FSessionID, sizeof(FSessionID)) <> sizeof(FSessionID)) then
-    raise exception.Create('Can''t load "SessionID" value.');
+  FDeviceID := LoadStringFromStream(Stream);
+  FSessionID := LoadStringFromStream(Stream);
   if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
     raise exception.Create('Can''t load "X" value.');
   if (Stream.read(FY, sizeof(FY)) <> sizeof(FY)) then
@@ -716,8 +779,8 @@ end;
 procedure TClientLoginResponseMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
-  Stream.Write(FDeviceID, sizeof(FDeviceID));
-  Stream.Write(FSessionID, sizeof(FSessionID));
+  SaveStringToStream(FDeviceID, Stream);
+  SaveStringToStream(FSessionID, Stream);
   Stream.Write(FX, sizeof(FX));
   Stream.Write(FY, sizeof(FY));
   Stream.Write(FScore, sizeof(FScore));
@@ -725,12 +788,12 @@ begin
   Stream.Write(FLife, sizeof(FLife));
 end;
 
-procedure TClientLoginResponseMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginResponseMessage.SetDeviceID(const Value: string);
 begin
   FDeviceID := Value;
 end;
 
-procedure TClientLoginResponseMessage.SetSessionID(const Value: TSporglooAPIAlpha16);
+procedure TClientLoginResponseMessage.SetSessionID(const Value: string);
 begin
   FSessionID := Value;
 end;
@@ -793,6 +856,7 @@ constructor TClientRegisterMessage.Create;
 begin
   inherited;
   MessageID := 1;
+  FDeviceID := '';
   FVersionAPI := 0;
 end;
 
@@ -804,8 +868,7 @@ end;
 procedure TClientRegisterMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
-  if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
-    raise exception.Create('Can''t load "DeviceID" value.');
+  FDeviceID := LoadStringFromStream(Stream);
   if (Stream.read(FVersionAPI, sizeof(FVersionAPI)) <> sizeof(FVersionAPI)) then
     raise exception.Create('Can''t load "VersionAPI" value.');
 end;
@@ -813,11 +876,11 @@ end;
 procedure TClientRegisterMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
-  Stream.Write(FDeviceID, sizeof(FDeviceID));
+  SaveStringToStream(FDeviceID, Stream);
   Stream.Write(FVersionAPI, sizeof(FVersionAPI));
 end;
 
-procedure TClientRegisterMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientRegisterMessage.SetDeviceID(const Value: string);
 begin
   FDeviceID := Value;
 end;
@@ -835,6 +898,8 @@ constructor TClientRegisterResponseMessage.Create;
 begin
   inherited;
   MessageID := 2;
+  FDeviceID := '';
+  FPlayerID := '';
 end;
 
 function TClientRegisterResponseMessage.GetNewInstance: TOlfSMMessage;
@@ -845,25 +910,23 @@ end;
 procedure TClientRegisterResponseMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
-  if (Stream.read(FDeviceID, sizeof(FDeviceID)) <> sizeof(FDeviceID)) then
-    raise exception.Create('Can''t load "DeviceID" value.');
-  if (Stream.read(FPlayerID, sizeof(FPlayerID)) <> sizeof(FPlayerID)) then
-    raise exception.Create('Can''t load "PlayerID" value.');
+  FDeviceID := LoadStringFromStream(Stream);
+  FPlayerID := LoadStringFromStream(Stream);
 end;
 
 procedure TClientRegisterResponseMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
-  Stream.Write(FDeviceID, sizeof(FDeviceID));
-  Stream.Write(FPlayerID, sizeof(FPlayerID));
+  SaveStringToStream(FDeviceID, Stream);
+  SaveStringToStream(FPlayerID, Stream);
 end;
 
-procedure TClientRegisterResponseMessage.SetDeviceID(const Value: TSporglooAPIAlpha16);
+procedure TClientRegisterResponseMessage.SetDeviceID(const Value: string);
 begin
   FDeviceID := Value;
 end;
 
-procedure TClientRegisterResponseMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TClientRegisterResponseMessage.SetPlayerID(const Value: string);
 begin
   FPlayerID := Value;
 end;
@@ -989,6 +1052,7 @@ constructor TOtherPlayerMoveMessage.Create;
 begin
   inherited;
   MessageID := 11;
+  FPlayerID := '';
   FX := 0;
   FY := 0;
 end;
@@ -1001,8 +1065,7 @@ end;
 procedure TOtherPlayerMoveMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
-  if (Stream.read(FPlayerID, sizeof(FPlayerID)) <> sizeof(FPlayerID)) then
-    raise exception.Create('Can''t load "PlayerID" value.');
+  FPlayerID := LoadStringFromStream(Stream);
   if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
     raise exception.Create('Can''t load "X" value.');
   if (Stream.read(FY, sizeof(FY)) <> sizeof(FY)) then
@@ -1012,12 +1075,12 @@ end;
 procedure TOtherPlayerMoveMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
-  Stream.Write(FPlayerID, sizeof(FPlayerID));
+  SaveStringToStream(FPlayerID, Stream);
   Stream.Write(FX, sizeof(FX));
   Stream.Write(FY, sizeof(FY));
 end;
 
-procedure TOtherPlayerMoveMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TOtherPlayerMoveMessage.SetPlayerID(const Value: string);
 begin
   FPlayerID := Value;
 end;
@@ -1040,6 +1103,8 @@ constructor TPlayerAddAStarOnTheMapMessage.Create;
 begin
   inherited;
   MessageID := 9;
+  FSessionID := '';
+  FPlayerID := '';
   FX := 0;
   FY := 0;
 end;
@@ -1052,10 +1117,8 @@ end;
 procedure TPlayerAddAStarOnTheMapMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
-  if (Stream.read(FSessionID, sizeof(FSessionID)) <> sizeof(FSessionID)) then
-    raise exception.Create('Can''t load "SessionID" value.');
-  if (Stream.read(FPlayerID, sizeof(FPlayerID)) <> sizeof(FPlayerID)) then
-    raise exception.Create('Can''t load "PlayerID" value.');
+  FSessionID := LoadStringFromStream(Stream);
+  FPlayerID := LoadStringFromStream(Stream);
   if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
     raise exception.Create('Can''t load "X" value.');
   if (Stream.read(FY, sizeof(FY)) <> sizeof(FY)) then
@@ -1065,18 +1128,18 @@ end;
 procedure TPlayerAddAStarOnTheMapMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
-  Stream.Write(FSessionID, sizeof(FSessionID));
-  Stream.Write(FPlayerID, sizeof(FPlayerID));
+  SaveStringToStream(FSessionID, Stream);
+  SaveStringToStream(FPlayerID, Stream);
   Stream.Write(FX, sizeof(FX));
   Stream.Write(FY, sizeof(FY));
 end;
 
-procedure TPlayerAddAStarOnTheMapMessage.SetSessionID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerAddAStarOnTheMapMessage.SetSessionID(const Value: string);
 begin
   FSessionID := Value;
 end;
 
-procedure TPlayerAddAStarOnTheMapMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerAddAStarOnTheMapMessage.SetPlayerID(const Value: string);
 begin
   FPlayerID := Value;
 end;
@@ -1099,6 +1162,8 @@ constructor TPlayerMoveMessage.Create;
 begin
   inherited;
   MessageID := 7;
+  FSessionID := '';
+  FPlayerID := '';
   FX := 0;
   FY := 0;
 end;
@@ -1111,10 +1176,8 @@ end;
 procedure TPlayerMoveMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
-  if (Stream.read(FSessionID, sizeof(FSessionID)) <> sizeof(FSessionID)) then
-    raise exception.Create('Can''t load "SessionID" value.');
-  if (Stream.read(FPlayerID, sizeof(FPlayerID)) <> sizeof(FPlayerID)) then
-    raise exception.Create('Can''t load "PlayerID" value.');
+  FSessionID := LoadStringFromStream(Stream);
+  FPlayerID := LoadStringFromStream(Stream);
   if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
     raise exception.Create('Can''t load "X" value.');
   if (Stream.read(FY, sizeof(FY)) <> sizeof(FY)) then
@@ -1124,18 +1187,18 @@ end;
 procedure TPlayerMoveMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
-  Stream.Write(FSessionID, sizeof(FSessionID));
-  Stream.Write(FPlayerID, sizeof(FPlayerID));
+  SaveStringToStream(FSessionID, Stream);
+  SaveStringToStream(FPlayerID, Stream);
   Stream.Write(FX, sizeof(FX));
   Stream.Write(FY, sizeof(FY));
 end;
 
-procedure TPlayerMoveMessage.SetSessionID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerMoveMessage.SetSessionID(const Value: string);
 begin
   FSessionID := Value;
 end;
 
-procedure TPlayerMoveMessage.SetPlayerID(const Value: TSporglooAPIAlpha16);
+procedure TPlayerMoveMessage.SetPlayerID(const Value: string);
 begin
   FPlayerID := Value;
 end;

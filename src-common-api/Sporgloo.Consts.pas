@@ -7,10 +7,9 @@ const
   CSporglooTilePath = 1;
   CSporglooTileStar = 2;
 
-  CSporglooAPIMessageTerminator = 0;
-  CSporglooAPIBufferLength = 250;
-
   CSporglooTileSize = 64;
+
+  CSporglooIDSize = 16;
 
 implementation
 
