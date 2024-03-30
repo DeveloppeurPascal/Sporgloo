@@ -101,7 +101,8 @@ begin
     end);
 end;
 
-procedure TfrmMain.DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
+procedure TfrmMain.DoClientLostConnection(const AClient
+  : TOlfSMSrvConnectedClient);
 begin
   if not(AClient is tsporglooclient) then
     exit;
@@ -173,7 +174,7 @@ begin
   begin
     StarsCount := StarsCount - 1;
     GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,
-      GameData.Session.PlayerID, MapX, MapY);
+      GameData.Session.player.PlayerID, MapX, MapY);
     // TODO : Add the star in a waiting list of server's ACK
     GameData.Map.SetTileID(MapX, MapY, CSporglooTileStar);
     TMessageManager.DefaultManager.SendMessage(self,
@@ -184,17 +185,17 @@ end;
 
 function TfrmMain.GetLifeLevel: TSporglooAPINumber;
 begin
-  result := TGameData.Current.Player.LifeLevel;
+  result := TGameData.Current.player.LifeLevel;
 end;
 
 function TfrmMain.GetScore: TSporglooAPINumber;
 begin
-  result := TGameData.Current.Player.Score;
+  result := TGameData.Current.player.Score;
 end;
 
 function TfrmMain.GetStarsCount: TSporglooAPINumber;
 begin
-  result := TGameData.Current.Player.StarsCount;
+  result := TGameData.Current.player.StarsCount;
 end;
 
 procedure TfrmMain.InitializeGamePage;
@@ -277,19 +278,19 @@ end;
 
 procedure TfrmMain.SetLifeLevel(const Value: TSporglooAPINumber);
 begin
-  TGameData.Current.Player.LifeLevel := Value;
+  TGameData.Current.player.LifeLevel := Value;
   // TODO : refresh screen if displayed
 end;
 
 procedure TfrmMain.SetScore(const Value: TSporglooAPINumber);
 begin
-  TGameData.Current.Player.Score := Value;
+  TGameData.Current.player.Score := Value;
   // TODO : refresh screen if displayed
 end;
 
 procedure TfrmMain.SetStarsCount(const Value: TSporglooAPINumber);
 begin
-  TGameData.Current.Player.StarsCount := Value;
+  TGameData.Current.player.StarsCount := Value;
   // TODO : refresh screen if displayed
 end;
 
@@ -304,16 +305,14 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TLostServerMessage;
-      Client: tsporglooclient;
-      DeviceID, PlayerID: string;
-      GameData: TGameData;
+      // Client: tsporglooclient;
     begin
       if not(M is TLostServerMessage) then
         exit;
       Msg := M as TLostServerMessage;
       if not assigned(Msg.Value) then
         exit;
-      Client := Msg.Value;
+      // Client := Msg.Value;
 
       // TODO : if connexion failed, retry after a user confirmation or close the program
     end);
@@ -338,11 +337,11 @@ begin
 
       GameData := TGameData.Current;
 
-      DeviceID := GameData.Player.DeviceID;
+      DeviceID := GameData.player.DeviceID;
       if DeviceID.IsEmpty then
         raise Exception.Create('Unknow device ID !');
 
-      PlayerID := GameData.Player.PlayerID;
+      PlayerID := GameData.player.PlayerID;
       if PlayerID.IsEmpty then
         Client.SendClientRegister(DeviceID)
       else
