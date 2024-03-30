@@ -34,6 +34,10 @@ type
       : TOlfSocketMessagingServerConnectedClient;
       Const AMessage: TOlfSocketMessage);
 
+    procedure onErrorMessage(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient;
+      Const AMessage: TOlfSocketMessage);
+
     procedure SendClientRegisterResponse(Const AToGame
       : TOlfSocketMessagingServerConnectedClient;
       Const DeviceID, PlayerID: string);
@@ -52,6 +56,11 @@ type
     procedure SendOtherPlayerMove(Const AToGame
       : TOlfSocketMessagingServerConnectedClient; Const PlayerID: string;
       Const X, Y: TSporglooAPINumber);
+
+    procedure SendErrorMessage(Const AToGame
+      : TOlfSocketMessagingServerConnectedClient;
+      const AErrorCode: TsporglooErrorCode; const AErrorText: string;
+      const ARaiseException: boolean = true);
   public
     constructor Create(AIP: string; APort: Word); override;
     destructor Destroy; override;
@@ -101,21 +110,30 @@ begin
   writeln('onClientLogin');
 {$ENDIF}
   if not(AMessage is TClientLoginMessage) then
-    raise exception.Create('Not the client login message expected.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongMessageReceived,
+      'Not the client login message expected.');
 
   msg := AMessage as TClientLoginMessage;
 
   if msg.DeviceID.IsEmpty then
-    raise exception.Create('Login with empty device ID is not allowed.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongDeviceID,
+      'Login with empty device ID is not allowed.');
 
   if msg.PlayerID.IsEmpty then
-    raise exception.Create('Login with empty player ID is not allowed.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongPlayerID,
+      'Login with empty player ID is not allowed.');
+
+  if msg.VersionAPI <> CAPIVersion then
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongAPIVersion,
+      'Wrong API.');
 
   if not SporglooPlayers.TryGetValue(msg.PlayerID, player) then
-    raise exception.Create('Unknow player !');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.UnknowPlayerID,
+      'Unknow player !');
 
   if (player.DeviceID <> msg.DeviceID) then
-    raise exception.Create('Can''t log with this player on your device.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongDeviceForPlayerID,
+      'Can''t log with this player on your device.');
 
   Session := TSporglooSession.Create;
   Session.SessionID := GetUniqID;
@@ -146,12 +164,18 @@ begin
   writeln('onClientRegister');
 {$ENDIF}
   if not(AMessage is TClientRegisterMessage) then
-    raise exception.Create('Not the client register message expected.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongMessageReceived,
+      'Not the client register message expected.');
 
   msg := AMessage as TClientRegisterMessage;
 
   if msg.DeviceID.IsEmpty then
-    raise exception.Create('Empty DeviceID to register.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongDeviceID,
+      'Empty DeviceID to register.');
+
+  if msg.VersionAPI <> CAPIVersion then
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongAPIVersion,
+      'Wrong API.');
 
   player := SporglooPlayers.GetPlayerByDevice(msg.DeviceID);
   if not assigned(player) then
@@ -173,6 +197,27 @@ begin
   SendClientRegisterResponse(AFromGame, player.DeviceID, player.PlayerID);
 end;
 
+procedure TSporglooServer.onErrorMessage(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+  const AMessage: TOlfSocketMessage);
+var
+  msg: TErrorMessage;
+begin
+{$IFDEF DEBUG}
+  writeln('onErrorMessage');
+{$ENDIF}
+  if not(AMessage is TErrorMessage) then
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongMessageReceived,
+      'Not the error message expected.');
+
+  msg := AMessage as TErrorMessage;
+{$IFDEF DEBUG}
+  writeln('Error message ' + msg.ErrorCode.tostring +
+    ' received from a client.');
+{$ENDIF}
+  // TODO : manage the received error
+end;
+
 procedure TSporglooServer.onMapRefresh(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
   const AMessage: TOlfSocketMessage);
@@ -184,7 +229,8 @@ begin
   writeln('onMapRefresh');
 {$ENDIF}
   if not(AMessage is TMapRefreshDemandMessage) then
-    raise exception.Create('Not the map refresh demand message expected.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongMessageReceived,
+      'Not the map refresh demand message expected.');
 
   msg := AMessage as TMapRefreshDemandMessage;
 
@@ -209,25 +255,32 @@ begin
   writeln('onPlayerMove');
 {$ENDIF}
   if not(AMessage is TPlayerMoveMessage) then
-    raise exception.Create('Not the player move message expected.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongMessageReceived,
+      'Not the player move message expected.');
 
   msg := AMessage as TPlayerMoveMessage;
 
   if msg.SessionID.IsEmpty then
-    raise exception.Create('Session ID needed.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongSessionID,
+      'Session ID needed.');
 
   if msg.PlayerID.IsEmpty then
-    raise exception.Create('Player ID needed.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongPlayerID,
+      'Player ID needed.');
 
   if not SporglooSessions.TryGetValue(msg.SessionID, Session) then
-    raise exception.Create('Unknow Session !');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.UnknowSessionID,
+      'Unknow Session !');
 
   if not SporglooPlayers.TryGetValue(msg.PlayerID, player) then
-    raise exception.Create('Unknow player !');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.UnknowPlayerID,
+      'Unknow player !');
 
   if (player.DeviceID <> Session.DeviceID) and
     (player.PlayerID <> Session.PlayerID) then
-    raise exception.Create('Wrong player for this session.');
+    SendErrorMessage(AFromGame,
+      TsporglooErrorCode.WrongDeviceOrPlayerForSessionID,
+      'Wrong player for this session.');
 
   // TODO : check if the movement the position is free on the map
   player.PlayerX := msg.X;
@@ -261,25 +314,32 @@ begin
   writeln('onPlayerPutAStar');
 {$ENDIF}
   if not(AMessage is TPlayerAddAStarOnTheMapMessage) then
-    raise exception.Create('Not the player add a star message expected.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongMessageReceived,
+      'Not the player add a star message expected.');
 
   msg := AMessage as TPlayerAddAStarOnTheMapMessage;
 
   if msg.SessionID.IsEmpty then
-    raise exception.Create('Session ID needed.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongSessionID,
+      'Session ID needed.');
 
   if msg.PlayerID.IsEmpty then
-    raise exception.Create('Player ID needed.');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.WrongPlayerID,
+      'Player ID needed.');
 
   if not SporglooSessions.TryGetValue(msg.SessionID, Session) then
-    raise exception.Create('Unknow Session !');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.UnknowSessionID,
+      'Unknow Session !');
 
   if not SporglooPlayers.TryGetValue(msg.PlayerID, player) then
-    raise exception.Create('Unknow player !');
+    SendErrorMessage(AFromGame, TsporglooErrorCode.UnknowPlayerID,
+      'Unknow player !');
 
   if (player.DeviceID <> Session.DeviceID) and
     (player.PlayerID <> Session.PlayerID) then
-    raise exception.Create('Wrong player for this session.');
+    SendErrorMessage(AFromGame,
+      TsporglooErrorCode.WrongDeviceOrPlayerForSessionID,
+      'Wrong player for this session.');
 
   if (player.StarsCount > 0) then
   begin
@@ -333,6 +393,27 @@ begin
   finally
     msg.Free;
   end;
+end;
+
+procedure TSporglooServer.SendErrorMessage(const AToGame
+  : TOlfSocketMessagingServerConnectedClient;
+  const AErrorCode: TsporglooErrorCode; const AErrorText: string;
+  const ARaiseException: boolean);
+var
+  msg: TErrorMessage;
+begin
+  // TODO : add a server log or an error reporting (in case of attack or other problem)
+  // TODO : send an alert if TSporglooErrorCode.WrongMessageReceived is raised (internal error)
+  msg := TErrorMessage.Create;
+  try
+    msg.ErrorCode := ord(AErrorCode);
+    AToGame.SendMessage(msg);
+  finally
+    msg.Free;
+  end;
+
+  if ARaiseException then
+    raise TSporglooException.Create(AErrorCode, AErrorText);
 end;
 
 procedure TSporglooServer.SendMapCell(Const AToGame
