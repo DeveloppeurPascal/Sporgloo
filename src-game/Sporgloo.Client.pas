@@ -148,9 +148,18 @@ begin
     Player.PlayerID := msg.PlayerID;
     TGameData.Current.OtherPlayers.add(msg.PlayerID, Player);
   end;
+
+  // TODO : redessiner la tuile où se trouvait le joueur avant son déplacement (si on le connaissait)
+
   Player.PlayerX := msg.X;
   Player.PlayerY := msg.Y;
-  // TODO : refresh the map cell
+
+  TThread.synchronize(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(self,
+        TOtherPlayerUpdateMessage.Create(Player));
+    end);
 end;
 
 procedure TSporglooClient.onPlayerMoveResponse(const AFromServer

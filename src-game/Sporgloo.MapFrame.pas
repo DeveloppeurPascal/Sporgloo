@@ -28,6 +28,7 @@ type
   protected
     procedure SubscribeToMapCellUpdateMessage;
     procedure SubscribeToMapUpdateMessage;
+    procedure SubscribeToOtherPlayerMove;
     procedure DrawMapCell(AX, AY: TSporglooAPINumber;
       ATileID: TSporglooAPIShort);
     procedure DrawAPlayer(AX, AY: TSporglooAPINumber);
@@ -54,6 +55,7 @@ begin
   TimerMapRefresh.Enabled := false;
   SubscribeToMapCellUpdateMessage;
   SubscribeToMapUpdateMessage;
+  SubscribeToOtherPlayerMove;
 end;
 
 procedure TMapFrame.DrawAPlayer(AX, AY: TSporglooAPINumber);
@@ -144,6 +146,7 @@ begin
   end;
 
   Player := TGameData.Current.Player;
+  // TODO : chercher si un autre joueur est à ces coordonnées pour l'afficher par dessus
 
   bmp := dmSporglooImages.MapImages.Bitmap
     (tsizef.Create(CSporglooTileSize * BitmapScale,
@@ -153,9 +156,8 @@ begin
     MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
       rectf(x, y, x + CSporglooTileSize + 1 * BitmapScale,
       y + CSporglooTileSize + 1 * BitmapScale), 1);
-    // TODO : check is a player is on the cell and draw it
 
-    if (AX = Player.PlayerX) and (AY = Player.PlayerY) then
+    if assigned(Player) and (AX = Player.PlayerX) and (AY = Player.PlayerY) then
       DrawAPlayer(AX, AY);
 
     if ATileID = CSporglooTileStar then
@@ -217,6 +219,33 @@ begin
       for x := Session.MapRangeX to Session.MapRangeXMax do
         for y := Session.MapRangey to Session.MapRangeYMax do
           DrawMapCell(x, y, Map.GetTileID(x, y));
+    end);
+end;
+
+procedure TMapFrame.SubscribeToOtherPlayerMove;
+begin
+  TMessageManager.DefaultManager.SubscribeToMessage(TOtherPlayerUpdateMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    var
+      Msg: TOtherPlayerUpdateMessage;
+      GameData: TGameData;
+      Player: TSporglooPlayer;
+    begin
+      if not(M is TOtherPlayerUpdateMessage) then
+        exit;
+      Msg := M as TOtherPlayerUpdateMessage;
+      if not assigned(Msg.Value) then
+        exit;
+
+      Player := Msg.Value;
+
+      GameData := TGameData.Current;
+
+      if (Player.PlayerX >= GameData.Session.MapRangeX) and
+        (Player.PlayerY >= GameData.Session.MapRangey) and
+        (Player.PlayerX <= GameData.Session.MapRangeXMax) and
+        (Player.PlayerY <= GameData.Session.MapRangeYMax) then
+        DrawAPlayer(Player.PlayerX, Player.PlayerY);
     end);
 end;
 

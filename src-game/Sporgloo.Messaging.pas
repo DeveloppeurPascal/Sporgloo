@@ -5,7 +5,8 @@ interface
 uses
   System.Messaging,
   Sporgloo.Types,
-  Sporgloo.Client;
+  Sporgloo.Client,
+  Sporgloo.Database;
 
 type
   /// <summary>
@@ -31,6 +32,12 @@ type
   /// Used to force the redraw of the map on screen
   /// </summary>
   TMapUpdateMessage = class(TMessage)
+  end;
+
+  /// <summary>
+  /// Sent by the client/server API when an other player moved.
+  /// </summary>
+  TOtherPlayerUpdateMessage = class(TObjectMessage<TSporglooPlayer>)
   end;
 
 implementation
