@@ -26,7 +26,9 @@ uses
   Olf.FMX.TextImageFrame in '..\lib-externes\librairies\src\Olf.FMX.TextImageFrame.pas' {OlfFMXTextImageFrame: TFrame},
   Olf.RTL.Params in '..\lib-externes\librairies\src\Olf.RTL.Params.pas',
   u_urlOpen in '..\lib-externes\librairies\src\u_urlOpen.pas',
-  Olf.RTL.Streams in '..\lib-externes\librairies\src\Olf.RTL.Streams.pas';
+  Olf.RTL.Streams in '..\lib-externes\librairies\src\Olf.RTL.Streams.pas',
+  udmAdobeStock_440583506 in '..\_PRIVATE\fontes\AdobeStock_440583506\udmAdobeStock_440583506.pas' {dmAdobeStock_440583506: TDataModule},
+  udmAdobeStock_526775911 in '..\_PRIVATE\fontes\AdobeStock_526775911\udmAdobeStock_526775911.pas' {dmAdobeStock_526775911: TDataModule};
 
 {$R *.res}
 
@@ -35,6 +37,8 @@ begin
   Application.Initialize;
   Application.FormFactor.Orientations := [TFormOrientation.Portrait, TFormOrientation.InvertedPortrait, TFormOrientation.Landscape, TFormOrientation.InvertedLandscape];
   Application.CreateForm(TdmSporglooImages, dmSporglooImages);
+  Application.CreateForm(TdmAdobeStock_440583506, dmAdobeStock_440583506);
+  Application.CreateForm(TdmAdobeStock_526775911, dmAdobeStock_526775911);
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.
