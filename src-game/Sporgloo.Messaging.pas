@@ -35,8 +35,4 @@ type
 
 implementation
 
-initialization
-
-finalization
-
 end.
