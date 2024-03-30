@@ -30,8 +30,9 @@
 
 ## evening stream
 
-prévu :
-- ajouter les infos sur les joueurs au niveau de la grille de jeu (pour simplifier les affichages et tests partout)
-- ajouter un message permettant l'envoi d'une série de cases de la grille plutôt que une par une => optimisation du dessin et des échanges
-- ajouter un message de déconnexion "propre" d'un client/joueur => coupure de la session
-- optimisation des mises à jour : stocker la zone d'affichage autour du joueur pour chaque session (zone max retournée à chaque refresh de la carte), sur les trucs à envoyer en masse faire une file d'attente et traiter l'envoi sur un autre thread ou en idle
+* added a disconnect message from client to server and from server to client on closing a program
+* added 2 graphical fonts from AdobeStock (generated with Folder2FMXImageList)
+* added the game title in the client window
+* added a frame for dialog boxes
+* added a frame for menu buttons
+* added the box and menu buttons in home screen
