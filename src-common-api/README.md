@@ -14,6 +14,7 @@ client to server
 
 MessageID = 1
 Client send : DeviceID
+API Version : VersionAPI
 
 MessageID = 2
 Server response : DeviceID+PlayerID
@@ -24,20 +25,25 @@ The server generate a PlayerID from a uniq ID (GUID or other) and store the Devi
 
 The server send a PlayerID to the client.
 
+If the server doesn't accept the client connection, it sends a message 12 "client not allowed to connect".
+
 ### Client login
 
 client to server
 
 MessageID = 3
 Client send : DevideID+PlayerID
+API Version : VersionAPI
 
 MessageID = 4
 Server response : DeviceID+SessionID+PlayerX+PlayerX+Score+StarsCount+LifeLevel
 
-Each time the game program starts, it ask for a SessionID to the server.
+Each time the game program starts, it asks for a SessionID to the server.
 
 The server generate a uniq ID as a SessionID and sent it to the client with last coordinates of the player.
 **TODO : add player data (score, life, ...)**
+
+If the server doesn't accept the client connection, it sends a message 12 "client not allowed to connect".
 
 ### Map refresh
 
