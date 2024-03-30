@@ -1,5 +1,7 @@
 # 20240330 - [DeveloppeurPascal](https://github.com/DeveloppeurPascal)
 
+## morning stream
+
 * updated submodules
 * added the API Version in register and login messages between games (clients) and the server
 * updated the client/server messages API unit
@@ -8,3 +10,28 @@
 * refactoring : changed IDs type to string and removed old code to manage TSporglooAPIAlpha16 type
 * added the error message from the server to the client on register/login operations
 * replaced the exceptions in the server by a common send of TErrorMessage to the concerned client
+
+## afternoon stream (with an OBS crash)
+
+* updated Skia4Delphi dependencies in FR/EN docs
+* updated the client program (the game) to follow the new Socket Messaging unit and receiving message events
+* updated the server program to follow the new Socket Messaging unit and receiving message events
+* refactoring : client class simplification
+* mise en place du stockage de la base de données du jeu et de son chargement (pour le serveur)
+
+## afternoon stream (after OBS crash)
+
+* prise en charge des mouvements des autres joueurs pour les afficher s'ils rentrent dans notre zone
+* removed DeviceID and Player ID in Session class, replaced by the Player
+* added some consts for default values on Player creation
+* send the new Player position and tile change to existing players
+* change default position for a new player (around an other connected player but not in (0,0))
+* updated Android SDK&libraries list on Sporgloo client
+
+## evening stream
+
+prévu :
+- ajouter les infos sur les joueurs au niveau de la grille de jeu (pour simplifier les affichages et tests partout)
+- ajouter un message permettant l'envoi d'une série de cases de la grille plutôt que une par une => optimisation du dessin et des échanges
+- ajouter un message de déconnexion "propre" d'un client/joueur => coupure de la session
+- optimisation des mises à jour : stocker la zone d'affichage autour du joueur pour chaque session (zone max retournée à chaque refresh de la carte), sur les trucs à envoyer en masse faire une file d'attente et traiter l'envoi sur un autre thread ou en idle
