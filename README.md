@@ -24,7 +24,7 @@ This project depends on :
 * [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) in the subfolder ./lib-externes/librairies
 * [DeveloppeurPascal/Socket-Messaging-Library](https://github.com/DeveloppeurPascal/Socket-Messaging-Library) in the subfolder ./lib-externes/Socket-Messaging-Library
 
-Sporgloo uses the library [Skia4Delphi](https://skia4delphi.org) installed from GetIt in Delphi IDE.
+Sporgloo uses the library [Skia4Delphi](https://skia4delphi.org) installed from GetIt in Delphi IDE or in standard with Delphi 12 Athens and after.
 
 ## How to ask a new feature, report a bug or a security issue ?
 

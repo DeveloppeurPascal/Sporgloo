@@ -24,7 +24,7 @@ Ce dépôt de code dépend des dépôts suivants :
 * [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) dans le sous-dossier ./lib-externes/librairies
 * [DeveloppeurPascal/Socket-Messaging-Library](https://github.com/DeveloppeurPascal/Socket-Messaging-Library) dans le sous-dossier ./lib-externes/Socket-Messaging-Library
 
-Il utilise aussi la librairie [Skia4Delphi](https://skia4delphi.org) installée depuis GetIt directement dans Delphi.
+Il utilise aussi la librairie [Skia4Delphi](https://skia4delphi.org) installée depuis GetIt directement dans Delphi ou en standard à partir de Delphi 12 Athens.
 
 ## Comment demander une nouvelle fonctionnalité, signaler un bogue ou une faille de sécurité ?
 
