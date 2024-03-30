@@ -323,7 +323,7 @@ begin
       TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
       'Wrong player for this session.');
 
-  // TODO : check if the movement the position is free on the map
+  // TODO : check if the movement at this position is free on the map
   Session.player.PlayerX := msg.X;
   Session.player.PlayerY := msg.Y;
 
