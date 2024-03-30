@@ -5,33 +5,35 @@ interface
 uses
   Olf.Net.Socket.Messaging,
   Sporgloo.API.Messages,
-  Sporgloo.Types;
+  Sporgloo.Types,
+  Sporgloo.Consts;
 
 type
-  TSporglooClient = class(TOlfSMClient)
+  TSporglooClient = class(TSporglooSocketMessagesClient)
   private
   protected
     procedure onClientRegisterResponse(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const AMessage: TOlfSocketMessage);
+      Const msg: TClientRegisterResponseMessage);
     procedure onClientLoginResponse(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const AMessage: TOlfSocketMessage);
+      Const msg: TClientLoginResponseMessage);
     procedure onMapCell(Const AFromGame
-      : TOlfSocketMessagingServerConnectedClient;
-      Const AMessage: TOlfSocketMessage);
+      : TOlfSocketMessagingServerConnectedClient; Const msg: TMapCellMessage);
     procedure onPlayerMoveResponse(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const AMessage: TOlfSocketMessage);
+      Const msg: TPlayerMoveResponseMessage);
     procedure onPlayerPutAStarResponse(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const AMessage: TOlfSocketMessage);
+      Const msg: TServerAcceptTheStarAddingMessage);
     procedure onOtherPlayerMove(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const AMessage: TOlfSocketMessage);
+      Const msg: TOtherPlayerMoveMessage);
+
+    procedure onErrorMessage(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient; Const msg: TErrorMessage);
   public
     constructor Create(AServerIP: string; AServerPort: word); override;
-    destructor Destroy; override;
 
     procedure SendClientRegister(Const DeviceID: string); overload;
     procedure SendClientRegister(Const AToGame
@@ -55,6 +57,11 @@ type
       : TOlfSocketMessagingServerConnectedClient;
       Const SessionID, PlayerID: string;
       Const X, Y: TSporglooAPINumber); overload;
+
+    procedure SendErrorMessage(Const AToGame
+      : TOlfSocketMessagingServerConnectedClient;
+      const AErrorCode: TSporglooErrorCode; const AErrorText: string;
+      const ARaiseException: boolean = true);
   end;
 
 implementation
@@ -66,47 +73,36 @@ Uses
   System.Net.Socket,
   uGameData,
   uConfig,
-  Sporgloo.Messaging, Sporgloo.Database;
+  Sporgloo.Messaging,
+  Sporgloo.Database;
 
 { TSporglooClient }
 
 constructor TSporglooClient.Create(AServerIP: string; AServerPort: word);
 begin
   inherited;
-
-  RegisterMessagesReceivedByTheClient(self);
-
-  SubscribeToMessage(2, onClientRegisterResponse);
-  SubscribeToMessage(4, onClientLoginResponse);
-  SubscribeToMessage(6, onMapCell);
-  SubscribeToMessage(8, onPlayerMoveResponse);
-  SubscribeToMessage(10, onPlayerPutAStarResponse);
-  SubscribeToMessage(11, onOtherPlayerMove);
-end;
-
-destructor TSporglooClient.Destroy;
-begin
-
-  inherited;
+  onReceiveClientRegisterResponseMessage := onClientRegisterResponse;
+  onReceiveClientLoginResponseMessage := onClientLoginResponse;
+  onReceiveMapCellMessage := onMapCell;
+  onReceivePlayerMoveResponseMessage := onPlayerMoveResponse;
+  onReceiveServerAcceptTheStarAddingMessage := onPlayerPutAStarResponse;
+  onReceiveOtherPlayerMoveMessage := onOtherPlayerMove;
+  OnReceiveErrorMessage := onErrorMessage;
 end;
 
 procedure TSporglooClient.onClientLoginResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-  const AMessage: TOlfSocketMessage);
+  const msg: TClientLoginResponseMessage);
 var
   LGameData: TGameData;
-  msg: TClientLoginResponseMessage;
 begin
-  if not(AMessage is TClientLoginResponseMessage) then
-    raise exception.Create('Not the client login response message expected.');
-
-  msg := AMessage as TClientLoginResponseMessage;
-
   if (tconfig.Current.DeviceID <> msg.DeviceID) then
-    raise exception.Create('Wrong DeviceID sent from the server.');
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceID,
+      'Wrong DeviceID sent from the server.');
 
   if msg.SessionID.IsEmpty then
-    raise exception.Create('No SessionID returned by the server.');
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongSessionID,
+      'No SessionID returned by the server.');
 
   LGameData := TGameData.Current;
   LGameData.Session.SessionID := msg.SessionID;
@@ -121,21 +117,15 @@ end;
 
 procedure TSporglooClient.onClientRegisterResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-  const AMessage: TOlfSocketMessage);
-var
-  msg: TClientRegisterResponseMessage;
+  const msg: TClientRegisterResponseMessage);
 begin
-  if not(AMessage is TClientRegisterResponseMessage) then
-    raise exception.Create
-      ('Not the client register response message expected.');
-
-  msg := AMessage as TClientRegisterResponseMessage;
-
   if (tconfig.Current.DeviceID <> msg.DeviceID) then
-    raise exception.Create('Wrong DeviceID sent from the server.');
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceID,
+      'Wrong DeviceID sent from the server.');
 
   if msg.PlayerID.IsEmpty then
-    raise exception.Create('No PlayerID returned by the server.');
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongPlayerID,
+      'No PlayerID returned by the server.');
 
   tconfig.Current.PlayerID := msg.PlayerID;
   TGameData.Current.Player.PlayerID := msg.PlayerID;
@@ -144,17 +134,15 @@ begin
   SendClientLogin(AFromGame, msg.DeviceID, msg.PlayerID);
 end;
 
-procedure TSporglooClient.onMapCell(const AFromGame
-  : TOlfSocketMessagingServerConnectedClient;
-  const AMessage: TOlfSocketMessage);
-var
-  msg: TMapCellMessage;
+procedure TSporglooClient.onErrorMessage(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient; const msg: TErrorMessage);
 begin
-  if not(AMessage is TMapCellMessage) then
-    raise exception.Create('Not the map cell message expected.');
+  // TODO : manage the received error
+end;
 
-  msg := AMessage as TMapCellMessage;
-
+procedure TSporglooClient.onMapCell(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient; const msg: TMapCellMessage);
+begin
   TGameData.Current.Map.SetTileID(msg.X, msg.Y, msg.TileID);
   TThread.synchronize(nil,
     procedure
@@ -167,16 +155,10 @@ end;
 
 procedure TSporglooClient.onOtherPlayerMove(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-const AMessage: TOlfSocketMessage);
+const msg: TOtherPlayerMoveMessage);
 var
   Player: TSporglooPlayer;
-  msg: TOtherPlayerMoveMessage;
 begin
-  if not(AMessage is TOtherPlayerMoveMessage) then
-    raise exception.Create('Not the other player move message expected.');
-
-  msg := AMessage as TOtherPlayerMoveMessage;
-
   if not TGameData.Current.OtherPlayers.TryGetValue(msg.PlayerID, Player) then
   begin
     Player := TSporglooPlayer.Create;
@@ -190,29 +172,15 @@ end;
 
 procedure TSporglooClient.onPlayerMoveResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-const AMessage: TOlfSocketMessage);
-var
-  msg: TPlayerMoveResponseMessage;
+const msg: TPlayerMoveResponseMessage);
 begin
-  if not(AMessage is TPlayerMoveResponseMessage) then
-    raise exception.Create('Not the player move response message expected.');
-
-  msg := AMessage as TPlayerMoveResponseMessage;
-
   // TODO : register the playerx,playerY coordinates have been send to the server
 end;
 
 procedure TSporglooClient.onPlayerPutAStarResponse(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-const AMessage: TOlfSocketMessage);
-var
-  msg: TServerAcceptTheStarAddingMessage;
+const msg: TServerAcceptTheStarAddingMessage);
 begin
-  if not(AMessage is TServerAcceptTheStarAddingMessage) then
-    raise exception.Create('Not the client login message expected.');
-
-  msg := AMessage as TServerAcceptTheStarAddingMessage;
-
   // TODO : check if X,Y correspond to a "new star" sent
 end;
 
@@ -225,6 +193,7 @@ begin
   try
     msg.DeviceID := DeviceID;
     msg.PlayerID := PlayerID;
+    msg.VersionAPI := CAPIVersion;
     AToGame.SendMessage(msg);
   finally
     msg.Free;
@@ -249,10 +218,32 @@ begin
   msg := TClientRegisterMessage.Create;
   try
     msg.DeviceID := DeviceID;
+    msg.VersionAPI := CAPIVersion;
     AToGame.SendMessage(msg);
   finally
     msg.Free;
   end;
+end;
+
+procedure TSporglooClient.SendErrorMessage(const AToGame
+  : TOlfSocketMessagingServerConnectedClient;
+const AErrorCode: TSporglooErrorCode; const AErrorText: string;
+const ARaiseException: boolean);
+var
+  msg: TErrorMessage;
+begin
+  // TODO : add a client log or an error reporting (in case of attack or other problem)
+
+  msg := TErrorMessage.Create;
+  try
+    msg.ErrorCode := ord(AErrorCode);
+    AToGame.SendMessage(msg);
+  finally
+    msg.Free;
+  end;
+
+  if ARaiseException then
+    raise TSporglooException.Create(AErrorCode, AErrorText);
 end;
 
 procedure TSporglooClient.SendMapRefresh(const X, Y, ColNumber,
