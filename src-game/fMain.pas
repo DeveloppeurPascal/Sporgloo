@@ -19,7 +19,8 @@ uses
   Sporgloo.MapFrame,
   FMX.Layouts,
   Sporgloo.Types,
-  Olf.Net.Socket.Messaging;
+  Olf.Net.Socket.Messaging,
+  Olf.FMX.TextImageFrame;
 
 type
 {$SCOPEDENUMS ON}
@@ -36,6 +37,9 @@ type
     WaitPage: TLayout;
     WaitAnimation: TAniIndicator;
     btnNewGame: TButton;
+    txtImgTitre: TOlfFMXTextImageFrame;
+    lGameTitle: TLayout;
+    Layout1: TLayout;
     procedure FormCreate(Sender: TObject);
     procedure btnNewGameClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -83,7 +87,8 @@ uses
   Sporgloo.Consts,
   Sporgloo.Messaging,
   Sporgloo.Client,
-  Sporgloo.API.Messages;
+  Sporgloo.API.Messages,
+  udmAdobeStock_526775911;
 
 procedure TfrmMain.btnNewGameClick(Sender: TObject);
 begin
@@ -313,7 +318,13 @@ end;
 
 procedure TfrmMain.ShowGameTitle(isVisible: boolean);
 begin
-  // TODO : add the game title
+  lGameTitle.Visible := isVisible;
+  if lGameTitle.Visible then
+  begin
+    lGameTitle.BringToFront;
+    txtImgTitre.Font := dmAdobeStock_526775911.ImageList;
+    txtImgTitre.Text := 'SPORGLOO';
+  end;
 end;
 
 procedure TfrmMain.SubscribeToDisconnect;

@@ -84,4 +84,31 @@ object frmMain: TfrmMain
       Align = Center
     end
   end
+  object lGameTitle: TLayout
+    Align = Contents
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 10
+    object Layout1: TLayout
+      Align = Top
+      Size.Width = 640.000000000000000000
+      Size.Height = 80.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      inline txtImgTitre: TOlfFMXTextImageFrame
+        Align = HorzCenter
+        HitTest = False
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 630.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+  end
 end
