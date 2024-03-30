@@ -15,6 +15,7 @@ const
 
   CStartStarsCount = 12;
   CStartLifeLevel = 24;
+  CStartDistanceFromLastPlayer = 50;
 
 type
 {$SCOPEDENUMS ON}

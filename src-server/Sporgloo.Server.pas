@@ -202,6 +202,7 @@ const msg: TClientRegisterMessage);
 var
   player: TSporglooPlayer;
   Session: TSporglooSession;
+  ok: boolean;
 begin
 {$IFDEF DEBUG}
   writeln('onClientRegister');
@@ -220,9 +221,27 @@ begin
     player := TSporglooPlayer.Create;
     player.DeviceID := msg.DeviceID;
     player.PlayerID := GetUniqID;
-    player.PlayerX := 0;
-    player.PlayerY := 0;
-    // TODO : change the coordinates if an other player is here too
+
+    if (SporglooSessions.count > 0) then
+    begin
+      Session := SporglooSessions.ToArray[random(SporglooSessions.count)].Value;
+      repeat
+        player.PlayerX := Session.player.PlayerX +
+          random(CStartDistanceFromLastPlayer * 2) -
+          CStartDistanceFromLastPlayer;
+        player.PlayerY := Session.player.PlayerY +
+          random(CStartDistanceFromLastPlayer * 2) -
+          CStartDistanceFromLastPlayer;
+        ok := true;
+        // TODO : tester si un joueur est à ces nouvelles coordonnées une fois les joueurs dans la grille
+      until ok;
+    end
+    else
+    begin
+      player.PlayerX := 0;
+      player.PlayerY := 0;
+    end;
+
     player.Score := 0;
     player.StarsCount := CStartStarsCount;
     player.LifeLevel := CStartLifeLevel;
