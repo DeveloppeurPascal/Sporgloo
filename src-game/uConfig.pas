@@ -52,23 +52,9 @@ var
   { TConfig }
 
 constructor TConfig.Create;
-var
-  AppName, Folder, FileName: string;
 begin
-  AppName := tpath.GetFileNameWithoutExtension(paramstr(0));
-{$IFDEF DEBUG}
-  AppName := AppName + '-debug';
-  Folder := tpath.combine(tpath.combine(tpath.GetDocumentsPath,
-    'Gamolf-debug'), AppName);
-{$ELSE}
-  Folder := tpath.combine(tpath.combine(tpath.GetHomePath, 'Gamolf'), AppName);
-{$ENDIF}
-  FileName := AppName + '.par';
-
-  if not tdirectory.Exists(Folder) then
-    tdirectory.CreateDirectory(Folder);
-
-  FParams := TParamsFile.Create(tpath.combine(Folder, FileName));
+  FParams := TParamsFile.Create;
+  FParams.InitDefaultFileNameV2('Gamolf', 'Sporgloo');
   FParams.Load;
 end;
 
@@ -114,8 +100,8 @@ begin
   // VPS Sporgloo (temporary address)
 {$ELSE}
   // TODO : for local tests
-   result := FParams.getValue('ServerIPv4', '127.0.0.1');
-//  result := FParams.getValue('ServerIPv4', '141.94.221.190');
+  result := FParams.getValue('ServerIPv4', '127.0.0.1');
+  // result := FParams.getValue('ServerIPv4', '141.94.221.190');
 {$ENDIF}
 end;
 
