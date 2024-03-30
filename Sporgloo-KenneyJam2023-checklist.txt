@@ -1,17 +1,3 @@
-X => créer le projet du jeu dans Delphi
-X => créer le projet du serveur dans Delphi
-X => créer icône du jeu
-X => créer icône du serveur de jeu
-X => associer son icone au projet du jeu
-X => associer son icone au projet du serveur
-X => choisir une typo pour le titre
-X => choisir une typo pour les éléments affichés à l'écran
-X => définir l'interface client/serveur (API)
-X => coder l'API
-X => coder le format de stockage des données côté joueur
-X => coder le format de stockage des données côté serveur
-X => coder du moteur d'affichage de la map
-X => faire le dessin du background du jeu (map en mode automatique, sans déplacement ni interaction du joueur)
 => faire un TFrame pour un bouton de menu
 => faire un TFrame pour la boite de dialogue avec ou sans titre
 => faire un TFrame pour un champ de saisie
@@ -23,7 +9,31 @@ X => faire le dessin du background du jeu (map en mode automatique, sans déplac
 ==> écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
 ==> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
 ==> écran du jeu (jeu en cours) : background du jeu, curseur souris ou contrôleur de jeu, boutons pause / play/pause musique, play/pause bruitages, score, niveau de vie, nombre de pastilles (= étoiles) dispos, actions du joueur, actions du personnage
-X => choix des éléments visuels de la map
-X => coder le jeu en interaction avec la souris / écran tactile (avec ou sans curseur sur l'écran, prise en compte des clicks)
 => coder le jeu en interaction avec les contrôleurs de jeu (simuler un curseur à l'écran)
 => coder la boucle de musique en fond sonore
+
+- traiter les TODO
+- messages d'erreur côté client
+- ajouter les déplacements du joueur avec les flèches du clavier
+- ajouter les déplacements au joystick (#18)
+- ajouter la musique d'ambiance (#17)
+- ajouter des bruitages sonores
+- ajout des écrans manquants (cf TLayout dans fMain.pas du jeu)
+- mise en pause / arrêt du jeu / fermeture du programme client
+- configurer le VPS sous Debian
+- transformation du programme serveur en démon Linux (#29)
+- tests du programme serveur sur un serveur sous Linux Debian
+- tests Android (sur tablette)
+- tests iOS (sur tablette)
+- changer le stockage du jeu côté serveur (mettre une base de données au lieu du stockage en mémoire) (#35)
+- changer l'UI, ajouter boites de dialogue, actions entre joueurs et revoir le fonctionnement global du jeu
+- ajouter un message de clôture de connexion à la sortie du client (fermeture du jeu) (#26)
+- permettre au joueur de choisir un avatar pour son personnage
+
+
+-----
+
+- ajouter les infos sur les joueurs au niveau de la grille de jeu (pour simplifier les affichages et tests partout)
+- ajouter un message permettant l'envoi d'une série de cases de la grille plutôt que une par une => optimisation du dessin et des échanges
+- ajouter un message de déconnexion "propre" d'un client/joueur => coupure de la session
+- optimisation des mises à jour : stocker la zone d'affichage autour du joueur pour chaque session (zone max retournée à chaque refresh de la carte), sur les trucs à envoyer en masse faire une file d'attente et traiter l'envoi sur un autre thread ou en idle
