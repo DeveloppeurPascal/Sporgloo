@@ -204,20 +204,20 @@ begin
       Close;
     Key := 0;
   end
-  else if ((Key in [vkLeft, vkRight, vkUp, vkDown]) or
-    (KeyChar in ['W', 'w', 'Z', 'z', 'A', 'a', 'Q', 'q', 'S', 's', 'D', 'd']))
-    and (ActivePage = TPageType.Game) then
+  else if ((Key in [vkLeft, vkRight, vkUp, vkDown]) or charinset(KeyChar,
+    ['W', 'w', 'Z', 'z', 'A', 'a', 'Q', 'q', 'S', 's', 'D', 'd'])) and
+    (ActivePage = TPageType.Game) then
   begin
-    if ((Key = vkLeft) or (KeyChar in ['A', 'a', 'Q', 'q'])) and
+    if ((Key = vkLeft) or charinset(KeyChar, ['A', 'a', 'Q', 'q'])) and
       (Viseur.Position.X - CSporglooTileSize >= 0) then
       Viseur.Position.X := Viseur.Position.X - CSporglooTileSize
-    else if ((Key = vkRight) or (KeyChar in ['D', 'd'])) and
+    else if ((Key = vkRight) or charinset(KeyChar, ['D', 'd'])) and
       (Viseur.Position.X + CSporglooTileSize < GamePage.Width) then
       Viseur.Position.X := Viseur.Position.X + CSporglooTileSize
-    else if ((Key = vkUp) or (KeyChar in ['W', 'w', 'Z', 'z'])) and
+    else if ((Key = vkUp) or charinset(KeyChar, ['W', 'w', 'Z', 'z'])) and
       (Viseur.Position.Y - CSporglooTileSize >= 0) then
       Viseur.Position.Y := Viseur.Position.Y - CSporglooTileSize
-    else if ((Key = vkDown) or (KeyChar in ['S', 's'])) and
+    else if ((Key = vkDown) or charinset(KeyChar, ['S', 's'])) and
       (Viseur.Position.Y + CSporglooTileSize < GamePage.height) then
       Viseur.Position.Y := Viseur.Position.Y + CSporglooTileSize;
 
