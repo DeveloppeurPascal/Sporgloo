@@ -1,0 +1,27 @@
+object cadViseur: TcadViseur
+  HitTest = False
+  Size.Width = 241.000000000000000000
+  Size.Height = 253.000000000000000000
+  Size.PlatformDefault = False
+  object SkSvg1: TSkSvg
+    Align = Client
+    Margins.Left = 2.000000000000000000
+    Margins.Top = 2.000000000000000000
+    Margins.Right = 2.000000000000000000
+    Margins.Bottom = 2.000000000000000000
+    Size.Width = 237.000000000000000000
+    Size.Height = 249.000000000000000000
+    Size.PlatformDefault = False
+    Svg.Source = 
+      '<?xml version="1.0" encoding="UTF-8"?>'#13#10'<svg id="Calque_2" data-' +
+      'name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' +
+      '64 64">'#13#10'  <defs>'#13#10'    <style>'#13#10'      .cls-1 {'#13#10'        fill: #3' +
+      '33;'#13#10'      }'#13#10'    </style>'#13#10'  </defs>'#13#10'  <g id="Calque_1-2" data' +
+      '-name="Calque 1">'#13#10'    <g>'#13#10'      <path class="cls-1" d="m34,0v1' +
+      '6h-4V0h4m0,48v16h-4v-16h4M0,30h16v4H0v-4m48,0h16v4h-16v-4"/>'#13#10'  ' +
+      '    <path class="cls-1" d="m34,32c0,.57-.2,1.03-.6,1.4-.37.4-.83' +
+      '.6-1.4.6s-1.05-.2-1.45-.6c-.37-.37-.55-.83-.55-1.4s.18-1.05.55-1' +
+      '.45c.4-.37.88-.55,1.45-.55s1.03.18,1.4.55c.4.4.6.88.6,1.45"/>'#13#10' ' +
+      '   </g>'#13#10'  </g>'#13#10'</svg>'
+  end
+end

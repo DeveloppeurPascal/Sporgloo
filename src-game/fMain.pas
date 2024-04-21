@@ -22,7 +22,8 @@ uses
   Olf.Net.Socket.Messaging,
   Olf.FMX.TextImageFrame,
   cGrayBox,
-  cYellowMenuButton;
+  cYellowMenuButton,
+  cViseur;
 
 type
 {$SCOPEDENUMS ON}
@@ -44,6 +45,7 @@ type
     cadGrayBox1: TcadGrayBox;
     btnPlay: TcadYellowMenuButton;
     btnQuit: TcadYellowMenuButton;
+    Viseur: TcadViseur;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -237,6 +239,12 @@ end;
 procedure TfrmMain.InitializeGamePage;
 begin
   // TODO : initialize the "new game" screen
+  Viseur.Width := CSporglooTileSize;
+  Viseur.Height := CSporglooTileSize;
+  Viseur.Position.X := CSporglooTileSize *
+    trunc(MapFrame1.Width / CSporglooTileSize) div 2;
+  Viseur.Position.Y := CSporglooTileSize *
+    trunc(MapFrame1.Height / CSporglooTileSize) div 2;
 end;
 
 procedure TfrmMain.InitializeHomePage;

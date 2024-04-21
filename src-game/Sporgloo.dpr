@@ -31,7 +31,8 @@ uses
   udmAdobeStock_526775911 in '..\_PRIVATE\fontes\AdobeStock_526775911\udmAdobeStock_526775911.pas' {dmAdobeStock_526775911: TDataModule},
   cGrayBox in 'cGrayBox.pas' {cadGrayBox: TFrame},
   cYellowMenuButton in 'cYellowMenuButton.pas' {cadYellowMenuButton: TFrame},
-  uBackgroundMusic in 'uBackgroundMusic.pas';
+  uBackgroundMusic in 'uBackgroundMusic.pas',
+  cViseur in 'cViseur.pas' {cadViseur: TFrame};
 
 {$R *.res}
 

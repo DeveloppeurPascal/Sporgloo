@@ -28,6 +28,7 @@ object frmMain: TfrmMain
     Size.Width = 640.000000000000000000
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
+    Visible = False
     TabOrder = 7
     inline cadGrayBox1: TcadGrayBox
       Align = Center
@@ -90,9 +91,16 @@ object frmMain: TfrmMain
     Size.Width = 640.000000000000000000
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
-    Visible = False
     TabOrder = 6
     OnMouseDown = GamePageMouseDown
+    inline Viseur: TcadViseur
+      HitTest = False
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 241.000000000000000000
+      Size.Height = 253.000000000000000000
+      Size.PlatformDefault = False
+    end
   end
   object NewGamePage: TLayout
     Align = Contents
