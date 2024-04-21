@@ -94,7 +94,8 @@ uses
   Sporgloo.Messaging,
   Sporgloo.Client,
   Sporgloo.API.Messages,
-  udmAdobeStock_526775911;
+  udmAdobeStock_526775911,
+  uBackgroundMusic;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
@@ -176,6 +177,8 @@ begin
       TGameData.Current.APIClient.Connect;
       ActivePage := TPageType.Home;
     end);
+
+  TBackgroundMusic.Current.OnOff(tconfig.Current.BackgroundMusic);
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
