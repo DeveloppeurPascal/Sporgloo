@@ -206,6 +206,9 @@ var
   MapX, MapY: TSporglooAPINumber;
   GameData: TGameData;
 begin
+  Viseur.Position.X := trunc(X / CSporglooTileSize) * CSporglooTileSize;
+  Viseur.Position.Y := trunc(Y / CSporglooTileSize) * CSporglooTileSize;
+
   GameData := TGameData.Current;
   MapX := trunc(X / CSporglooTileSize) + GameData.Session.MapRangeX;
   MapY := trunc(Y / CSporglooTileSize) + GameData.Session.MapRangeY;
