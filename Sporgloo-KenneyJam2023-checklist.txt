@@ -1,20 +1,15 @@
 => faire un TFrame pour un champ de saisie
-=> coder les écrans du jeu : 
-==> écran d'accueil/menu : background du jeu, boite de dialogue avec boutons de menu
+=> coder les écrans du jeu :
 ==> écran des scores (hall of fame) : background du jeu, boite de dialogue avec titre, liste des scores à l'intérieur (plus tard aussi les pseudos après modération)
 ==> écran des crédits du jeu : background du jeu, boite de dialogue avec titre, texte
 ==> écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
 ==> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
 ==> écran du jeu (jeu en cours) : background du jeu, curseur souris ou contrôleur de jeu, boutons pause / play/pause musique, play/pause bruitages, score, niveau de vie, nombre de pastilles (= étoiles) dispos, actions du joueur, actions du personnage
-=> coder le jeu en interaction avec les contrôleurs de jeu (simuler un curseur à l'écran)
-=> coder la boucle de musique en fond sonore
 
 - traiter les TODO
-- messages d'erreur côté client
-- ajouter les déplacements du joueur avec les flèches du clavier
-- ajouter les déplacements au joystick (#18)
-- ajouter la musique d'ambiance (#17)
-- ajouter des bruitages sonores
+- messages d'erreur côté client (provenant de l'API client/serveur)
+- gérer les déplacements DES joueurs vers l'étoile la plus proche en path finding automatique
+- ajouter des bruitages
 - ajout des écrans manquants (cf TLayout dans fMain.pas du jeu)
 - mise en pause / arrêt du jeu / fermeture du programme client
 - configurer le VPS sous Debian
