@@ -54,6 +54,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnPlayClick(Sender: TObject);
     procedure btnQuitClick(Sender: TObject);
+    procedure GamePageMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Single);
   private
     FActivePage: TPageType;
     procedure SetActivePage(const Value: TPageType);
@@ -221,6 +223,13 @@ begin
   end;
 end;
 
+procedure TfrmMain.GamePageMouseMove(Sender: TObject; Shift: TShiftState;
+X, Y: Single);
+begin
+  Viseur.Position.X := trunc(X / CSporglooTileSize) * CSporglooTileSize;
+  Viseur.Position.Y := trunc(Y / CSporglooTileSize) * CSporglooTileSize;
+end;
+
 function TfrmMain.GetLifeLevel: TSporglooAPINumber;
 begin
   result := TGameData.Current.player.LifeLevel;
@@ -239,12 +248,16 @@ end;
 procedure TfrmMain.InitializeGamePage;
 begin
   // TODO : initialize the "new game" screen
+
   Viseur.Width := CSporglooTileSize;
   Viseur.Height := CSporglooTileSize;
   Viseur.Position.X := CSporglooTileSize *
     trunc(MapFrame1.Width / CSporglooTileSize) div 2;
   Viseur.Position.Y := CSporglooTileSize *
     trunc(MapFrame1.Height / CSporglooTileSize) div 2;
+
+  GamePage.Cursor := crnone;
+  // crNone : absent de la liste de possibilités dans l'inspecteur d'objets
 end;
 
 procedure TfrmMain.InitializeHomePage;

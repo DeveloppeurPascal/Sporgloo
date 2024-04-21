@@ -93,6 +93,7 @@ object frmMain: TfrmMain
     Size.PlatformDefault = False
     TabOrder = 6
     OnMouseDown = GamePageMouseDown
+    OnMouseMove = GamePageMouseMove
     inline Viseur: TcadViseur
       HitTest = False
       Position.X = 8.000000000000000000
