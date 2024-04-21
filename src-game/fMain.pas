@@ -23,7 +23,8 @@ uses
   Olf.FMX.TextImageFrame,
   cGrayBox,
   cYellowMenuButton,
-  cViseur;
+  cViseur,
+  FMX.Objects;
 
 type
 {$SCOPEDENUMS ON}
@@ -46,6 +47,8 @@ type
     btnPlay: TcadYellowMenuButton;
     btnQuit: TcadYellowMenuButton;
     Viseur: TcadViseur;
+    TimerGamePad: TTimer;
+    GameControllerPicture: TPath;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -56,8 +59,11 @@ type
     procedure btnQuitClick(Sender: TObject);
     procedure GamePageMouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Single);
+    procedure TimerGamePadTimer(Sender: TObject);
   private
     FActivePage: TPageType;
+    FPreviousGamePadKey: Word;
+    FPreviousFamePadKeyChar: widechar;
     procedure SetActivePage(const Value: TPageType);
     procedure SetLifeLevel(const Value: TSporglooAPINumber);
     procedure SetScore(const Value: TSporglooAPINumber);
@@ -99,7 +105,9 @@ uses
   Sporgloo.Client,
   Sporgloo.API.Messages,
   udmAdobeStock_526775911,
-  uBackgroundMusic;
+  uBackgroundMusic,
+  Gamolf.RTL.Joystick,
+  FMX.Platform;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
@@ -161,6 +169,10 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   ActivePage := TPageType.None;
+
+  FPreviousGamePadKey := 0;
+  FPreviousFamePadKeyChar := #0;
+  GameControllerPicture.Visible := false;
 
 {$IFDEF RELEASE}
   FullScreen := true;
@@ -475,6 +487,83 @@ begin
       else
         Client.SendClientLogin(DeviceID, PlayerID);
     end);
+end;
+
+procedure TfrmMain.TimerGamePadTimer(Sender: TObject);
+var
+  GamePadService: IGamolfJoystickService;
+  JoystickInfo: TJoystickInfo;
+  GameControllerDetected: boolean;
+begin
+  GameControllerDetected := false;
+
+  if TPlatformServices.Current.SupportsPlatformService(IGamolfJoystickService,
+    GamePadService) then
+    GamePadService.ForEachConnectedDevice(JoystickInfo,
+      procedure(JoystickID: TJoystickID; var JoystickInfo: TJoystickInfo)
+      var
+        Key: Word;
+        KeyChar: widechar;
+        DPad: Word;
+      begin
+        Key := 0;
+        KeyChar := #0;
+        GameControllerDetected := true;
+
+        if length(JoystickInfo.PressedButtons) > 0 then
+        begin
+          if ActivePage = TPageType.Game then
+            KeyChar := ' '
+          else
+            Key := vkReturn;
+        end
+        else
+        begin
+          DPad := JoystickInfo.DPad;
+
+          if (DPad >= 360) and (length(JoystickInfo.Axes) >= 2) then
+            DPad := GamePadService.getDPadFromXY(JoystickInfo.Axes[0],
+              JoystickInfo.Axes[1]);
+
+          if (DPad < 360) then // angle between 0 and 359°
+          begin
+            if GamePadService.isDPad(DPad, [TJoystickDPad.LeftTop,
+              TJoystickDPad.Left, TJoystickDPad.LeftBottom]) then
+              Key := vkLeft
+            else if GamePadService.isDPad(DPad, [TJoystickDPad.RightTop,
+              TJoystickDPad.Right, TJoystickDPad.RightBottom]) then
+              Key := vkRight
+            else if GamePadService.isDPad(DPad, [TJoystickDPad.TopLeft,
+              TJoystickDPad.Top, TJoystickDPad.TopRight]) then
+              Key := vkUp
+            else if GamePadService.isDPad(DPad, [TJoystickDPad.BottomLeft,
+              TJoystickDPad.Bottom, TJoystickDPad.BottomRight]) then
+              Key := vkDown;
+          end;
+        end;
+
+        if ((Key <> 0) or (KeyChar <> #0)) and ((Key <> FPreviousGamePadKey) or
+          (KeyChar <> FPreviousFamePadKeyChar)) then
+        begin
+          // TODO : ajouter une tempo entre deux actions ou voir lesquelles temporiser (exemple boutons mais pas déplacements)
+          // FPreviousGamePadKey := Key;
+          // FPreviousFamePadKeyChar := KeyChar;
+          FormKeyDown(Sender, Key, KeyChar, []);
+        end;
+      end)
+  else
+    TimerGamePad.Enabled := false;
+
+  if (GameControllerDetected <> GameControllerPicture.Visible) then
+  begin
+    GameControllerPicture.Position.X := ClientWidth -
+      GameControllerPicture.Width - 5;
+    GameControllerPicture.Position.Y := 5;
+    GameControllerPicture.BringToFront;
+    GameControllerPicture.Visible := GameControllerDetected;
+    // TODO : faire une tempo sur l'affichage
+    // TODO : changer de visuel quand un joystick n'est plus détecté et qu'il y en avait avant
+  end;
 end;
 
 initialization
