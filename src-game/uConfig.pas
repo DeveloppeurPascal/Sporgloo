@@ -21,6 +21,10 @@ type
     function GetServerIPv4Port: word;
     function GetServerIPv6: string;
     function GetServerIPv6Port: word;
+    function GetBackgroundMusic: boolean;
+    function GetBackgroundMusicVolume: integer;
+    procedure SetBackgroundMusic(const Value: boolean);
+    procedure SetBackgroundMusicVolume(const Value: integer);
   protected
   public
     property DeviceID: string read GetDeviceID write SetDeviceID;
@@ -33,6 +37,10 @@ type
     property ServerIPv6: string read GetServerIPv6 write SetServerIPv6;
     property ServerIPv6Port: word read GetServerIPv6Port
       write SetServerIPv6Port;
+    property BackgroundMusic: boolean read GetBackgroundMusic
+      write SetBackgroundMusic;
+    property BackgroundMusicVolume: integer read GetBackgroundMusicVolume
+      write SetBackgroundMusicVolume;
     class function Current: TConfig;
     constructor Create;
     destructor Destroy; override;
@@ -76,6 +84,16 @@ destructor TConfig.Destroy;
 begin
   FParams.Free;
   inherited;
+end;
+
+function TConfig.GetBackgroundMusic: boolean;
+begin
+  result := FParams.getValue('MusicOnOff', true);
+end;
+
+function TConfig.GetBackgroundMusicVolume: integer;
+begin
+  result := FParams.getValue('MusicVol', 100);
 end;
 
 function TConfig.GetDeviceID: string;
@@ -122,6 +140,18 @@ begin
   raise Exception.Create('No IPv6 server available.');
   // TODO : add IPv6 setup for the server
   result := FParams.getValue('ServerIPv6Port', 8080);
+end;
+
+procedure TConfig.SetBackgroundMusic(const Value: boolean);
+begin
+  FParams.setValue('MusicOnOff', Value);
+  FParams.Save;
+end;
+
+procedure TConfig.SetBackgroundMusicVolume(const Value: integer);
+begin
+  FParams.setValue('MusicVol', Value);
+  FParams.Save;
 end;
 
 procedure TConfig.SetDeviceID(const Value: string);
