@@ -7,7 +7,6 @@ object frmMain: TfrmMain
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
-  FullScreen = True
   OnCreate = FormCreate
   OnClose = FormClose
   OnKeyDown = FormKeyDown
