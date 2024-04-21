@@ -197,6 +197,7 @@ begin
     end
     else
       Close;
+    Key := 0;
   end;
 end;
 
