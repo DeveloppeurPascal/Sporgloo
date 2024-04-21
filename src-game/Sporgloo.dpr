@@ -30,7 +30,8 @@ uses
   udmAdobeStock_440583506 in '..\_PRIVATE\fontes\AdobeStock_440583506\udmAdobeStock_440583506.pas' {dmAdobeStock_440583506: TDataModule},
   udmAdobeStock_526775911 in '..\_PRIVATE\fontes\AdobeStock_526775911\udmAdobeStock_526775911.pas' {dmAdobeStock_526775911: TDataModule},
   cGrayBox in 'cGrayBox.pas' {cadGrayBox: TFrame},
-  cYellowMenuButton in 'cYellowMenuButton.pas' {cadYellowMenuButton: TFrame};
+  cYellowMenuButton in 'cYellowMenuButton.pas' {cadYellowMenuButton: TFrame},
+  uBackgroundMusic in 'uBackgroundMusic.pas';
 
 {$R *.res}
 
