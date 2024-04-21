@@ -146,6 +146,8 @@ object frmMain: TfrmMain
     TabOrder = 10
     object Layout1: TLayout
       Align = Top
+      Margins.Top = 30.000000000000000000
+      Position.Y = 30.000000000000000000
       Size.Width = 640.000000000000000000
       Size.Height = 80.000000000000000000
       Size.PlatformDefault = False
