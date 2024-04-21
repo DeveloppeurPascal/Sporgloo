@@ -81,7 +81,7 @@ begin
   FisDown := Value;
   rDown.Visible := FisDown;
   rUp.Visible := not FisDown;
-  txtImage.height := rDown.height - 10;
+  txtImage.height := rDown.height - 20;
   if rDown.Visible then
     txtImage.Margins.top := 4
   else
