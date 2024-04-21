@@ -188,7 +188,12 @@ end;
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
 var KeyChar: Char; Shift: TShiftState);
 begin
-  if (Key = vkEscape) or (Key = vkHardwareBack) then
+  if (Key = vkReturn) and (ActivePage = TPageType.Home) then
+  begin
+    btnPlayClick(Sender);
+    Key := 0;
+  end
+  else if (Key = vkEscape) or (Key = vkHardwareBack) then
   begin
     if ActivePage = TPageType.Game then
     begin
@@ -198,6 +203,33 @@ begin
     else
       Close;
     Key := 0;
+  end
+  else if ((Key in [vkLeft, vkRight, vkUp, vkDown]) or
+    (KeyChar in ['W', 'w', 'Z', 'z', 'A', 'a', 'Q', 'q', 'S', 's', 'D', 'd']))
+    and (ActivePage = TPageType.Game) then
+  begin
+    if ((Key = vkLeft) or (KeyChar in ['A', 'a', 'Q', 'q'])) and
+      (Viseur.Position.X - CSporglooTileSize >= 0) then
+      Viseur.Position.X := Viseur.Position.X - CSporglooTileSize
+    else if ((Key = vkRight) or (KeyChar in ['D', 'd'])) and
+      (Viseur.Position.X + CSporglooTileSize < GamePage.Width) then
+      Viseur.Position.X := Viseur.Position.X + CSporglooTileSize
+    else if ((Key = vkUp) or (KeyChar in ['W', 'w', 'Z', 'z'])) and
+      (Viseur.Position.Y - CSporglooTileSize >= 0) then
+      Viseur.Position.Y := Viseur.Position.Y - CSporglooTileSize
+    else if ((Key = vkDown) or (KeyChar in ['S', 's'])) and
+      (Viseur.Position.Y + CSporglooTileSize < GamePage.height) then
+      Viseur.Position.Y := Viseur.Position.Y + CSporglooTileSize;
+
+    Key := 0;
+    KeyChar := #0;
+  end
+  else if (KeyChar = ' ') and (ActivePage = TPageType.Game) then
+  begin
+    GamePageMouseDown(Sender, TMouseButton.mbLeft, [],
+      Viseur.Position.X + CSporglooTileSize / 2,
+      Viseur.Position.Y + CSporglooTileSize / 2);
+    KeyChar := #0;
   end;
 end;
 
@@ -254,11 +286,11 @@ begin
   // TODO : initialize the "new game" screen
 
   Viseur.Width := CSporglooTileSize;
-  Viseur.Height := CSporglooTileSize;
+  Viseur.height := CSporglooTileSize;
   Viseur.Position.X := CSporglooTileSize *
     trunc(MapFrame1.Width / CSporglooTileSize) div 2;
   Viseur.Position.Y := CSporglooTileSize *
-    trunc(MapFrame1.Height / CSporglooTileSize) div 2;
+    trunc(MapFrame1.height / CSporglooTileSize) div 2;
 
   GamePage.Cursor := crnone;
   // crNone : absent de la liste de possibilités dans l'inspecteur d'objets
