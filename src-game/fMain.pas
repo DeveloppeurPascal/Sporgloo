@@ -300,9 +300,11 @@ begin
   Viseur.Width := CSporglooTileSize;
   Viseur.height := CSporglooTileSize;
   Viseur.Position.X := CSporglooTileSize *
-    trunc(MapFrame1.Width / CSporglooTileSize) div 2;
+    (trunc(MapFrame1.Width / CSporglooTileSize) div 2);
   Viseur.Position.Y := CSporglooTileSize *
-    trunc(MapFrame1.height / CSporglooTileSize) div 2;
+    (trunc(MapFrame1.height / CSporglooTileSize) div 2);
+  // Viseur.Position.X := 0;
+  // Viseur.Position.Y := 0;
 
   GamePage.Cursor := crnone;
   // crNone : absent de la liste de possibilités dans l'inspecteur d'objets
@@ -561,6 +563,7 @@ begin
     GameControllerPicture.Position.Y := 5;
     GameControllerPicture.BringToFront;
     GameControllerPicture.Visible := GameControllerDetected;
+    GameControllerPicture.Anchors := [TAnchorKind.akTop, TAnchorKind.akright];
     // TODO : faire une tempo sur l'affichage
     // TODO : changer de visuel quand un joystick n'est plus détecté et qu'il y en avait avant
   end;
