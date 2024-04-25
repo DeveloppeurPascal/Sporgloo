@@ -502,7 +502,9 @@ var
   msg: TErrorMessage;
 begin
   // TODO : add a server log or an error reporting (in case of attack or other problem)
-
+{$IFDEF DEBUG}
+  writeln('ERROR ' + ord(AErrorCode).tostring + ': ' + AErrorText);
+{$ENDIF}
   msg := TErrorMessage.Create;
   try
     msg.ErrorCode := ord(AErrorCode);
