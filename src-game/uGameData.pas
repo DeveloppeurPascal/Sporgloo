@@ -85,10 +85,10 @@ begin
   if not assigned(APIClient) then
     exit;
 
+  TMessageManager.DefaultManager.SendMessage(Self, TMapUpdateMessage.Create);
+
   APIClient.SendMapRefresh(Session.MapRangeX, Session.MapRangeY,
     Session.MapRangeColNumber, Session.MapRangeRowNumber);
-
-  TMessageManager.DefaultManager.SendMessage(Self, TMapUpdateMessage.Create);
 end;
 
 initialization
