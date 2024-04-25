@@ -204,14 +204,12 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TMapUpdateMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      Msg: TMapUpdateMessage;
       Session: TSporglooSession;
       Map: TSporglooMap;
       x, y: TSporglooAPINumber;
     begin
       if not(M is TMapUpdateMessage) then
         exit;
-      Msg := M as TMapUpdateMessage;
 
       Session := TGameData.Current.Session;
       Map := TGameData.Current.Map;
@@ -268,18 +266,6 @@ begin
       MapImage.Bitmap := tbitmap.Create;
 
     BitmapScale := MapImage.Bitmap.BitmapScale;
-
-    // bmp := tbitmap.Create(ceil(MapImage.width * BitmapScale),
-    // ceil(MapImage.Height * BitmapScale));
-    // r := rectf(0, 0, min(MapImage.Bitmap.BoundsF.Right, bmp.BoundsF.Right),
-    // min(MapImage.Bitmap.BoundsF.bottom, bmp.BoundsF.bottom));
-    // bmp.Canvas.BeginScene;
-    // try
-    // bmp.Canvas.DrawBitmap(MapImage.Bitmap, r, r, 1);
-    // finally
-    // bmp.Canvas.EndScene;
-    // end;
-    // MapImage.Bitmap.assign(bmp);
 
     MapImage.Bitmap.setsize(ceil(MapImage.width * BitmapScale),
       ceil(MapImage.Height * BitmapScale));
