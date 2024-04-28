@@ -34,7 +34,8 @@ uses
   System.Generics.Collections,
   System.Messaging,
   uConfig,
-  Sporgloo.Messaging;
+  Sporgloo.Messaging,
+  System.Classes;
 
 var
   GameDataInstance: TGameData;
@@ -85,7 +86,12 @@ begin
   if not assigned(APIClient) then
     exit;
 
-  TMessageManager.DefaultManager.SendMessage(Self, TMapUpdateMessage.Create);
+  tthread.queue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(Self,
+        TMapUpdateMessage.Create);
+    end);
 
   APIClient.SendMapRefresh(Session.MapRangeX, Session.MapRangeY,
     Session.MapRangeColNumber, Session.MapRangeRowNumber);
