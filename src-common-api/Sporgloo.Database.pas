@@ -147,96 +147,146 @@ procedure TSporglooPlayer.LoadFromStream(AStream: TStream);
 var
   VersionNum: integer;
 begin
-  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
-    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+  System.tmonitor.Enter(self);
+  try
+    if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+      VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
 
-  if not((VersionNum >= 0) and (sizeof(FLifeLevel) = AStream.read(FLifeLevel,
-    sizeof(FLifeLevel)))) then
-    FLifeLevel := 0;
+    if not((VersionNum >= 0) and (sizeof(FLifeLevel) = AStream.read(FLifeLevel,
+      sizeof(FLifeLevel)))) then
+      FLifeLevel := 0;
 
-  if not((VersionNum >= 0) and (sizeof(FScore) = AStream.read(FScore,
-    sizeof(FScore)))) then
-    FScore := 0;
+    if not((VersionNum >= 0) and (sizeof(FScore) = AStream.read(FScore,
+      sizeof(FScore)))) then
+      FScore := 0;
 
-  if not(VersionNum >= 0) then
-    FPlayerID := ''
-  else
-    FPlayerID := LoadStringFromStream(AStream);
+    if not(VersionNum >= 0) then
+      FPlayerID := ''
+    else
+      FPlayerID := LoadStringFromStream(AStream);
 
-  if not((VersionNum >= 0) and (sizeof(FPlayerX) = AStream.read(FPlayerX,
-    sizeof(FPlayerX)))) then
-    FPlayerX := 0;
+    if not((VersionNum >= 0) and (sizeof(FPlayerX) = AStream.read(FPlayerX,
+      sizeof(FPlayerX)))) then
+      FPlayerX := 0;
 
-  if not((VersionNum >= 0) and (sizeof(FPlayerY) = AStream.read(FPlayerY,
-    sizeof(FPlayerY)))) then
-    FPlayerY := 0;
+    if not((VersionNum >= 0) and (sizeof(FPlayerY) = AStream.read(FPlayerY,
+      sizeof(FPlayerY)))) then
+      FPlayerY := 0;
 
-  if not((VersionNum >= 0) and (sizeof(FStarsCount) = AStream.read(FStarsCount,
-    sizeof(FStarsCount)))) then
-    FStarsCount := 0;
+    if not((VersionNum >= 0) and (sizeof(FStarsCount) = AStream.
+      read(FStarsCount, sizeof(FStarsCount)))) then
+      FStarsCount := 0;
 
-  if not(VersionNum >= 0) then
-    FDeviceID := ''
-  else
-    FDeviceID := LoadStringFromStream(AStream);
+    if not(VersionNum >= 0) then
+      FDeviceID := ''
+    else
+      FDeviceID := LoadStringFromStream(AStream);
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SaveToStream(AStream: TStream);
 var
   VersionNum: integer;
 begin
-  VersionNum := CVersion;
-  AStream.Write(VersionNum, sizeof(VersionNum));
-  AStream.Write(FLifeLevel, sizeof(FLifeLevel));
-  AStream.Write(FScore, sizeof(FScore));
-  SaveStringToStream(FPlayerID, AStream);
-  AStream.Write(FPlayerX, sizeof(FPlayerX));
-  AStream.Write(FPlayerY, sizeof(FPlayerY));
-  AStream.Write(FStarsCount, sizeof(FStarsCount));
-  SaveStringToStream(FDeviceID, AStream);
+  System.tmonitor.Enter(self);
+  try
+    VersionNum := CVersion;
+    AStream.Write(VersionNum, sizeof(VersionNum));
+    AStream.Write(FLifeLevel, sizeof(FLifeLevel));
+    AStream.Write(FScore, sizeof(FScore));
+    SaveStringToStream(FPlayerID, AStream);
+    AStream.Write(FPlayerX, sizeof(FPlayerX));
+    AStream.Write(FPlayerY, sizeof(FPlayerY));
+    AStream.Write(FStarsCount, sizeof(FStarsCount));
+    SaveStringToStream(FDeviceID, AStream);
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SetDeviceID(const Value: string);
 begin
-  FDeviceID := Value;
+  System.tmonitor.Enter(self);
+  try
+    FDeviceID := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SetLifeLevel(const Value: TSporglooAPINumber);
 begin
-  FLifeLevel := Value;
+  System.tmonitor.Enter(self);
+  try
+    FLifeLevel := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SetPlayerID(const Value: string);
 begin
-  FPlayerID := Value;
+  System.tmonitor.Enter(self);
+  try
+    FPlayerID := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SetPlayerX(const Value: TSporglooAPINumber);
 begin
-  FPlayerX := Value;
+  System.tmonitor.Enter(self);
+  try
+    FPlayerX := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SetPlayerY(const Value: TSporglooAPINumber);
 begin
-  FPlayerY := Value;
+  System.tmonitor.Enter(self);
+  try
+    FPlayerY := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SetScore(const Value: TSporglooAPINumber);
 begin
-  FScore := Value;
+  System.tmonitor.Enter(self);
+  try
+    FScore := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayer.SetStarsCount(const Value: TSporglooAPINumber);
 begin
-  FStarsCount := Value;
+  System.tmonitor.Enter(self);
+  try
+    FStarsCount := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 { TSporglooPlayersList }
 
 function TSporglooPlayersList.GetPlayer(APlayerID: string): TSporglooPlayer;
 begin
-  if not TryGetValue(APlayerID, result) then
-    result := nil;
+  System.tmonitor.Enter(self);
+  try
+    if not TryGetValue(APlayerID, result) then
+      result := nil;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 function TSporglooPlayersList.GetPlayerByDevice(ADeviceID: string)
@@ -244,14 +294,19 @@ function TSporglooPlayersList.GetPlayerByDevice(ADeviceID: string)
 var
   key: string;
 begin
-  result := nil;
-  if (Count > 0) then
-    for key in keys do
-      if items[key].DeviceID = ADeviceID then
-      begin
-        result := items[key];
-        break;
-      end;
+  System.tmonitor.Enter(self);
+  try
+    result := nil;
+    if (Count > 0) then
+      for key in keys do
+        if items[key].DeviceID = ADeviceID then
+        begin
+          result := items[key];
+          break;
+        end;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooPlayersList.LoadFromStream(AStream: TStream);
@@ -260,18 +315,24 @@ var
   nb: int64;
   Player: TSporglooPlayer;
 begin
-  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
-    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+  System.tmonitor.Enter(self);
+  try
+    if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+      VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
 
-  if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb)))) then
-    nb := 0;
+    if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb))))
+    then
+      nb := 0;
 
-  while (nb > 0) do
-  begin
-    Player := TSporglooPlayer.Create;
-    Player.LoadFromStream(AStream);
-    add(Player.PlayerID, Player);
-    dec(nb);
+    while (nb > 0) do
+    begin
+      Player := TSporglooPlayer.Create;
+      Player.LoadFromStream(AStream);
+      add(Player.PlayerID, Player);
+      dec(nb);
+    end;
+  finally
+    System.tmonitor.Exit(self);
   end;
 end;
 
@@ -281,18 +342,24 @@ var
   nb: int64;
   LKey: string;
 begin
-  VersionNum := CVersion;
-  AStream.Write(VersionNum, sizeof(VersionNum));
-  nb := Count;
-  AStream.Write(nb, sizeof(nb));
-  for LKey in keys do
-    items[LKey].SaveToStream(AStream);
+  System.tmonitor.Enter(self);
+  try
+    VersionNum := CVersion;
+    AStream.Write(VersionNum, sizeof(VersionNum));
+    nb := Count;
+    AStream.Write(nb, sizeof(nb));
+    for LKey in keys do
+      items[LKey].SaveToStream(AStream);
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 { TSporglooMap }
 
 constructor TSporglooMap.Create;
 begin
+  inherited;
   FCell := TSporglooMapCol.Create([doOwnsValues]);
 end;
 
@@ -306,30 +373,46 @@ function TSporglooMap.GetTileID(X, Y: TSporglooAPINumber): TSporglooAPIshort;
 var
   FRow: TSporglooMapRow;
 begin
-  if (not FCell.TryGetValue(X, FRow)) or (not FRow.TryGetValue(Y, result)) then
-    result := 0;
+  System.tmonitor.Enter(self);
+  try
+    if (not FCell.TryGetValue(X, FRow)) or (not FRow.TryGetValue(Y, result))
+    then
+      result := 0;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooMap.LoadFromStream(AStream: TStream);
 var
   VersionNum: integer;
 begin
-  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
-    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+  System.tmonitor.Enter(self);
+  try
+    if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+      VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
 
-  if not(VersionNum >= 0) then
-    FCell.Clear
-  else
-    FCell.LoadFromStream(AStream);
+    if not(VersionNum >= 0) then
+      FCell.Clear
+    else
+      FCell.LoadFromStream(AStream);
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooMap.SaveToStream(AStream: TStream);
 var
   VersionNum: integer;
 begin
-  VersionNum := CVersion;
-  AStream.Write(VersionNum, sizeof(VersionNum));
-  FCell.SaveToStream(AStream);
+  System.tmonitor.Enter(self);
+  try
+    VersionNum := CVersion;
+    AStream.Write(VersionNum, sizeof(VersionNum));
+    FCell.SaveToStream(AStream);
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooMap.SetTileID(X, Y: TSporglooAPINumber;
@@ -337,18 +420,24 @@ procedure TSporglooMap.SetTileID(X, Y: TSporglooAPINumber;
 var
   LRow: TSporglooMapRow;
 begin
-  if (not FCell.TryGetValue(X, LRow)) then
-  begin
-    LRow := TSporglooMapRow.Create;
-    FCell.add(X, LRow);
+  System.tmonitor.Enter(self);
+  try
+    if (not FCell.TryGetValue(X, LRow)) then
+    begin
+      LRow := TSporglooMapRow.Create;
+      FCell.add(X, LRow);
+    end;
+    LRow.AddOrSetValue(Y, TileID);
+  finally
+    System.tmonitor.Exit(self);
   end;
-  LRow.AddOrSetValue(Y, TileID);
 end;
 
 { TSporglooSession }
 
 constructor TSporglooSession.Create;
 begin
+  inherited;
   FSessionID := '';
   FMapRangeX := 0;
   FMapRangeY := 0;
@@ -379,55 +468,90 @@ end;
 procedure TSporglooSession.SetMapRangeColNumber(const Value
   : TSporglooAPINumber);
 begin
-  FMapRangeColNumber := Value;
-  if FMapRangeColNumber > 0 then
-    FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
-  else
-    FMapRangeXMax := FMapRangeX;
+  System.tmonitor.Enter(self);
+  try
+    FMapRangeColNumber := Value;
+    if FMapRangeColNumber > 0 then
+      FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
+    else
+      FMapRangeXMax := FMapRangeX;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooSession.SetMapRangeRowNumber(const Value
   : TSporglooAPINumber);
 begin
-  FMapRangeRowNumber := Value;
-  if FMapRangeRowNumber > 0 then
-    FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
-  else
-    FMapRangeYMax := FMapRangeY;
+  System.tmonitor.Enter(self);
+  try
+    FMapRangeRowNumber := Value;
+    if FMapRangeRowNumber > 0 then
+      FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
+    else
+      FMapRangeYMax := FMapRangeY;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooSession.SetMapRangeX(const Value: TSporglooAPINumber);
 begin
-  FMapRangeX := Value;
-  if FMapRangeColNumber > 0 then
-    FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
-  else
-    FMapRangeXMax := FMapRangeX;
+  System.tmonitor.Enter(self);
+  try
+    FMapRangeX := Value;
+    if FMapRangeColNumber > 0 then
+      FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
+    else
+      FMapRangeXMax := FMapRangeX;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooSession.SetMapRangeY(const Value: TSporglooAPINumber);
 begin
-  FMapRangeY := Value;
-  if FMapRangeRowNumber > 0 then
-    FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
-  else
-    FMapRangeYMax := FMapRangeY;
+  System.tmonitor.Enter(self);
+  try
+    FMapRangeY := Value;
+    if FMapRangeRowNumber > 0 then
+      FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
+    else
+      FMapRangeYMax := FMapRangeY;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooSession.SetPlayer(const Value: TSporglooPlayer);
 begin
-  FPlayer := Value;
+  System.tmonitor.Enter(self);
+  try
+    FPlayer := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooSession.SetSessionID(const Value: string);
 begin
-  FSessionID := Value;
+  System.tmonitor.Enter(self);
+  try
+    FSessionID := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 procedure TSporglooSession.SetSocketClient(const Value
   : TOlfSocketMessagingServerConnectedClient);
 begin
-  FSocketClient := Value;
+  System.tmonitor.Enter(self);
+  try
+    FSocketClient := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
 end;
 
 { TSporglooMapRow }
@@ -439,23 +563,29 @@ var
   LKey: TSporglooAPINumber;
   LValue: TSporglooAPIshort;
 begin
-  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
-    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+  System.tmonitor.Enter(self);
+  try
+    if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+      VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
 
-  if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb)))) then
-    nb := 0;
+    if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb))))
+    then
+      nb := 0;
 
-  Clear;
-  while (nb > 0) do
-  begin
-    if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
-      sizeof(LKey)))) then
-      LKey := 0;
-    if not((VersionNum >= 0) and (sizeof(LValue) = AStream.read(LValue,
-      sizeof(LValue)))) then
-      LValue := 0;
-    AddOrSetValue(LKey, LValue);
-    dec(nb);
+    Clear;
+    while (nb > 0) do
+    begin
+      if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
+        sizeof(LKey)))) then
+        LKey := 0;
+      if not((VersionNum >= 0) and (sizeof(LValue) = AStream.read(LValue,
+        sizeof(LValue)))) then
+        LValue := 0;
+      AddOrSetValue(LKey, LValue);
+      dec(nb);
+    end;
+  finally
+    System.tmonitor.Exit(self);
   end;
 end;
 
@@ -466,15 +596,20 @@ var
   LKey: TSporglooAPINumber;
   LValue: TSporglooAPIshort;
 begin
-  VersionNum := CVersion;
-  AStream.Write(VersionNum, sizeof(VersionNum));
-  nb := Count;
-  AStream.Write(nb, sizeof(nb));
-  for LKey in keys do
-  begin
-    AStream.Write(LKey, sizeof(LKey));
-    LValue := items[LKey];
-    AStream.Write(LValue, sizeof(LValue));
+  System.tmonitor.Enter(self);
+  try
+    VersionNum := CVersion;
+    AStream.Write(VersionNum, sizeof(VersionNum));
+    nb := Count;
+    AStream.Write(nb, sizeof(nb));
+    for LKey in keys do
+    begin
+      AStream.Write(LKey, sizeof(LKey));
+      LValue := items[LKey];
+      AStream.Write(LValue, sizeof(LValue));
+    end;
+  finally
+    System.tmonitor.Exit(self);
   end;
 end;
 
@@ -487,22 +622,28 @@ var
   LKey: TSporglooAPINumber;
   LValue: TSporglooMapRow;
 begin
-  if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
-    VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+  System.tmonitor.Enter(self);
+  try
+    if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
+      VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
 
-  if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb)))) then
-    nb := 0;
+    if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb))))
+    then
+      nb := 0;
 
-  Clear;
-  while (nb > 0) do
-  begin
-    if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
-      sizeof(LKey)))) then
-      LKey := 0;
-    LValue := TSporglooMapRow.Create;
-    LValue.LoadFromStream(AStream);
-    AddOrSetValue(LKey, LValue);
-    dec(nb);
+    Clear;
+    while (nb > 0) do
+    begin
+      if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
+        sizeof(LKey)))) then
+        LKey := 0;
+      LValue := TSporglooMapRow.Create;
+      LValue.LoadFromStream(AStream);
+      AddOrSetValue(LKey, LValue);
+      dec(nb);
+    end;
+  finally
+    System.tmonitor.Exit(self);
   end;
 end;
 
@@ -512,14 +653,19 @@ var
   nb: int64;
   LKey: TSporglooAPINumber;
 begin
-  VersionNum := CVersion;
-  AStream.Write(VersionNum, sizeof(VersionNum));
-  nb := Count;
-  AStream.Write(nb, sizeof(nb));
-  for LKey in keys do
-  begin
-    AStream.Write(LKey, sizeof(LKey));
-    items[LKey].SaveToStream(AStream);
+  System.tmonitor.Enter(self);
+  try
+    VersionNum := CVersion;
+    AStream.Write(VersionNum, sizeof(VersionNum));
+    nb := Count;
+    AStream.Write(nb, sizeof(nb));
+    for LKey in keys do
+    begin
+      AStream.Write(LKey, sizeof(LKey));
+      items[LKey].SaveToStream(AStream);
+    end;
+  finally
+    System.tmonitor.Exit(self);
   end;
 end;
 
