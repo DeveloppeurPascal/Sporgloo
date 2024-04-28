@@ -37,7 +37,7 @@ type
   /// <summary>
   /// Sent by the client/server API when an other player moved.
   /// </summary>
-  TOtherPlayerUpdateMessage = class(TObjectMessage<TSporglooPlayer>)
+  TOtherPlayerUpdateMessage = class(TMessage<TSporglooPlayer>)
   end;
 
   /// <summary>
