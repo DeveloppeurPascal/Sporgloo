@@ -156,16 +156,15 @@ begin
     MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
       rectf(x, y, x + CSporglooTileSize + 1 * BitmapScale,
       y + CSporglooTileSize + 1 * BitmapScale), 1);
-
-    if assigned(Player) and (AX = Player.PlayerX) and (AY = Player.PlayerY) then
-      DrawAPlayer(AX, AY);
-
-    if ATileID = CSporglooTileStar then
-      DrawAStar(AX, AY);
-
   finally
     MapImage.Bitmap.Canvas.EndScene;
   end;
+
+  if assigned(Player) and (AX = Player.PlayerX) and (AY = Player.PlayerY) then
+    DrawAPlayer(AX, AY);
+
+  if ATileID = CSporglooTileStar then
+    DrawAStar(AX, AY);
 end;
 
 procedure TMapFrame.MapImageResized(Sender: TObject);
