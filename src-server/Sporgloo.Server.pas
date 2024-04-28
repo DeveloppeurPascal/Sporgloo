@@ -241,8 +241,10 @@ begin
     end
     else
     begin
-      player.PlayerX := 0;
-      player.PlayerY := 0;
+      player.PlayerX := random(CStartDistanceFromLastPlayer +
+        CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
+      player.PlayerY := random(CStartDistanceFromLastPlayer +
+        CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
     end;
 
     player.Score := 0;
@@ -250,6 +252,8 @@ begin
     player.LifeLevel := CStartLifeLevel;
     SporglooPlayers.Add(player.PlayerID, player);
     SporglooMap.SetTileID(player.PlayerX, player.PlayerY, CSporglooTilePath);
+
+    SendClientRegisterResponse(AFromGame, player.DeviceID, player.PlayerID);
 
     // TODO : to optimize this feature, send the changes from an other thread and only for session where it should be visible
     for Session in SporglooSessions.Values do
@@ -264,8 +268,6 @@ begin
           // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
         end;
   end;
-
-  SendClientRegisterResponse(AFromGame, player.DeviceID, player.PlayerID);
 end;
 
 procedure TSporglooServer.onErrorMessage(const AFromGame
@@ -300,9 +302,10 @@ begin
       end);
     writeln('nb = ', nb);
 {$ENDIF}
+    tthread.CurrentThread.Terminate;
     SessionID := (AFromGame.tagobject as TSporglooSession).SessionID;
     (AFromGame.tagobject as TSporglooSession).SocketClient := nil;
-    AFromGame.Free;
+    AFromGame.tagobject := nil;
     SporglooSessions.Remove(SessionID);
 {$IFDEF DEBUG}
     writeln('nb sessions = ', SporglooSessions.count);
@@ -415,6 +418,8 @@ begin
       TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
       'Wrong player for this session.');
 
+  SendPlayerPutAStarResponse(AFromGame, msg.X, msg.Y);
+
   if (Session.player.StarsCount > 0) then
   begin
     SporglooMap.SetTileID(msg.X, msg.Y, CSporglooTileStar);
@@ -430,7 +435,6 @@ begin
           // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
         end;
   end;
-  SendPlayerPutAStarResponse(AFromGame, msg.X, msg.Y);
 end;
 
 procedure TSporglooServer.SaveGameData;
