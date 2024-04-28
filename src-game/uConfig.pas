@@ -65,8 +65,7 @@ constructor TConfig.Create;
 begin
   FParams := TParamsFile.Create;
   FParams.InitDefaultFileNameV2('Gamolf', 'Sporgloo');
-  // TODO : retirer DEBUG
-{$IF Defined(DEBUG) or Defined(RELEASE)}
+{$IF Defined(RELEASE)}
   FParams.onCryptProc := function(Const AParams: string): TStream
     var
       Keys: TByteDynArray;
