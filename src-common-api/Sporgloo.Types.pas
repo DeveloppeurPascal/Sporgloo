@@ -69,6 +69,7 @@ end;
 constructor TSporglooMapCell.Create(X, Y: TSporglooAPINumber;
   TileID: TSporglooAPIShort);
 begin
+  inherited Create;
   FX := X;
   FY := Y;
   FTileID := TileID;
