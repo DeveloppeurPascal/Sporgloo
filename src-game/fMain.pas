@@ -209,10 +209,7 @@ begin
   else if (Key = vkEscape) or (Key = vkHardwareBack) then
   begin
     if ActivePage = TPageType.Game then
-    begin
-      // TODO : déclencher l'enregistrement des données
-      ActivePage := TPageType.Home;
-    end
+      ActivePage := TPageType.Home
     else
       Close;
     Key := 0;
@@ -296,16 +293,12 @@ end;
 
 procedure TfrmMain.InitializeGamePage;
 begin
-  // TODO : initialize the "new game" screen
-
   Viseur.Width := CSporglooTileSize;
   Viseur.height := CSporglooTileSize;
   Viseur.Position.X := CSporglooTileSize *
     (trunc(MapFrame1.Width / CSporglooTileSize) div 2);
   Viseur.Position.Y := CSporglooTileSize *
     (trunc(MapFrame1.height / CSporglooTileSize) div 2);
-  // Viseur.Position.X := 0;
-  // Viseur.Position.Y := 0;
 
   GamePage.Cursor := crnone;
   // crNone : absent de la liste de possibilités dans l'inspecteur d'objets
