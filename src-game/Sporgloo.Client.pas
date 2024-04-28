@@ -170,7 +170,8 @@ begin
     var
       Player: TSporglooPlayer;
     begin
-      if not TGameData.Current.OtherPlayers.TryGetValue(PlayerID, Player) then
+      Player := TGameData.Current.OtherPlayers.GetPlayer(PlayerID);
+      if not assigned(Player) then
       begin
         Player := TSporglooPlayer.Create;
         Player.PlayerID := PlayerID;
