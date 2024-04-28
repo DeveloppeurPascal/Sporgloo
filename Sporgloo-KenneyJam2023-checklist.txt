@@ -6,24 +6,25 @@
 ==> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
 ==> écran du jeu (jeu en cours) : background du jeu, curseur souris ou contrôleur de jeu, boutons pause / play/pause musique, play/pause bruitages, score, niveau de vie, nombre de pastilles (= étoiles) dispos, actions du joueur, actions du personnage
 
+- ajouter un message permettant l'envoi d'une série de cases de la grille plutôt que une par une => optimisation du dessin et des échanges
+- ajouter les infos sur les joueurs au niveau de la grille de jeu (pour simplifier les affichages et tests partout)
+- optimisation des mises à jour : stocker la zone d'affichage autour du joueur pour chaque session (zone max retournée à chaque refresh de la carte), sur les trucs à envoyer en masse faire une file d'attente et traiter l'envoi sur un autre thread ou en idle
+
+- changer l'UI, ajouter boites de dialogue, actions entre joueurs et revoir le fonctionnement global du jeu
+
 - traiter les TODO
-- messages d'erreur côté client (provenant de l'API client/serveur)
-- gérer les déplacements DES joueurs vers l'étoile la plus proche en path finding automatique
+- traiter les messages d'erreur côté client (provenant de l'API client/serveur)
+- traiter les messages d'erreur côté serveur (provenant de l'API client/serveur)
+- gérer les déplacements DES joueurs vers l'étoile la plus proche en path finding automatique (à faire côté clients avec une session active)
 - ajouter des bruitages
 - ajout des écrans manquants (cf TLayout dans fMain.pas du jeu)
-- mise en pause / arrêt du jeu / fermeture du programme client
-- configurer le VPS sous Debian
-- transformation du programme serveur en démon Linux (#29)
+
+- configurer le VPS sous Debian pour le serveur (PAServer + version RELEASE du programme)
 - tests du programme serveur sur un serveur sous Linux Debian
-- tests Android (sur tablette)
+- transformation du programme serveur en démon Linux (#29)
+
 - tests iOS (sur tablette)
+- tests Android (sur tablette)
+
 - changer le stockage du jeu côté serveur (mettre une base de données au lieu du stockage en mémoire) (#35)
-- changer l'UI, ajouter boites de dialogue, actions entre joueurs et revoir le fonctionnement global du jeu
 - permettre au joueur de choisir un avatar pour son personnage
-
-
------
-
-- ajouter les infos sur les joueurs au niveau de la grille de jeu (pour simplifier les affichages et tests partout)
-- ajouter un message permettant l'envoi d'une série de cases de la grille plutôt que une par une => optimisation du dessin et des échanges
-- optimisation des mises à jour : stocker la zone d'affichage autour du joueur pour chaque session (zone max retournée à chaque refresh de la carte), sur les trucs à envoyer en masse faire une file d'attente et traiter l'envoi sur un autre thread ou en idle
