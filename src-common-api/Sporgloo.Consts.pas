@@ -15,7 +15,11 @@ const
 
   CStartStarsCount = 12;
   CStartLifeLevel = 24;
+{$IFDEF DEBUG}
+  CStartDistanceFromLastPlayer = 10;
+{$ELSE}
   CStartDistanceFromLastPlayer = 50;
+{$ENDIF}
 
 type
 {$SCOPEDENUMS ON}
