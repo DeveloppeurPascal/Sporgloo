@@ -32,7 +32,8 @@ uses
   cGrayBox in 'cGrayBox.pas' {cadGrayBox: TFrame},
   cYellowMenuButton in 'cYellowMenuButton.pas' {cadYellowMenuButton: TFrame},
   uBackgroundMusic in 'uBackgroundMusic.pas',
-  cViseur in 'cViseur.pas' {cadViseur: TFrame};
+  cViseur in 'cViseur.pas' {cadViseur: TFrame},
+  Olf.RTL.CryptDecrypt in '..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas';
 
 {$R *.res}
 

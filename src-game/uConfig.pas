@@ -51,11 +51,13 @@ implementation
 uses
   Sporgloo.Types,
   System.SysUtils,
-  System.IOUtils;
+  System.IOUtils,
+  System.Classes,
+  System.Types,
+  Olf.RTL.CryptDecrypt;
 
 var
   ConfigInstance: TConfig;
-  Params: TParamsFile;
 
   { TConfig }
 
@@ -63,6 +65,47 @@ constructor TConfig.Create;
 begin
   FParams := TParamsFile.Create;
   FParams.InitDefaultFileNameV2('Gamolf', 'Sporgloo');
+  // TODO : retirer DEBUG
+{$IF Defined(DEBUG) or Defined(RELEASE)}
+  FParams.onCryptProc := function(Const AParams: string): TStream
+    var
+      Keys: TByteDynArray;
+      ParStream: TStringStream;
+    begin
+      ParStream := TStringStream.Create(AParams);
+      try
+{$I '..\_PRIVATE\src\paramsxorkey.inc'}
+        result := TOlfCryptDecrypt.XORCrypt(ParStream, Keys);
+      finally
+        ParStream.free;
+      end;
+    end;
+  FParams.onDecryptProc := function(Const AStream: TStream): string
+    var
+      Keys: TByteDynArray;
+      Stream: TStream;
+      StringStream: TStringStream;
+    begin
+{$I '..\_PRIVATE\src\paramsxorkey.inc'}
+      result := '';
+      Stream := TOlfCryptDecrypt.XORdeCrypt(AStream, Keys);
+      try
+        if assigned(Stream) and (Stream.Size > 0) then
+        begin
+          StringStream := TStringStream.Create;
+          try
+            Stream.Position := 0;
+            StringStream.CopyFrom(Stream);
+            result := StringStream.DataString;
+          finally
+            StringStream.free;
+          end;
+        end;
+      finally
+        Stream.free;
+      end;
+    end;
+{$ENDIF}
   FParams.Load;
 end;
 
@@ -82,7 +125,7 @@ end;
 
 destructor TConfig.Destroy;
 begin
-  FParams.Free;
+  FParams.free;
   inherited;
 end;
 
@@ -196,6 +239,6 @@ ConfigInstance := nil;
 
 finalization
 
-ConfigInstance.Free;
+ConfigInstance.free;
 
 end.
