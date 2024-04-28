@@ -63,7 +63,8 @@ type
   private
     FActivePage: TPageType;
     FPreviousGamePadKey: Word;
-    FPreviousFamePadKeyChar: widechar;
+    FPreviousGamePadKeyChar: widechar;
+    FPreviousGamePadTempo: int64;
     procedure SetActivePage(const Value: TPageType);
     procedure SetLifeLevel(const Value: TSporglooAPINumber);
     procedure SetScore(const Value: TSporglooAPINumber);
@@ -172,7 +173,8 @@ begin
   ActivePage := TPageType.None;
 
   FPreviousGamePadKey := 0;
-  FPreviousFamePadKeyChar := #0;
+  FPreviousGamePadKeyChar := #0;
+  FPreviousGamePadTempo := 0;
   GameControllerPicture.Visible := false;
 
 {$IFDEF RELEASE}
@@ -538,13 +540,34 @@ begin
           end;
         end;
 
-        if ((Key <> 0) or (KeyChar <> #0)) and ((Key <> FPreviousGamePadKey) or
-          (KeyChar <> FPreviousFamePadKeyChar)) then
+        if ((Key <> 0) or (KeyChar <> #0)) then
         begin
-          // TODO : ajouter une tempo entre deux actions ou voir lesquelles temporiser (exemple boutons mais pas déplacements)
-          // FPreviousGamePadKey := Key;
-          // FPreviousFamePadKeyChar := KeyChar;
-          FormKeyDown(Sender, Key, KeyChar, []);
+          if ((Key <> FPreviousGamePadKey) or
+            (KeyChar <> FPreviousGamePadKeyChar)) then
+          begin
+            // TODO : ajouter une tempo entre deux actions ou voir lesquelles temporiser (exemple boutons mais pas déplacements)
+            FPreviousGamePadKey := Key;
+            FPreviousGamePadKeyChar := KeyChar;
+            FPreviousGamePadTempo := 300; // en millisecondes
+            // TODO : paramétrer le temps entre deux actions au joystick
+
+            FormKeyDown(Sender, Key, KeyChar, []);
+          end
+          else
+          begin
+            FPreviousGamePadTempo := FPreviousGamePadTempo -
+              TimerGamePad.Interval;
+            if FPreviousGamePadTempo < 0 then
+            begin
+              FPreviousGamePadKey := 0;
+              FPreviousGamePadKeyChar := #0;
+            end;
+          end;
+        end
+        else
+        begin
+          FPreviousGamePadKey := 0;
+          FPreviousGamePadKeyChar := #0;
         end;
       end)
   else
