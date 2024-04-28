@@ -151,19 +151,20 @@ var
   msg: TLogoffMessage;
 begin
   if assigned(TGameData.Current.APIClient) then
-  begin
-    msg := TLogoffMessage.Create;
     try
+      msg := TLogoffMessage.Create;
       try
-        TGameData.Current.APIClient.SendMessage(msg);
-      except
+        try
+          TGameData.Current.APIClient.SendMessage(msg);
+        except
+        end;
+      finally
+        msg.free;
       end;
+      TGameData.Current.APIClient.free;
     finally
-      msg.free;
+      TGameData.Current.APIClient := nil;
     end;
-    TGameData.Current.APIClient.free;
-    TGameData.Current.APIClient := nil;
-  end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
