@@ -139,14 +139,19 @@ end;
 
 procedure TSporglooClient.onMapCell(const AFromServer
   : TOlfSocketMessagingServerConnectedClient; const msg: TMapCellMessage);
+var
+  X, Y: TSporglooAPINumber;
+  TileID: byte;
 begin
-  TGameData.Current.Map.SetTileID(msg.X, msg.Y, msg.TileID);
-  TThread.synchronize(nil,
+  X := msg.X;
+  Y := msg.Y;
+  TileID := msg.TileID;
+  TThread.queue(nil,
     procedure
     begin
+      TGameData.Current.Map.SetTileID(X, Y, TileID);
       TMessageManager.DefaultManager.SendMessage(self,
-        TMapCellUpdateMessage.Create(TSporglooMapCell.Create(msg.X, msg.Y,
-        msg.TileID)));
+        TMapCellUpdateMessage.Create(TSporglooMapCell.Create(X, Y, TileID)));
     end);
 end;
 
@@ -154,23 +159,29 @@ procedure TSporglooClient.onOtherPlayerMove(const AFromServer
   : TOlfSocketMessagingServerConnectedClient;
 const msg: TOtherPlayerMoveMessage);
 var
-  Player: TSporglooPlayer;
+  X, Y: TSporglooAPINumber;
+  PlayerID: string;
 begin
-  if not TGameData.Current.OtherPlayers.TryGetValue(msg.PlayerID, Player) then
-  begin
-    Player := TSporglooPlayer.Create;
-    Player.PlayerID := msg.PlayerID;
-    TGameData.Current.OtherPlayers.add(msg.PlayerID, Player);
-  end;
-
-  // TODO : redessiner la tuile où se trouvait le joueur avant son déplacement (si on le connaissait)
-
-  Player.PlayerX := msg.X;
-  Player.PlayerY := msg.Y;
-
-  TThread.synchronize(nil,
+  X := msg.X;
+  Y := msg.Y;
+  PlayerID := msg.PlayerID;
+  TThread.queue(nil,
     procedure
+    var
+      Player: TSporglooPlayer;
     begin
+      if not TGameData.Current.OtherPlayers.TryGetValue(PlayerID, Player) then
+      begin
+        Player := TSporglooPlayer.Create;
+        Player.PlayerID := PlayerID;
+        TGameData.Current.OtherPlayers.add(PlayerID, Player);
+      end;
+
+      // TODO : redessiner la tuile où se trouvait le joueur avant son déplacement (si on le connaissait)
+
+      Player.PlayerX := X;
+      Player.PlayerY := Y;
+
       TMessageManager.DefaultManager.SendMessage(self,
         TOtherPlayerUpdateMessage.Create(Player));
     end);
