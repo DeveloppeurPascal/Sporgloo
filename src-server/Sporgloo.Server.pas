@@ -49,15 +49,7 @@ type
       Life: TSporglooAPINumber);
     procedure SendMapCell(Const AToGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const X, Y: TSporglooAPINumber; Const TileID: TSporglooAPIShort);
-    procedure SendPlayerMoveResponse(Const AToGame
-      : TOlfSocketMessagingServerConnectedClient);
-    procedure SendPlayerPutAStarResponse(Const AToGame
-      : TOlfSocketMessagingServerConnectedClient;
-      Const X, Y: TSporglooAPINumber);
-    procedure SendOtherPlayerMove(Const AToGame
-      : TOlfSocketMessagingServerConnectedClient; Const PlayerID: string;
-      Const X, Y: TSporglooAPINumber);
+      Const MapCell: TSporglooMapCell);
 
     procedure SendErrorMessage(Const AToGame
       : TOlfSocketMessagingServerConnectedClient;
@@ -109,6 +101,30 @@ begin
 {$IFDEF DEBUG}
         writeln('DB saved');
 {$ENDIF}
+      end;
+    end).start;
+
+  tthread.createanonymousthread(
+    procedure
+    var
+      MapCell: TSporglooMapCell;
+      Session: TSporglooSession;
+    begin
+      while not tthread.CheckTerminated do
+      begin
+        MapCell := GetNextChangedMapCell;
+        if assigned(MapCell) then
+        begin
+          MapCell.HasChanged := false;
+          for Session in SporglooSessions.Values do
+            try
+              SendMapCell(Session.SocketClient, MapCell);
+            except
+              // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
+            end;
+        end
+        else
+          sleep(10);
       end;
     end).start;
 end;
@@ -185,14 +201,15 @@ begin
   Session := TSporglooSession.Create;
   Session.SessionID := GetUniqID;
   Session.player := player;
-  Session.MapRangeX := 0;
-  Session.MapRangey := 0;
-  Session.MapRangeColNumber := 0;
-  Session.MapRangeRowNumber := 0;
   Session.SocketClient := AFromGame;
   AFromGame.tagobject := Session;
 
-  SporglooSessions.Add(Session.SessionID, Session);
+  System.Tmonitor.enter(SporglooSessions);
+  try
+    SporglooSessions.Add(Session.SessionID, Session);
+  finally
+    System.Tmonitor.Exit(SporglooSessions);
+  end;
 
   SendClientLoginResponse(AFromGame, Session.player.DeviceID, Session.SessionID,
     Session.player.PlayerX, Session.player.PlayerY, Session.player.Score,
@@ -206,6 +223,7 @@ var
   player: TSporglooPlayer;
   Session: TSporglooSession;
   ok: boolean;
+  MapCell: TSporglooMapCell;
 begin
 {$IFDEF DEBUG}
   writeln('onClientRegister');
@@ -241,33 +259,30 @@ begin
     end
     else
     begin
-      player.PlayerX := random(CStartDistanceFromLastPlayer +
-        CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
-      player.PlayerY := random(CStartDistanceFromLastPlayer +
-        CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
+      repeat
+        player.PlayerX := random(CStartDistanceFromLastPlayer +
+          CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
+        player.PlayerY := random(CStartDistanceFromLastPlayer +
+          CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
+        ok := true;
+        // TODO : tester si un joueur est à ces nouvelles coordonnées une fois les joueurs dans la grille
+      until ok;
     end;
 
     player.Score := 0;
     player.StarsCount := CStartStarsCount;
     player.LifeLevel := CStartLifeLevel;
     SporglooPlayers.Add(player.PlayerID, player);
-    SporglooMap.SetTileID(player.PlayerX, player.PlayerY, CSporglooTilePath);
+
+    MapCell := SporglooMap.GetCellAt(player.PlayerX, player.PlayerY);
+    MapCell.TileID := CSporglooTilePath;
+    MapCell.PlayerID := player.PlayerID;
 
     SendClientRegisterResponse(AFromGame, player.DeviceID, player.PlayerID);
-
-    // TODO : to optimize this feature, send the changes from an other thread and only for session where it should be visible
-    for Session in SporglooSessions.Values do
-      if assigned(Session.SocketClient) and (Session.SocketClient <> AFromGame)
-      then
-        try
-          SendOtherPlayerMove(Session.SocketClient, player.PlayerID,
-            player.PlayerX, player.PlayerY);
-          SendMapCell(Session.SocketClient, player.PlayerX, player.PlayerY,
-            CSporglooTilePath);
-        except
-          // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
-        end;
-  end;
+  end
+  else
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceForPlayerID,
+      'A player is already registered for this device.');
 end;
 
 procedure TSporglooServer.onErrorMessage(const AFromGame
@@ -306,7 +321,12 @@ begin
     SessionID := (AFromGame.tagobject as TSporglooSession).SessionID;
     (AFromGame.tagobject as TSporglooSession).SocketClient := nil;
     AFromGame.tagobject := nil;
-    SporglooSessions.Remove(SessionID);
+    System.Tmonitor.enter(SporglooSessions);
+    try
+      SporglooSessions.Remove(SessionID);
+    finally
+      System.Tmonitor.Exit(SporglooSessions);
+    end;
 {$IFDEF DEBUG}
     writeln('nb sessions = ', SporglooSessions.count);
     nb := 0;
@@ -330,19 +350,24 @@ begin
   writeln('onMapRefresh');
 {$ENDIF}
   if msg.ColNumber < 1 then
-    exit;
+    Exit;
   if msg.RowNumber < 1 then
-    exit;
+    Exit;
+
   // TODO : envoyer un message avec toutes les données plutôt que X messages pour chaque case
   for X := msg.X to msg.X + msg.ColNumber - 1 do
     for Y := msg.Y to msg.Y + msg.RowNumber - 1 do
-      SendMapCell(AFromGame, X, Y, SporglooMap.GetTileID(X, Y));
+    begin
+      SendMapCell(AFromGame, SporglooMap.GetCellAt(X, Y));
+      // TODO : référencer la session au niveau de la liste des sessions à mettre à jour en cas de changement de chaque cellule
+    end;
 end;
 
 procedure TSporglooServer.onPlayerMove(const AFromGame
   : TOlfSocketMessagingServerConnectedClient; const msg: TPlayerMoveMessage);
 var
   Session: TSporglooSession;
+  MapCell: TSporglooMapCell;
 begin
 {$IFDEF DEBUG}
   writeln('onPlayerMove');
@@ -368,24 +393,17 @@ begin
       TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
       'Wrong player for this session.');
 
-  // TODO : check if the movement at this position is free on the map
+  MapCell := SporglooMap.GetCellAt(Session.player.PlayerX,
+    Session.player.PlayerY);
+  MapCell.PlayerID := '';
+
   Session.player.PlayerX := msg.X;
   Session.player.PlayerY := msg.Y;
 
+  MapCell := SporglooMap.GetCellAt(msg.X, msg.Y);
+  MapCell.PlayerID := Session.player.PlayerID;
+
   // TODO : check the TileID, change score if needed, change lifelevel, change map tile
-
-  SendPlayerMoveResponse(AFromGame);
-
-  // TODO : to optimize this feature, send the changes from an other thread and only for session where it should be visible
-  for Session in SporglooSessions.Values do
-    if assigned(Session.SocketClient) and (Session.SocketClient <> AFromGame)
-    then
-      try
-        SendOtherPlayerMove(Session.SocketClient, Session.player.PlayerID,
-          Session.player.PlayerX, Session.player.PlayerY);
-      except
-        // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
-      end;
 end;
 
 procedure TSporglooServer.onPlayerPutAStar(const AFromGame
@@ -418,22 +436,10 @@ begin
       TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
       'Wrong player for this session.');
 
-  SendPlayerPutAStarResponse(AFromGame, msg.X, msg.Y);
-
   if (Session.player.StarsCount > 0) then
   begin
-    SporglooMap.SetTileID(msg.X, msg.Y, CSporglooTileStar);
+    SporglooMap.GetCellAt(msg.X, msg.Y).TileID := CSporglooTileStar;
     Session.player.StarsCount := Session.player.StarsCount - 1;
-
-    // TODO : to optimize this feature, send the changes from an other thread and only for session where it should be visible
-    for Session in SporglooSessions.Values do
-      if assigned(Session.SocketClient) and (Session.SocketClient <> AFromGame)
-      then
-        try
-          SendMapCell(Session.SocketClient, msg.X, msg.Y, CSporglooTileStar);
-        except
-          // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
-        end;
   end;
 end;
 
@@ -522,67 +528,20 @@ begin
 end;
 
 procedure TSporglooServer.SendMapCell(Const AToGame
-  : TOlfSocketMessagingServerConnectedClient; const X, Y: TSporglooAPINumber;
-const TileID: TSporglooAPIShort);
+  : TOlfSocketMessagingServerConnectedClient; Const MapCell: TSporglooMapCell);
 var
   msg: TMapCellMessage;
 begin
-  if (TileID = CSporglooTileNone) then
-    exit;
-
 {$IFDEF DEBUG}
-  writeln('=> ', X, ',', Y, '=', TileID);
+  writeln('=> ', MapCell.PlayerID, ' - ', MapCell.X, ',', MapCell.Y, '=',
+    MapCell.TileID);
 {$ENDIF}
   msg := TMapCellMessage.Create;
   try
-    msg.X := X;
-    msg.Y := Y;
-    msg.TileID := TileID;
-    AToGame.SendMessage(msg);
-  finally
-    msg.Free;
-  end;
-end;
-
-procedure TSporglooServer.SendOtherPlayerMove(Const AToGame
-  : TOlfSocketMessagingServerConnectedClient; const PlayerID: string;
-const X, Y: TSporglooAPINumber);
-var
-  msg: TOtherPlayerMoveMessage;
-begin
-  msg := TOtherPlayerMoveMessage.Create;
-  try
-    msg.PlayerID := PlayerID;
-    msg.X := X;
-    msg.Y := Y;
-    AToGame.SendMessage(msg);
-  finally
-    msg.Free;
-  end;
-end;
-
-procedure TSporglooServer.SendPlayerMoveResponse(Const AToGame
-  : TOlfSocketMessagingServerConnectedClient);
-var
-  msg: TPlayerMoveResponseMessage;
-begin
-  msg := TPlayerMoveResponseMessage.Create;
-  try
-    AToGame.SendMessage(msg);
-  finally
-    msg.Free;
-  end;
-end;
-
-procedure TSporglooServer.SendPlayerPutAStarResponse(Const AToGame
-  : TOlfSocketMessagingServerConnectedClient; const X, Y: TSporglooAPINumber);
-var
-  msg: TServerAcceptTheStarAddingMessage;
-begin
-  msg := TServerAcceptTheStarAddingMessage.Create;
-  try
-    msg.X := X;
-    msg.Y := Y;
+    msg.X := MapCell.X;
+    msg.Y := MapCell.Y;
+    msg.TileID := MapCell.TileID;
+    msg.PlayerID := MapCell.PlayerID;
     AToGame.SendMessage(msg);
   finally
     msg.Free;

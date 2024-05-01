@@ -5,10 +5,11 @@
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">OSXARM64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>131203</TargetedPlatforms>
         <AppType>Console</AppType>
         <MainSource>SporglooServer.dpr</MainSource>
+        <ProjectName Condition="'$(ProjectName)'==''">SporglooServer</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -237,6 +238,8 @@
         <DCCReference Include="..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Streams.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Params.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas"/>
+        <DCCReference Include="uGameData.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -310,6 +313,29 @@
                 </DeployFile>
                 <DeployFile LocalName="Linux64\Release\SporglooServer" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Linux64">
+                        <RemoteName>SporglooServer</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\SporglooServer.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>SporglooServer</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\SporglooServer.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
+                    <Platform Name="OSXARM64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\SporglooServer.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>Info.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\SporglooServer" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="OSXARM64">
                         <RemoteName>SporglooServer</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
