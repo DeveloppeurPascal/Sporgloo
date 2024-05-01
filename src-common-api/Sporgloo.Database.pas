@@ -55,13 +55,16 @@ type
     procedure SaveToStream(AStream: TStream);
   end;
 
-  TSporglooMapRow = class(TDictionary<TSporglooAPINumber, TSporglooAPIshort>)
+  TSporglooMapRow = class(TObjectDictionary<TSporglooAPINumber,
+    TSporglooMapCell>)
   private const
-    CVersion = 1;
+    CVersion = 2;
   protected
+    FRowKey: TSporglooAPINumber;
   public
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
+    constructor Create(ARowKey: TSporglooAPINumber);
   end;
 
   TSporglooMapCol = class(TObjectDictionary<TSporglooAPINumber,
@@ -76,14 +79,13 @@ type
 
   TSporglooMap = class
   private const
-    CVersion = 1;
+    CVersion = 2;
 
   var
     FCell: TSporglooMapCol;
   protected
   public
-    function GetTileID(X, Y: TSporglooAPINumber): TSporglooAPIshort;
-    procedure SetTileID(X, Y: TSporglooAPINumber; TileID: TSporglooAPIshort);
+    function GetCellAt(AX, AY: TSporglooAPINumber): TSporglooMapCell;
 
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
@@ -94,19 +96,9 @@ type
 
   TSporglooSession = class
   private
-    FMapRangeColNumber: TSporglooAPINumber;
     FSessionID: string;
-    FMapRangeRowNumber: TSporglooAPINumber;
-    FMapRangeX: TSporglooAPINumber;
-    FMapRangeY: TSporglooAPINumber;
-    FMapRangeXMax: TSporglooAPINumber;
-    FMapRangeYMax: TSporglooAPINumber;
     FSocketClient: TOlfSocketMessagingServerConnectedClient;
     FPlayer: TSporglooPlayer;
-    procedure SetMapRangeColNumber(const Value: TSporglooAPINumber);
-    procedure SetMapRangeRowNumber(const Value: TSporglooAPINumber);
-    procedure SetMapRangeX(const Value: TSporglooAPINumber);
-    procedure SetMapRangeY(const Value: TSporglooAPINumber);
     procedure SetSessionID(const Value: string);
     procedure SetSocketClient(const Value
       : TOlfSocketMessagingServerConnectedClient);
@@ -116,14 +108,6 @@ type
     property SessionID: string read FSessionID write SetSessionID;
     property SocketClient: TOlfSocketMessagingServerConnectedClient
       read FSocketClient write SetSocketClient;
-    property MapRangeX: TSporglooAPINumber read FMapRangeX write SetMapRangeX;
-    property MapRangeY: TSporglooAPINumber read FMapRangeY write SetMapRangeY;
-    property MapRangeColNumber: TSporglooAPINumber read FMapRangeColNumber
-      write SetMapRangeColNumber;
-    property MapRangeRowNumber: TSporglooAPINumber read FMapRangeRowNumber
-      write SetMapRangeRowNumber;
-    property MapRangeXMax: TSporglooAPINumber read FMapRangeXMax;
-    property MapRangeYMax: TSporglooAPINumber read FMapRangeYMax;
     property Player: TSporglooPlayer read FPlayer write SetPlayer;
     constructor Create;
     destructor Destroy; override;
@@ -141,7 +125,7 @@ implementation
 
 uses
   Olf.RTL.Streams,
-  Sporgloo.API.Messages;
+  Sporgloo.API.Messages, Sporgloo.Consts;
 
 procedure TSporglooPlayer.LoadFromStream(AStream: TStream);
 var
@@ -369,15 +353,22 @@ begin
   inherited;
 end;
 
-function TSporglooMap.GetTileID(X, Y: TSporglooAPINumber): TSporglooAPIshort;
+function TSporglooMap.GetCellAt(AX, AY: TSporglooAPINumber): TSporglooMapCell;
 var
-  FRow: TSporglooMapRow;
+  LRow: TSporglooMapRow;
 begin
   System.tmonitor.Enter(self);
   try
-    if (not FCell.TryGetValue(X, FRow)) or (not FRow.TryGetValue(Y, result))
-    then
-      result := 0;
+    if (not FCell.TryGetValue(AX, LRow)) then
+    begin
+      LRow := TSporglooMapRow.Create(AX);
+      FCell.add(AX, LRow);
+    end;
+    if (not LRow.TryGetValue(AY, result)) then
+    begin
+      result := TSporglooMapCell.Create(AX, AY, CSporglooTileNone, '');
+      LRow.add(AY, result);
+    end;
   finally
     System.tmonitor.Exit(self);
   end;
@@ -415,36 +406,12 @@ begin
   end;
 end;
 
-procedure TSporglooMap.SetTileID(X, Y: TSporglooAPINumber;
-  TileID: TSporglooAPIshort);
-var
-  LRow: TSporglooMapRow;
-begin
-  System.tmonitor.Enter(self);
-  try
-    if (not FCell.TryGetValue(X, LRow)) then
-    begin
-      LRow := TSporglooMapRow.Create;
-      FCell.add(X, LRow);
-    end;
-    LRow.AddOrSetValue(Y, TileID);
-  finally
-    System.tmonitor.Exit(self);
-  end;
-end;
-
 { TSporglooSession }
 
 constructor TSporglooSession.Create;
 begin
   inherited;
   FSessionID := '';
-  FMapRangeX := 0;
-  FMapRangeY := 0;
-  FMapRangeColNumber := 0;
-  FMapRangeRowNumber := 0;
-  FMapRangeXMax := 0;
-  FMapRangeYMax := 0;
   FSocketClient := nil;
   FPlayer := nil;
 end;
@@ -463,64 +430,6 @@ begin
     end;
   end;
   inherited;
-end;
-
-procedure TSporglooSession.SetMapRangeColNumber(const Value
-  : TSporglooAPINumber);
-begin
-  System.tmonitor.Enter(self);
-  try
-    FMapRangeColNumber := Value;
-    if FMapRangeColNumber > 0 then
-      FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
-    else
-      FMapRangeXMax := FMapRangeX;
-  finally
-    System.tmonitor.Exit(self);
-  end;
-end;
-
-procedure TSporglooSession.SetMapRangeRowNumber(const Value
-  : TSporglooAPINumber);
-begin
-  System.tmonitor.Enter(self);
-  try
-    FMapRangeRowNumber := Value;
-    if FMapRangeRowNumber > 0 then
-      FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
-    else
-      FMapRangeYMax := FMapRangeY;
-  finally
-    System.tmonitor.Exit(self);
-  end;
-end;
-
-procedure TSporglooSession.SetMapRangeX(const Value: TSporglooAPINumber);
-begin
-  System.tmonitor.Enter(self);
-  try
-    FMapRangeX := Value;
-    if FMapRangeColNumber > 0 then
-      FMapRangeXMax := FMapRangeX + FMapRangeColNumber - 1
-    else
-      FMapRangeXMax := FMapRangeX;
-  finally
-    System.tmonitor.Exit(self);
-  end;
-end;
-
-procedure TSporglooSession.SetMapRangeY(const Value: TSporglooAPINumber);
-begin
-  System.tmonitor.Enter(self);
-  try
-    FMapRangeY := Value;
-    if FMapRangeRowNumber > 0 then
-      FMapRangeYMax := FMapRangeY + FMapRangeRowNumber - 1
-    else
-      FMapRangeYMax := FMapRangeY;
-  finally
-    System.tmonitor.Exit(self);
-  end;
 end;
 
 procedure TSporglooSession.SetPlayer(const Value: TSporglooPlayer);
@@ -556,12 +465,19 @@ end;
 
 { TSporglooMapRow }
 
+constructor TSporglooMapRow.Create(ARowKey: TSporglooAPINumber);
+begin
+  inherited Create([doOwnsValues]);
+  FRowKey := ARowKey;
+end;
+
 procedure TSporglooMapRow.LoadFromStream(AStream: TStream);
 var
   VersionNum: integer;
   nb: int64;
   LKey: TSporglooAPINumber;
-  LValue: TSporglooAPIshort;
+  LValueOldVersion1: TSporglooAPIShort;
+  LValue: TSporglooMapCell;
 begin
   System.tmonitor.Enter(self);
   try
@@ -578,9 +494,18 @@ begin
       if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
         sizeof(LKey)))) then
         LKey := 0;
-      if not((VersionNum >= 0) and (sizeof(LValue) = AStream.read(LValue,
-        sizeof(LValue)))) then
-        LValue := 0;
+      if VersionNum = 1 then
+      begin // deprecated, only for compatibility with previous storage
+        if not((sizeof(LValueOldVersion1) = AStream.read(LValueOldVersion1,
+          sizeof(LValueOldVersion1)))) then
+          LValueOldVersion1 := 0;
+        LValue := TSporglooMapCell.Create(FRowKey, LKey, LValueOldVersion1, '');
+      end
+      else
+      begin
+        LValue := TSporglooMapCell.Create;
+        LValue.LoadFromStream(AStream);
+      end;
       AddOrSetValue(LKey, LValue);
       dec(nb);
     end;
@@ -594,7 +519,6 @@ var
   VersionNum: integer;
   nb: int64;
   LKey: TSporglooAPINumber;
-  LValue: TSporglooAPIshort;
 begin
   System.tmonitor.Enter(self);
   try
@@ -605,8 +529,7 @@ begin
     for LKey in keys do
     begin
       AStream.Write(LKey, sizeof(LKey));
-      LValue := items[LKey];
-      AStream.Write(LValue, sizeof(LValue));
+      items[LKey].SaveToStream(AStream);
     end;
   finally
     System.tmonitor.Exit(self);
@@ -637,7 +560,7 @@ begin
       if not((VersionNum >= 0) and (sizeof(LKey) = AStream.read(LKey,
         sizeof(LKey)))) then
         LKey := 0;
-      LValue := TSporglooMapRow.Create;
+      LValue := TSporglooMapRow.Create(LKey);
       LValue.LoadFromStream(AStream);
       AddOrSetValue(LKey, LValue);
       dec(nb);
