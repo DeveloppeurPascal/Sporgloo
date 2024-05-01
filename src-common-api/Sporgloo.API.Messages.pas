@@ -12,7 +12,7 @@
 // ****************************************
 // File generator : Socket Messaging Code Generator (v1.1)
 // Website : https://smcodegenerator.olfsoftware.fr/ 
-// Generation date : 30/03/2024 21:35:23
+// Generation date : 01/05/2024 15:07:51
 // 
 // Don't do any change on this file. They will be erased by next generation !
 // ****************************************
@@ -208,9 +208,11 @@ type
     FX: TSporglooAPINumber;
     FY: TSporglooAPINumber;
     FTileID: TSporglooAPIShort;
+    FPlayerID: string;
     procedure SetX(const Value: TSporglooAPINumber);
     procedure SetY(const Value: TSporglooAPINumber);
     procedure SetTileID(const Value: TSporglooAPIShort);
+    procedure SetPlayerID(const Value: string);
   public
     /// <summary>
     /// X
@@ -224,6 +226,10 @@ type
     /// Tile identifier
     /// </summary>
     property TileID: TSporglooAPIShort read FTileID write SetTileID;
+    /// <summary>
+    /// Player unique identifier
+    /// </summary>
+    property PlayerID: string read FPlayerID write SetPlayerID;
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
@@ -1044,6 +1050,7 @@ begin
   FX := 0;
   FY := 0;
   FTileID := 0;
+  FPlayerID := '';
 end;
 
 function TMapCellMessage.GetNewInstance: TOlfSMMessage;
@@ -1060,6 +1067,7 @@ begin
     raise exception.Create('Can''t load "Y" value.');
   if (Stream.read(FTileID, sizeof(FTileID)) <> sizeof(FTileID)) then
     raise exception.Create('Can''t load "TileID" value.');
+  FPlayerID := LoadStringFromStream(Stream);
 end;
 
 procedure TMapCellMessage.SaveToStream(Stream: TStream);
@@ -1068,6 +1076,7 @@ begin
   Stream.Write(FX, sizeof(FX));
   Stream.Write(FY, sizeof(FY));
   Stream.Write(FTileID, sizeof(FTileID));
+  SaveStringToStream(FPlayerID, Stream);
 end;
 
 procedure TMapCellMessage.SetX(const Value: TSporglooAPINumber);
@@ -1083,6 +1092,11 @@ end;
 procedure TMapCellMessage.SetTileID(const Value: TSporglooAPIShort);
 begin
   FTileID := Value;
+end;
+
+procedure TMapCellMessage.SetPlayerID(const Value: string);
+begin
+  FPlayerID := Value;
 end;
 
 {$ENDREGION}
