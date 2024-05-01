@@ -250,24 +250,32 @@ Shift: TShiftState; X, Y: Single);
 var
   MapX, MapY: TSporglooAPINumber;
   GameData: TGameData;
+  MapCell: TSporglooMapCell;
 begin
   Viseur.Position.X := trunc(X / CSporglooTileSize) * CSporglooTileSize;
   Viseur.Position.Y := trunc(Y / CSporglooTileSize) * CSporglooTileSize;
 
-  GameData := TGameData.Current;
-  MapX := trunc(X / CSporglooTileSize) + GameData.Session.MapRangeX;
-  MapY := trunc(Y / CSporglooTileSize) + GameData.Session.MapRangeY;
-  if (GameData.Map.GetTileID(MapX, MapY) <> CSporglooTileStar) and
-    (StarsCount > 0) then
+  if (StarsCount > 0) then
   begin
-    StarsCount := StarsCount - 1;
-    GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,
-      GameData.Session.player.PlayerID, MapX, MapY);
-    // TODO : Add the star in a waiting list of server's ACK
-    GameData.Map.SetTileID(MapX, MapY, CSporglooTileStar);
-    TMessageManager.DefaultManager.SendMessage(self,
-      TMapCellUpdateMessage.Create(TSporglooMapCell.Create(MapX, MapY,
-      CSporglooTileStar)));
+    GameData := TGameData.Current;
+    MapX := trunc(X / CSporglooTileSize) + GameData.ViewportX;
+    MapY := trunc(Y / CSporglooTileSize) + GameData.ViewportY;
+
+    MapCell := GameData.Map.GetCellAt(MapX, MapY);
+
+    if (MapCell.TileID in [CSporglooTileNone, CSporglooTilePath]) and
+      MapCell.PlayerID.IsEmpty then
+    begin
+      GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,
+        GameData.Session.player.PlayerID, MapX, MapY);
+
+      // TODO : Add the star in a waiting list of server's ACK
+
+      StarsCount := StarsCount - 1;
+      MapCell.TileID := CSporglooTileStar;
+      TMessageManager.DefaultManager.SendMessage(self,
+        TMapCellUpdateMessage.Create(MapCell));
+    end;
   end;
 end;
 

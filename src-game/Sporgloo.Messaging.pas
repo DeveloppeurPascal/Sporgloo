@@ -25,7 +25,7 @@ type
   /// This message is sent by the client/server API to send
   /// the new TileID to the subscribers
   /// </summary>
-  TMapCellUpdateMessage = class(TObjectMessage<TSporglooMapCell>)
+  TMapCellUpdateMessage = class(TMessage<TSporglooMapCell>)
   end;
 
   /// <summary>

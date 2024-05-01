@@ -20,15 +20,6 @@ type
       Const msg: TClientLoginResponseMessage);
     procedure onMapCell(Const AFromServer
       : TOlfSocketMessagingServerConnectedClient; Const msg: TMapCellMessage);
-    procedure onPlayerMoveResponse(Const AFromServer
-      : TOlfSocketMessagingServerConnectedClient;
-      Const msg: TPlayerMoveResponseMessage);
-    procedure onPlayerPutAStarResponse(Const AFromServer
-      : TOlfSocketMessagingServerConnectedClient;
-      Const msg: TServerAcceptTheStarAddingMessage);
-    procedure onOtherPlayerMove(Const AFromServer
-      : TOlfSocketMessagingServerConnectedClient;
-      Const msg: TOtherPlayerMoveMessage);
     procedure onLogoff(Const AFromServer
       : TOlfSocketMessagingServerConnectedClient; Const msg: TLogoffMessage);
 
@@ -69,9 +60,6 @@ begin
   onReceiveClientRegisterResponseMessage := onClientRegisterResponse;
   onReceiveClientLoginResponseMessage := onClientLoginResponse;
   onReceiveMapCellMessage := onMapCell;
-  onReceivePlayerMoveResponseMessage := onPlayerMoveResponse;
-  onReceiveServerAcceptTheStarAddingMessage := onPlayerPutAStarResponse;
-  onReceiveOtherPlayerMoveMessage := onOtherPlayerMove;
   OnReceiveErrorMessage := onErrorMessage;
   onReceiveLogoffMessage := onLogoff;
 end;
@@ -140,66 +128,18 @@ end;
 procedure TSporglooClient.onMapCell(const AFromServer
   : TOlfSocketMessagingServerConnectedClient; const msg: TMapCellMessage);
 var
-  X, Y: TSporglooAPINumber;
-  TileID: byte;
+  MapCell: TSporglooMapCell;
 begin
-  X := msg.X;
-  Y := msg.Y;
-  TileID := msg.TileID;
+  MapCell := TGameData.Current.Map.GetCellAt(msg.X, msg.Y);
+  MapCell.TileID := msg.TileID;
+  MapCell.PlayerID := msg.PlayerID;
+
   TThread.queue(nil,
     procedure
     begin
-      TGameData.Current.Map.SetTileID(X, Y, TileID);
       TMessageManager.DefaultManager.SendMessage(self,
-        TMapCellUpdateMessage.Create(TSporglooMapCell.Create(X, Y, TileID)));
+        TMapCellUpdateMessage.Create(MapCell));
     end);
-end;
-
-procedure TSporglooClient.onOtherPlayerMove(const AFromServer
-  : TOlfSocketMessagingServerConnectedClient;
-const msg: TOtherPlayerMoveMessage);
-var
-  X, Y: TSporglooAPINumber;
-  PlayerID: string;
-begin
-  X := msg.X;
-  Y := msg.Y;
-  PlayerID := msg.PlayerID;
-  TThread.queue(nil,
-    procedure
-    var
-      Player: TSporglooPlayer;
-    begin
-      Player := TGameData.Current.OtherPlayers.GetPlayer(PlayerID);
-      if not assigned(Player) then
-      begin
-        Player := TSporglooPlayer.Create;
-        Player.PlayerID := PlayerID;
-        TGameData.Current.OtherPlayers.add(PlayerID, Player);
-      end;
-
-      // TODO : redessiner la tuile où se trouvait le joueur avant son déplacement (si on le connaissait)
-
-      Player.PlayerX := X;
-      Player.PlayerY := Y;
-
-      TMessageManager.DefaultManager.SendMessage(self,
-        TOtherPlayerUpdateMessage.Create(Player));
-    end);
-end;
-
-procedure TSporglooClient.onPlayerMoveResponse(const AFromServer
-  : TOlfSocketMessagingServerConnectedClient;
-const msg: TPlayerMoveResponseMessage);
-begin
-  // TODO : register the playerx,playerY coordinates have been send to the server
-end;
-
-procedure TSporglooClient.onPlayerPutAStarResponse(const AFromServer
-  : TOlfSocketMessagingServerConnectedClient;
-const msg: TServerAcceptTheStarAddingMessage);
-begin
-  // TODO : check if X,Y correspond to a "new star" sent
 end;
 
 procedure TSporglooClient.SendClientLogin(const DeviceID, PlayerID: string);
@@ -300,5 +240,6 @@ begin
     msg.Free;
   end;
 end;
+
 
 end.

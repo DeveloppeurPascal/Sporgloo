@@ -16,7 +16,8 @@ uses
   FMX.StdCtrls,
   Sporgloo.Types,
   Sporgloo.Images,
-  FMX.Objects;
+  FMX.Objects,
+  Sporgloo.Database;
 
 type
   TMapFrame = class(TFrame)
@@ -29,9 +30,8 @@ type
     procedure SubscribeToMapCellUpdateMessage;
     procedure SubscribeToMapUpdateMessage;
     procedure SubscribeToOtherPlayerMove;
-    procedure DrawMapCell(AX, AY: TSporglooAPINumber;
-      ATileID: TSporglooAPIShort);
-    procedure DrawAPlayer(AX, AY: TSporglooAPINumber);
+    procedure DrawMapCell(AMapCell: TSporglooMapCell);
+    procedure DrawAPlayer(APlayer: TSporglooPlayer);
     procedure DrawAStar(AX, AY: TSporglooAPINumber);
   public
     constructor Create(AOwner: TComponent); override;
@@ -46,8 +46,7 @@ uses
   System.Math,
   uGameData,
   Sporgloo.Consts,
-  Sporgloo.Messaging,
-  Sporgloo.Database;
+  Sporgloo.Messaging;
 
 constructor TMapFrame.Create(AOwner: TComponent);
 begin
@@ -58,32 +57,40 @@ begin
   SubscribeToOtherPlayerMove;
 end;
 
-procedure TMapFrame.DrawAPlayer(AX, AY: TSporglooAPINumber);
+procedure TMapFrame.DrawAPlayer(APlayer: TSporglooPlayer);
 var
   x, y, w, h: single;
   BitmapScale: single;
   bmp: tbitmap;
-  Session: TSporglooSession;
+  GameData: TGameData;
 begin
-  BitmapScale := MapImage.Bitmap.BitmapScale;
+  if not assigned(MapImage.Bitmap) then
+    MapImage.Bitmap := tbitmap.Create;
 
-  Session := TGameData.Current.Session;
+  GameData := TGameData.Current;
 
-  w := 18 * 1.5;
-  x := abs(Session.MapRangeX - AX) * CSporglooTileSize +
-    (CSporglooTileSize - w) / 2;
-  h := 25 * 1.5;
-  y := abs(Session.MapRangey - AY) * CSporglooTileSize +
-    (CSporglooTileSize - h) / 2;
+  if (APlayer.PlayerX >= GameData.ViewportX) and
+    (APlayer.PlayerY >= GameData.ViewportY) and
+    (APlayer.PlayerX <= GameData.ViewportXMax) and
+    (APlayer.PlayerY <= GameData.ViewportYMax) then
+  begin
+    w := 18 * 1.5;
+    x := abs(GameData.ViewportX - APlayer.PlayerX) * CSporglooTileSize +
+      (CSporglooTileSize - w) / 2;
+    h := 25 * 1.5;
+    y := abs(GameData.ViewportY - APlayer.PlayerY) * CSporglooTileSize +
+      (CSporglooTileSize - h) / 2;
 
-  bmp := dmSporglooImages.MapImages.Bitmap(tsizef.Create(w * BitmapScale,
-    h * BitmapScale), 3); // Image index 3 - player, original size (18x25)
-  MapImage.Bitmap.Canvas.BeginScene;
-  try
-    MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
-      rectf(x, y, x + w + 1 * BitmapScale, y + h + 1 * BitmapScale), 1);
-  finally
-    MapImage.Bitmap.Canvas.EndScene;
+    BitmapScale := MapImage.Bitmap.BitmapScale;
+    bmp := dmSporglooImages.MapImages.Bitmap(tsizef.Create(w * BitmapScale,
+      h * BitmapScale), 3); // Image index 3 - player, original size (18x25)
+    MapImage.Bitmap.Canvas.BeginScene;
+    try
+      MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
+        rectf(x, y, x + w + 1 * BitmapScale, y + h + 1 * BitmapScale), 1);
+    finally
+      MapImage.Bitmap.Canvas.EndScene;
+    end;
   end;
 end;
 
@@ -92,19 +99,21 @@ var
   x, y, w, h: single;
   BitmapScale: single;
   bmp: tbitmap;
-  Session: TSporglooSession;
+  GameData: TGameData;
 begin
-  BitmapScale := MapImage.Bitmap.BitmapScale;
+  if not assigned(MapImage.Bitmap) then
+    MapImage.Bitmap := tbitmap.Create;
 
-  Session := TGameData.Current.Session;
+  GameData := TGameData.Current;
 
   w := 58;
-  x := abs(Session.MapRangeX - AX) * CSporglooTileSize +
+  x := abs(GameData.ViewportX - AX) * CSporglooTileSize +
     (CSporglooTileSize - w) / 2;
   h := 58;
-  y := abs(Session.MapRangey - AY) * CSporglooTileSize +
+  y := abs(GameData.ViewportY - AY) * CSporglooTileSize +
     (CSporglooTileSize - h) / 2;
 
+  BitmapScale := MapImage.Bitmap.BitmapScale;
   bmp := dmSporglooImages.MapImages.Bitmap(tsizef.Create(w * BitmapScale,
     h * BitmapScale), 2); // Image index 2 - star, original size (113x113)
   MapImage.Bitmap.Canvas.BeginScene;
@@ -116,55 +125,58 @@ begin
   end;
 end;
 
-procedure TMapFrame.DrawMapCell(AX, AY: TSporglooAPINumber;
-  ATileID: TSporglooAPIShort);
+procedure TMapFrame.DrawMapCell(AMapCell: TSporglooMapCell);
 var
   x, y: single;
   BitmapScale: single;
-  Session: TSporglooSession;
-  Player: TSporglooPlayer;
   bmp: tbitmap;
   TileImgIndex: integer;
+  GameData: TGameData;
 begin
   if not assigned(MapImage.Bitmap) then
     MapImage.Bitmap := tbitmap.Create;
 
-  BitmapScale := MapImage.Bitmap.BitmapScale;
+  GameData := TGameData.Current;
 
-  Session := TGameData.Current.Session;
+  if (AMapCell.x >= GameData.ViewportX) and (AMapCell.y >= GameData.ViewportY)
+    and (AMapCell.x <= GameData.ViewportXMax) and
+    (AMapCell.y <= GameData.ViewportYMax) then
+  begin
+    x := abs(GameData.ViewportX - AMapCell.x) * CSporglooTileSize;
+    y := abs(GameData.ViewportY - AMapCell.y) * CSporglooTileSize;
 
-  x := abs(Session.MapRangeX - AX) * CSporglooTileSize;
-  y := abs(Session.MapRangey - AY) * CSporglooTileSize;
+    case AMapCell.TileID of
+      CSporglooTileNone:
+        TileImgIndex := 1; // arbres
+      CSporglooTilePath, CSporglooTileStar:
+        TileImgIndex := 0; // chemin
+    else
+      raise exception.Create('Tile ID ' + AMapCell.TileID.ToString +
+        ' non supported.');
+    end;
 
-  case ATileID of
-    CSporglooTileNone:
-      TileImgIndex := 1;
-    CSporglooTilePath, CSporglooTileStar:
-      TileImgIndex := 0;
-  else
-    raise exception.Create('Tile ID ' + ATileID.ToString + ' non supported.');
+    BitmapScale := MapImage.Bitmap.BitmapScale;
+    bmp := dmSporglooImages.MapImages.Bitmap
+      (tsizef.Create(CSporglooTileSize * BitmapScale,
+      CSporglooTileSize * BitmapScale), TileImgIndex);
+    MapImage.Bitmap.Canvas.BeginScene;
+    try
+      MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
+        rectf(x, y, x + CSporglooTileSize + 1 * BitmapScale,
+        y + CSporglooTileSize + 1 * BitmapScale), 1);
+    finally
+      MapImage.Bitmap.Canvas.EndScene;
+    end;
+
+    if AMapCell.TileID = CSporglooTileStar then
+      DrawAStar(AMapCell.x, AMapCell.y);
+
+    if not AMapCell.PlayerID.IsEmpty then
+      if AMapCell.PlayerID = GameData.Player.PlayerID then
+        DrawAPlayer(GameData.Player)
+      else
+        DrawAPlayer(GameData.OtherPlayers.GetPlayer(AMapCell.PlayerID));
   end;
-
-  Player := TGameData.Current.Player;
-  // TODO : chercher si un autre joueur est à ces coordonnées pour l'afficher par dessus
-
-  bmp := dmSporglooImages.MapImages.Bitmap
-    (tsizef.Create(CSporglooTileSize * BitmapScale,
-    CSporglooTileSize * BitmapScale), TileImgIndex);
-  MapImage.Bitmap.Canvas.BeginScene;
-  try
-    MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
-      rectf(x, y, x + CSporglooTileSize + 1 * BitmapScale,
-      y + CSporglooTileSize + 1 * BitmapScale), 1);
-  finally
-    MapImage.Bitmap.Canvas.EndScene;
-  end;
-
-  if assigned(Player) and (AX = Player.PlayerX) and (AY = Player.PlayerY) then
-    DrawAPlayer(AX, AY);
-
-  if ATileID = CSporglooTileStar then
-    DrawAStar(AX, AY);
 end;
 
 procedure TMapFrame.MapImageResized(Sender: TObject);
@@ -178,23 +190,14 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TMapCellUpdateMessage;
-      GameData: TGameData;
-      MapCell: TSporglooMapCell;
     begin
       if not(M is TMapCellUpdateMessage) then
         exit;
       Msg := M as TMapCellUpdateMessage;
       if not assigned(Msg.Value) then
         exit;
-      MapCell := Msg.Value;
 
-      GameData := TGameData.Current;
-
-      if (MapCell.x >= GameData.Session.MapRangeX) and
-        (MapCell.y >= GameData.Session.MapRangey) and
-        (MapCell.x <= GameData.Session.MapRangeXMax) and
-        (MapCell.y <= GameData.Session.MapRangeYMax) then
-        DrawMapCell(MapCell.x, MapCell.y, MapCell.TileID);
+      DrawMapCell(Msg.Value);
     end);
 end;
 
@@ -203,19 +206,19 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TMapUpdateMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      Session: TSporglooSession;
+      GameData: TGameData;
       Map: TSporglooMap;
       x, y: TSporglooAPINumber;
     begin
       if not(M is TMapUpdateMessage) then
         exit;
 
-      Session := TGameData.Current.Session;
-      Map := TGameData.Current.Map;
+      GameData := TGameData.Current;
+      Map := GameData.Map;
 
-      for x := Session.MapRangeX to Session.MapRangeXMax do
-        for y := Session.MapRangey to Session.MapRangeYMax do
-          DrawMapCell(x, y, Map.GetTileID(x, y));
+      for x := GameData.ViewportX to GameData.ViewportXMax do
+        for y := GameData.ViewportY to GameData.ViewportYMax do
+          DrawMapCell(Map.GetCellAt(x, y));
     end);
 end;
 
@@ -225,8 +228,6 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TOtherPlayerUpdateMessage;
-      GameData: TGameData;
-      Player: TSporglooPlayer;
     begin
       if not(M is TOtherPlayerUpdateMessage) then
         exit;
@@ -234,30 +235,21 @@ begin
       if not assigned(Msg.Value) then
         exit;
 
-      Player := Msg.Value;
-
-      GameData := TGameData.Current;
-
-      if (Player.PlayerX >= GameData.Session.MapRangeX) and
-        (Player.PlayerY >= GameData.Session.MapRangey) and
-        (Player.PlayerX <= GameData.Session.MapRangeXMax) and
-        (Player.PlayerY <= GameData.Session.MapRangeYMax) then
-        DrawAPlayer(Player.PlayerX, Player.PlayerY);
+      DrawAPlayer(Msg.Value);
     end);
 end;
 
 procedure TMapFrame.TimerMapRefreshTimer(Sender: TObject);
 var
   GameData: TGameData;
-  // w, h: single;
   BitmapScale: single;
-  // bmp: tbitmap;
-  // r: trectf;
 begin
   if not TimerMapRefresh.Enabled then
     exit;
 
-  if TGameData.Current.isServerConnected then
+  GameData := TGameData.Current;
+
+  if GameData.isServerConnected then
   begin
     TimerMapRefresh.Enabled := false;
 
@@ -269,17 +261,10 @@ begin
     MapImage.Bitmap.setsize(ceil(MapImage.width * BitmapScale),
       ceil(MapImage.Height * BitmapScale));
 
-    GameData := TGameData.Current;
-    GameData.Session.MapRangeColNumber :=
-      ceil(MapImage.width / CSporglooTileSize);
-    GameData.Session.MapRangeRowNumber :=
-      ceil(MapImage.Height / CSporglooTileSize);
-    GameData.Session.MapRangeX := GameData.Player.PlayerX -
-      (GameData.Session.MapRangeColNumber div 2);
-    GameData.Session.MapRangey := GameData.Player.PlayerY -
-      (GameData.Session.MapRangeRowNumber div 2);
+    GameData.ViewportNbCol := ceil(MapImage.width / CSporglooTileSize);
+    GameData.ViewportNbRow := ceil(MapImage.Height / CSporglooTileSize);
 
-    TGameData.Current.refreshmap;
+    GameData.refreshmap;
   end;
 end;
 

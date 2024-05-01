@@ -33,11 +33,13 @@ uses
   cYellowMenuButton in 'cYellowMenuButton.pas' {cadYellowMenuButton: TFrame},
   uBackgroundMusic in 'uBackgroundMusic.pas',
   cViseur in 'cViseur.pas' {cadViseur: TFrame},
-  Olf.RTL.CryptDecrypt in '..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas';
+  Olf.RTL.CryptDecrypt in '..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas',
+  Olf.RTL.Maths.Conversions in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas';
 
 {$R *.res}
 
 begin
+  SporglooProjectType := TSporglooProjectType.Client;
   GlobalUseSkia := True;
   Application.Initialize;
   Application.FormFactor.Orientations := [TFormOrientation.Portrait, TFormOrientation.InvertedPortrait, TFormOrientation.Landscape, TFormOrientation.InvertedLandscape];
