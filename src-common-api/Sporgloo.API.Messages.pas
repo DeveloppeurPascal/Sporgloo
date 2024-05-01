@@ -12,7 +12,7 @@
 // ****************************************
 // File generator : Socket Messaging Code Generator (v1.1)
 // Website : https://smcodegenerator.olfsoftware.fr/ 
-// Generation date : 01/05/2024 15:07:51
+// Generation date : 01/05/2024 16:32:14
 // 
 // Don't do any change on this file. They will be erased by next generation !
 // ****************************************
@@ -273,36 +273,6 @@ type
   end;
 
   /// <summary>
-  /// Message ID 11: Other player move message
-  /// </summary>
-  TOtherPlayerMoveMessage = class(TOlfSMMessage)
-  private
-    FPlayerID: string;
-    FX: TSporglooAPINumber;
-    FY: TSporglooAPINumber;
-    procedure SetPlayerID(const Value: string);
-    procedure SetX(const Value: TSporglooAPINumber);
-    procedure SetY(const Value: TSporglooAPINumber);
-  public
-    /// <summary>
-    /// Player unique identifier
-    /// </summary>
-    property PlayerID: string read FPlayerID write SetPlayerID;
-    /// <summary>
-    /// X
-    /// </summary>
-    property X: TSporglooAPINumber read FX write SetX;
-    /// <summary>
-    /// Y
-    /// </summary>
-    property Y: TSporglooAPINumber read FY write SetY;
-    constructor Create; override;
-    procedure LoadFromStream(Stream: TStream); override;
-    procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSMMessage; override;
-  end;
-
-  /// <summary>
   /// Message ID 9: Player add a star on the map message
   /// </summary>
   TPlayerAddAStarOnTheMapMessage = class(TOlfSMMessage)
@@ -374,42 +344,6 @@ type
     function GetNewInstance: TOlfSMMessage; override;
   end;
 
-  /// <summary>
-  /// Message ID 8: Player move response
-  /// </summary>
-  TPlayerMoveResponseMessage = class(TOlfSMMessage)
-  private
-  public
-    constructor Create; override;
-    procedure LoadFromStream(Stream: TStream); override;
-    procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSMMessage; override;
-  end;
-
-  /// <summary>
-  /// Message ID 10: Server accept the star adding message
-  /// </summary>
-  TServerAcceptTheStarAddingMessage = class(TOlfSMMessage)
-  private
-    FX: TSporglooAPINumber;
-    FY: TSporglooAPINumber;
-    procedure SetX(const Value: TSporglooAPINumber);
-    procedure SetY(const Value: TSporglooAPINumber);
-  public
-    /// <summary>
-    /// X
-    /// </summary>
-    property X: TSporglooAPINumber read FX write SetX;
-    /// <summary>
-    /// Y
-    /// </summary>
-    property Y: TSporglooAPINumber read FY write SetY;
-    constructor Create; override;
-    procedure LoadFromStream(Stream: TStream); override;
-    procedure SaveToStream(Stream: TStream); override;
-    function GetNewInstance: TOlfSMMessage; override;
-  end;
-
   TSporglooSocketMessagesServer = class(TOlfSMServer)
   private
   protected
@@ -458,12 +392,6 @@ type
       Const AMessage: TOlfSMMessage);
     procedure onReceiveMessage6(Const ASender: TOlfSMSrvConnectedClient;
       Const AMessage: TOlfSMMessage);
-    procedure onReceiveMessage11(Const ASender: TOlfSMSrvConnectedClient;
-      Const AMessage: TOlfSMMessage);
-    procedure onReceiveMessage8(Const ASender: TOlfSMSrvConnectedClient;
-      Const AMessage: TOlfSMMessage);
-    procedure onReceiveMessage10(Const ASender: TOlfSMSrvConnectedClient;
-      Const AMessage: TOlfSMMessage);
   public
     onReceiveClientLoginResponseMessage
       : TOlfSMReceivedMessageEvent<TClientLoginResponseMessage>;
@@ -475,12 +403,6 @@ type
       : TOlfSMReceivedMessageEvent<TLogoffMessage>;
     onReceiveMapCellMessage
       : TOlfSMReceivedMessageEvent<TMapCellMessage>;
-    onReceiveOtherPlayerMoveMessage
-      : TOlfSMReceivedMessageEvent<TOtherPlayerMoveMessage>;
-    onReceivePlayerMoveResponseMessage
-      : TOlfSMReceivedMessageEvent<TPlayerMoveResponseMessage>;
-    onReceiveServerAcceptTheStarAddingMessage
-      : TOlfSMReceivedMessageEvent<TServerAcceptTheStarAddingMessage>;
     constructor Create; override;
   end;
 
@@ -573,9 +495,6 @@ begin
   Client.RegisterMessageToReceive(TErrorMessage.Create);
   Client.RegisterMessageToReceive(TLogoffMessage.Create);
   Client.RegisterMessageToReceive(TMapCellMessage.Create);
-  Client.RegisterMessageToReceive(TOtherPlayerMoveMessage.Create);
-  Client.RegisterMessageToReceive(TPlayerMoveResponseMessage.Create);
-  Client.RegisterMessageToReceive(TServerAcceptTheStarAddingMessage.Create);
 end;
 
 {$REGION 'TSporglooSocketMessagesServer'}
@@ -676,9 +595,6 @@ begin
   SubscribeToMessage(12, onReceiveMessage12);
   SubscribeToMessage(13, onReceiveMessage13);
   SubscribeToMessage(6, onReceiveMessage6);
-  SubscribeToMessage(11, onReceiveMessage11);
-  SubscribeToMessage(8, onReceiveMessage8);
-  SubscribeToMessage(10, onReceiveMessage10);
 end;
 
 procedure TSporglooSocketMessagesClient.onReceiveMessage4(const ASender: TOlfSMSrvConnectedClient;
@@ -729,36 +645,6 @@ begin
   if not assigned(onReceiveMapCellMessage) then
     exit;
   onReceiveMapCellMessage(ASender, AMessage as TMapCellMessage);
-end;
-
-procedure TSporglooSocketMessagesClient.onReceiveMessage11(const ASender: TOlfSMSrvConnectedClient;
-const AMessage: TOlfSMMessage);
-begin
-  if not(AMessage is TOtherPlayerMoveMessage) then
-    exit;
-  if not assigned(onReceiveOtherPlayerMoveMessage) then
-    exit;
-  onReceiveOtherPlayerMoveMessage(ASender, AMessage as TOtherPlayerMoveMessage);
-end;
-
-procedure TSporglooSocketMessagesClient.onReceiveMessage8(const ASender: TOlfSMSrvConnectedClient;
-const AMessage: TOlfSMMessage);
-begin
-  if not(AMessage is TPlayerMoveResponseMessage) then
-    exit;
-  if not assigned(onReceivePlayerMoveResponseMessage) then
-    exit;
-  onReceivePlayerMoveResponseMessage(ASender, AMessage as TPlayerMoveResponseMessage);
-end;
-
-procedure TSporglooSocketMessagesClient.onReceiveMessage10(const ASender: TOlfSMSrvConnectedClient;
-const AMessage: TOlfSMMessage);
-begin
-  if not(AMessage is TServerAcceptTheStarAddingMessage) then
-    exit;
-  if not assigned(onReceiveServerAcceptTheStarAddingMessage) then
-    exit;
-  onReceiveServerAcceptTheStarAddingMessage(ASender, AMessage as TServerAcceptTheStarAddingMessage);
 end;
 
 {$ENDREGION}
@@ -1162,57 +1048,6 @@ end;
 
 {$ENDREGION}
 
-{$REGION 'TOtherPlayerMoveMessage' }
-
-constructor TOtherPlayerMoveMessage.Create;
-begin
-  inherited;
-  MessageID := 11;
-  FPlayerID := '';
-  FX := 0;
-  FY := 0;
-end;
-
-function TOtherPlayerMoveMessage.GetNewInstance: TOlfSMMessage;
-begin
-  result := TOtherPlayerMoveMessage.Create;
-end;
-
-procedure TOtherPlayerMoveMessage.LoadFromStream(Stream: TStream);
-begin
-  inherited;
-  FPlayerID := LoadStringFromStream(Stream);
-  if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
-    raise exception.Create('Can''t load "X" value.');
-  if (Stream.read(FY, sizeof(FY)) <> sizeof(FY)) then
-    raise exception.Create('Can''t load "Y" value.');
-end;
-
-procedure TOtherPlayerMoveMessage.SaveToStream(Stream: TStream);
-begin
-  inherited;
-  SaveStringToStream(FPlayerID, Stream);
-  Stream.Write(FX, sizeof(FX));
-  Stream.Write(FY, sizeof(FY));
-end;
-
-procedure TOtherPlayerMoveMessage.SetPlayerID(const Value: string);
-begin
-  FPlayerID := Value;
-end;
-
-procedure TOtherPlayerMoveMessage.SetX(const Value: TSporglooAPINumber);
-begin
-  FX := Value;
-end;
-
-procedure TOtherPlayerMoveMessage.SetY(const Value: TSporglooAPINumber);
-begin
-  FY := Value;
-end;
-
-{$ENDREGION}
-
 {$REGION 'TPlayerAddAStarOnTheMapMessage' }
 
 constructor TPlayerAddAStarOnTheMapMessage.Create;
@@ -1325,74 +1160,6 @@ begin
 end;
 
 procedure TPlayerMoveMessage.SetY(const Value: TSporglooAPINumber);
-begin
-  FY := Value;
-end;
-
-{$ENDREGION}
-
-{$REGION 'TPlayerMoveResponseMessage' }
-
-constructor TPlayerMoveResponseMessage.Create;
-begin
-  inherited;
-  MessageID := 8;
-end;
-
-function TPlayerMoveResponseMessage.GetNewInstance: TOlfSMMessage;
-begin
-  result := TPlayerMoveResponseMessage.Create;
-end;
-
-procedure TPlayerMoveResponseMessage.LoadFromStream(Stream: TStream);
-begin
-  inherited;
-end;
-
-procedure TPlayerMoveResponseMessage.SaveToStream(Stream: TStream);
-begin
-  inherited;
-end;
-
-{$ENDREGION}
-
-{$REGION 'TServerAcceptTheStarAddingMessage' }
-
-constructor TServerAcceptTheStarAddingMessage.Create;
-begin
-  inherited;
-  MessageID := 10;
-  FX := 0;
-  FY := 0;
-end;
-
-function TServerAcceptTheStarAddingMessage.GetNewInstance: TOlfSMMessage;
-begin
-  result := TServerAcceptTheStarAddingMessage.Create;
-end;
-
-procedure TServerAcceptTheStarAddingMessage.LoadFromStream(Stream: TStream);
-begin
-  inherited;
-  if (Stream.read(FX, sizeof(FX)) <> sizeof(FX)) then
-    raise exception.Create('Can''t load "X" value.');
-  if (Stream.read(FY, sizeof(FY)) <> sizeof(FY)) then
-    raise exception.Create('Can''t load "Y" value.');
-end;
-
-procedure TServerAcceptTheStarAddingMessage.SaveToStream(Stream: TStream);
-begin
-  inherited;
-  Stream.Write(FX, sizeof(FX));
-  Stream.Write(FY, sizeof(FY));
-end;
-
-procedure TServerAcceptTheStarAddingMessage.SetX(const Value: TSporglooAPINumber);
-begin
-  FX := Value;
-end;
-
-procedure TServerAcceptTheStarAddingMessage.SetY(const Value: TSporglooAPINumber);
 begin
   FY := Value;
 end;
