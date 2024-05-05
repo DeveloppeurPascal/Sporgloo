@@ -301,9 +301,13 @@ procedure TSporglooPlayer.TestAndChangeTarget(AX, AY: TSporglooAPINumber);
 var
   DistanceTarget, DistanceStar: TSporglooAPINumber;
 begin
-  DistanceTarget := abs(abs(PlayerX) - abs(TargetX)) +
-    abs(abs(PlayerY) - abs(Targety));
-  DistanceStar := abs(abs(PlayerX) - abs(AX)) + abs(abs(PlayerY) - abs(AY));
+  DistanceStar := abs(PlayerX - AX) + abs(PlayerY - AY);
+
+  if (TargetX = PlayerX) and (Targety = PlayerY) then
+    DistanceTarget := DistanceStar + 1
+  else
+    DistanceTarget := abs(PlayerX - TargetX) + abs(PlayerY - Targety);
+
   if DistanceStar < DistanceTarget then
   begin
     TargetX := AX;
@@ -353,7 +357,8 @@ begin
   System.tmonitor.Enter(self);
   try
     if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
-      VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+      VersionNum := -1;
+    // pas d'info de version, fichier de sauvegarde foireux
 
     if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb))))
     then
@@ -533,7 +538,8 @@ begin
   System.tmonitor.Enter(self);
   try
     if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
-      VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
+      VersionNum := -1;
+    // pas d'info de version, fichier de sauvegarde foireux
 
     if not((VersionNum >= 0) and (sizeof(nb) = AStream.read(nb, sizeof(nb))))
     then
@@ -546,7 +552,8 @@ begin
         sizeof(LKey)))) then
         LKey := 0;
       if VersionNum = 1 then
-      begin // deprecated, only for compatibility with previous storage
+      begin
+        // deprecated, only for compatibility with previous storage
         if not((sizeof(LValueOldVersion1) = AStream.read(LValueOldVersion1,
           sizeof(LValueOldVersion1)))) then
           LValueOldVersion1 := 0;
