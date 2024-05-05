@@ -34,7 +34,10 @@ uses
   uBackgroundMusic in 'uBackgroundMusic.pas',
   cViseur in 'cViseur.pas' {cadViseur: TFrame},
   Olf.RTL.CryptDecrypt in '..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas',
-  Olf.RTL.Maths.Conversions in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas';
+  Olf.RTL.Maths.Conversions in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas',
+  uDMAboutBoxLogo in 'uDMAboutBoxLogo.pas' {dmAboutBoxLogo: TDataModule},
+  Olf.FMX.AboutDialog in '..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialog.pas',
+  Olf.FMX.AboutDialogForm in '..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialogForm.pas' {OlfAboutDialogForm};
 
 {$R *.res}
 
@@ -46,6 +49,7 @@ begin
   Application.CreateForm(TdmSporglooImages, dmSporglooImages);
   Application.CreateForm(TdmAdobeStock_440583506, dmAdobeStock_440583506);
   Application.CreateForm(TdmAdobeStock_526775911, dmAdobeStock_526775911);
+  Application.CreateForm(TdmAboutBoxLogo, dmAboutBoxLogo);
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.
