@@ -11,6 +11,15 @@ const
 
   CSporglooTileSize = 64;
 
+  /// <summary>
+  ///   Marge used to get the all map from the server (as a viewport left/right margin)
+  /// </summary>
+  CColMargins = 10;
+  /// <summary>
+  ///   Marge used to get the all map from the server (as a viewport top/bottom margin)
+  /// </summary>
+  CRowMargins = 10;
+
   CSporglooIDSize = 16;
 
   CStartStarsCount = 12;

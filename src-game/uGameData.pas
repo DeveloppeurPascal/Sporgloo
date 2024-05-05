@@ -56,7 +56,8 @@ uses
   System.Messaging,
   uConfig,
   Sporgloo.Messaging,
-  System.Classes;
+  System.Classes,
+  Sporgloo.Consts;
 
 var
   GameDataInstance: TGameData;
@@ -130,7 +131,8 @@ begin
         TMapUpdateMessage.Create);
     end);
 
-  APIClient.SendMapRefresh(ViewportX, ViewportY, ViewportNbCol, ViewportNbRow);
+  APIClient.SendMapRefresh(ViewportX - CColMargins, ViewportY - CRowMargins,
+    ViewportNbCol + 2 * CColMargins, ViewportNbRow + 2 * CRowMargins);
 end;
 
 procedure TGameData.SetViewportNbCol(const Value: TSporglooAPINumber);
