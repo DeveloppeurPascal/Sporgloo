@@ -99,7 +99,7 @@ begin
         sleep(1000 * 60); // attente 1 minute
         SaveGameData;
 {$IFDEF DEBUG}
-        // Writeln('DB saved');
+        // writeln('DB saved');
 {$ENDIF}
       end;
     end).start;
@@ -176,7 +176,7 @@ var
   Session: TSporglooSession;
 begin
 {$IFDEF DEBUG}
-  // Writeln('onClientLogin');
+  // writeln('onClientLogin');
 {$ENDIF}
   if msg.VersionAPI <> CAPIVersion then
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongAPIVersion,
@@ -226,7 +226,7 @@ var
   MapCell: TSporglooMapCell;
 begin
 {$IFDEF DEBUG}
-  // Writeln('onClientRegister');
+  // writeln('onClientRegister');
 {$ENDIF}
   if msg.DeviceID.IsEmpty then
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceID,
@@ -289,7 +289,7 @@ procedure TSporglooServer.onErrorMessage(const AFromGame
   : TOlfSocketMessagingServerConnectedClient; const msg: TErrorMessage);
 begin
 {$IFDEF DEBUG}
-  // Writeln('onErrorMessage n°' + msg.ErrorCode.tostring +    ' received from a client.');
+  // writeln('onErrorMessage n°' + msg.ErrorCode.tostring +  ' received from a client.');
 {$ENDIF}
   // TODO : manage the received error
 end;
@@ -306,15 +306,15 @@ begin
   then
   begin
 {$IFDEF DEBUG}
-    // Writeln('onLogOff');
-    // Writeln('nb sessions = ', SporglooSessions.count);
+    // writeln('onLogOff');
+    // writeln('nb sessions = ', SporglooSessions.count);
     nb := 0;
     ForEachConnectedClient(
       procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
       begin
         AtomicIncrement(nb);
       end);
-    // Writeln('nb = ', nb);
+    // writeln('nb = ', nb);
 {$ENDIF}
     tthread.CurrentThread.Terminate;
     SessionID := (AFromGame.tagobject as TSporglooSession).SessionID;
@@ -327,14 +327,14 @@ begin
       System.Tmonitor.Exit(SporglooSessions);
     end;
 {$IFDEF DEBUG}
-    // Writeln('nb sessions = ', SporglooSessions.count);
+    // writeln('nb sessions = ', SporglooSessions.count);
     nb := 0;
     ForEachConnectedClient(
       procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
       begin
         AtomicIncrement(nb);
       end);
-    // Writeln('nb = ', nb);
+    // writeln('nb = ', nb);
 {$ENDIF}
   end;
 end;
@@ -346,7 +346,7 @@ var
   X, Y: TSporglooAPINumber;
 begin
 {$IFDEF DEBUG}
-  // Writeln('onMapRefresh');
+  // writeln('onMapRefresh');
 {$ENDIF}
   if msg.ColNumber < 1 then
     Exit;
@@ -366,10 +366,10 @@ procedure TSporglooServer.onPlayerMove(const AFromGame
   : TOlfSocketMessagingServerConnectedClient; const msg: TPlayerMoveMessage);
 var
   Session: TSporglooSession;
-  MapCell: TSporglooMapCell;
+  MapCell, PrevMapCell: TSporglooMapCell;
 begin
 {$IFDEF DEBUG}
-  // Writeln('onPlayerMove');
+  // writeln('onPlayerMove');
 {$ENDIF}
   if msg.SessionID.IsEmpty then
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongSessionID,
@@ -392,17 +392,47 @@ begin
       TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
       'Wrong player for this session.');
 
-  MapCell := SporglooMap.GetCellAt(Session.player.PlayerX,
-    Session.player.PlayerY);
-  MapCell.PlayerID := '';
+  if (Session.player.PlayerX <> msg.X) or (Session.player.PlayerY <> msg.Y) then
+  begin
+{$IFDEF DEBUG}
+    // writeln('onPlayerMove - new coordinates');
+{$ENDIF}
+    MapCell := SporglooMap.GetCellAt(msg.X, msg.Y);
+    if (not(MapCell.TileID = CSporglooTileForest)) and MapCell.PlayerID.IsEmpty
+    then
+    begin
+{$IFDEF DEBUG}
+      // writeln('onPlayerMove - accepted move');
+{$ENDIF}
+      if MapCell.TileID = CSporglooTileStar then
+      begin
+        MapCell.TileID := CSporglooTilePath;
+        Session.player.StarsCount := Session.player.StarsCount + 1;
+{$IFDEF DEBUG}
+        // writeln('StarsCount = ' + Session.player.StarsCount.tostring);
+{$ENDIF}
+      end;
+      // TODO : check the TileID, change score if needed, change lifelevel, change map tile
 
-  Session.player.PlayerX := msg.X;
-  Session.player.PlayerY := msg.Y;
+      PrevMapCell := SporglooMap.GetCellAt(Session.player.PlayerX,
+        Session.player.PlayerY);
+      PrevMapCell.PlayerID := '';
 
-  MapCell := SporglooMap.GetCellAt(msg.X, msg.Y);
-  MapCell.PlayerID := Session.player.PlayerID;
+      Session.player.PlayerX := msg.X;
+      Session.player.PlayerY := msg.Y;
 
-  // TODO : check the TileID, change score if needed, change lifelevel, change map tile
+      MapCell.PlayerID := Session.player.PlayerID;
+    end
+    else
+      SendErrorMessage(AFromGame, TSporglooErrorCode.PlayerMoveDenied,
+        'New position not available.');
+  end
+  else
+  begin
+{$IFDEF DEBUG}
+    // writeln('onPlayerMove - but same coordinates');
+{$ENDIF}
+  end;
 end;
 
 procedure TSporglooServer.onPlayerPutAStar(const AFromGame
@@ -412,7 +442,7 @@ var
   Session: TSporglooSession;
 begin
 {$IFDEF DEBUG}
-  // Writeln('onPlayerPutAStar');
+  // writeln('onPlayerPutAStar');
 {$ENDIF}
   if msg.SessionID.IsEmpty then
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongSessionID,
@@ -439,6 +469,9 @@ begin
   begin
     SporglooMap.GetCellAt(msg.X, msg.Y).TileID := CSporglooTileStar;
     Session.player.StarsCount := Session.player.StarsCount - 1;
+{$IFDEF DEBUG}
+    // writeln('StarsCount = ' + Session.player.StarsCount.tostring);
+{$ENDIF}
   end;
 end;
 
@@ -512,7 +545,7 @@ var
 begin
   // TODO : add a server log or an error reporting (in case of attack or other problem)
 {$IFDEF DEBUG}
-  // Writeln('ERROR ' + ord(AErrorCode).tostring + ': ' + AErrorText);
+  // writeln('ERROR ' + ord(AErrorCode).tostring + ': ' + AErrorText);
 {$ENDIF}
   msg := TErrorMessage.Create;
   try
@@ -532,7 +565,7 @@ var
   msg: TMapCellMessage;
 begin
 {$IFDEF DEBUG}
-  // Writeln('=> ', MapCell.PlayerID, ' - ', MapCell.X, ',', MapCell.Y, '=',    MapCell.TileID);
+  // writeln('=> ', MapCell.PlayerID, ' - ', MapCell.X, ',', MapCell.Y, '=',  MapCell.TileID);
 {$ENDIF}
   msg := TMapCellMessage.Create;
   try
