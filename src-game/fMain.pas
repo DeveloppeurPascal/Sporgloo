@@ -274,7 +274,7 @@ begin
 
     MapCell := GameData.Map.GetCellAt(MapX, MapY);
 
-    if (MapCell.TileID in [CSporglooTileNone, CSporglooTilePath]) and
+    if (MapCell.TileID in [CSporglooTileForest, CSporglooTilePath]) and
       MapCell.PlayerID.IsEmpty then
     begin
       GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,

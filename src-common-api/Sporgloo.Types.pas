@@ -127,7 +127,7 @@ begin
 
     if not((VersionNum >= 0) and (sizeof(FTileID) = AStream.read(FTileID,
       sizeof(FTileID)))) then
-      FTileID := CSporglooTileNone;
+      FTileID := CSporglooTileForest;
 
     if not((VersionNum >= 0) and (sizeof(FX) = AStream.read(FX, sizeof(FX))))
     then

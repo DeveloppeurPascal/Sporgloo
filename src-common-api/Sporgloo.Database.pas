@@ -366,7 +366,7 @@ begin
     end;
     if (not LRow.TryGetValue(AY, result)) then
     begin
-      result := TSporglooMapCell.Create(AX, AY, CSporglooTileNone, '');
+      result := TSporglooMapCell.Create(AX, AY, CSporglooTileForest, '');
       LRow.add(AY, result);
     end;
   finally

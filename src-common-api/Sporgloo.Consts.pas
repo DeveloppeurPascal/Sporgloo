@@ -5,7 +5,7 @@ interface
 const
   CAPIVersion = 20240501;
 
-  CSporglooTileNone = 0;
+  CSporglooTileForest = 0;
   CSporglooTilePath = 1;
   CSporglooTileStar = 2;
 

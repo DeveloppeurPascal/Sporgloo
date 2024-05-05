@@ -146,7 +146,7 @@ begin
     y := abs(GameData.ViewportY - AMapCell.y) * CSporglooTileSize;
 
     case AMapCell.TileID of
-      CSporglooTileNone:
+      CSporglooTileForest:
         TileImgIndex := 1; // arbres
       CSporglooTilePath, CSporglooTileStar:
         TileImgIndex := 0; // chemin
