@@ -160,9 +160,10 @@ begin
   // VPS Sporgloo (temporary address)
 {$ELSE}
   // TODO : for local tests
-//  result := FParams.getValue('ServerIPv4', '127.0.0.1');
+  // result := FParams.getValue('ServerIPv4', '127.0.0.1');
 {$ENDIF}
-   result := '92.222.216.2';
+  result := '92.222.216.2';
+  // result := '127.0.0.1';
 end;
 
 function TConfig.GetServerIPv4Port: word;
