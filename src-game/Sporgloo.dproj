@@ -94,6 +94,12 @@
         <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Linux64)'!=''">
+        <Cfg_2_Linux64>true</Cfg_2_Linux64>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='OSX64' and '$(Cfg_2)'=='true') or '$(Cfg_2_OSX64)'!=''">
         <Cfg_2_OSX64>true</Cfg_2_OSX64>
         <CfgParent>Cfg_2</CfgParent>
@@ -325,108 +331,127 @@
     <PropertyGroup Condition="'$(Cfg_2_Android)'!=''">
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Build>1</VerInfo_Build>
-        <VerInfo_Keys>package=fr.gamolf.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
-        <Android_LauncherIcon36>..\assets\icon\sporgloo-game-36x36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>..\assets\icon\sporgloo-game-48x48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>..\assets\icon\sporgloo-game-72x72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>..\assets\icon\sporgloo-game-96x96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>..\assets\icon\sporgloo-game-144x144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>..\assets\icon\sporgloo-game-192x192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>..\assets\icon\sporgloo-game-426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>..\assets\icon\sporgloo-game-470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>..\assets\icon\sporgloo-game-640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>..\assets\icon\sporgloo-game-960x720.png</Android_SplashImage960>
+        <VerInfo_Keys>package=fr.gamolf.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=0.1;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <Android_LauncherIcon36>..\assets\icons\sporgloo-game-36x36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>..\assets\icons\sporgloo-game-48x48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>..\assets\icons\sporgloo-game-72x72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>..\assets\icons\sporgloo-game-96x96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>..\assets\icons\sporgloo-game-144x144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>..\assets\icons\sporgloo-game-192x192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>..\assets\icons\sporgloo-game-426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>..\assets\icons\sporgloo-game-470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>..\assets\icons\sporgloo-game-640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>..\assets\icons\sporgloo-game-960x720.png</Android_SplashImage960>
         <Android_SplashTileMode>repeat</Android_SplashTileMode>
         <Android_SplashGravity>fill</Android_SplashGravity>
-        <Android_NotificationIcon24>..\assets\icon\sporgloo-game-24x24.png</Android_NotificationIcon24>
-        <Android_NotificationIcon36>..\assets\icon\sporgloo-game-36x36.png</Android_NotificationIcon36>
-        <Android_NotificationIcon48>..\assets\icon\sporgloo-game-48x48.png</Android_NotificationIcon48>
-        <Android_NotificationIcon72>..\assets\icon\sporgloo-game-72x72.png</Android_NotificationIcon72>
-        <Android_NotificationIcon96>..\assets\icon\sporgloo-game-96x96.png</Android_NotificationIcon96>
+        <Android_NotificationIcon24>..\assets\icons\sporgloo-game-24x24.png</Android_NotificationIcon24>
+        <Android_NotificationIcon36>..\assets\icons\sporgloo-game-36x36.png</Android_NotificationIcon36>
+        <Android_NotificationIcon48>..\assets\icons\sporgloo-game-48x48.png</Android_NotificationIcon48>
+        <Android_NotificationIcon72>..\assets\icons\sporgloo-game-72x72.png</Android_NotificationIcon72>
+        <Android_NotificationIcon96>..\assets\icons\sporgloo-game-96x96.png</Android_NotificationIcon96>
+        <Android_BackgroundColor>#FFFFFF</Android_BackgroundColor>
+        <Android_DarkBackgroundColor>#000000</Android_DarkBackgroundColor>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Android64)'!=''">
         <DCC_GenerateAndroidAppBundleFile>true</DCC_GenerateAndroidAppBundleFile>
         <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>package=fr.gamolf.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
-        <Android_LauncherIcon36>..\assets\icon\sporgloo-game-36x36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>..\assets\icon\sporgloo-game-48x48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>..\assets\icon\sporgloo-game-72x72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>..\assets\icon\sporgloo-game-96x96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>..\assets\icon\sporgloo-game-144x144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>..\assets\icon\sporgloo-game-192x192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>..\assets\icon\sporgloo-game-426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>..\assets\icon\sporgloo-game-470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>..\assets\icon\sporgloo-game-640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>..\assets\icon\sporgloo-game-960x720.png</Android_SplashImage960>
+        <VerInfo_Keys>package=fr.gamolf.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=0.1;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <Android_LauncherIcon36>..\assets\icons\sporgloo-game-36x36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>..\assets\icons\sporgloo-game-48x48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>..\assets\icons\sporgloo-game-72x72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>..\assets\icons\sporgloo-game-96x96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>..\assets\icons\sporgloo-game-144x144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>..\assets\icons\sporgloo-game-192x192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>..\assets\icons\sporgloo-game-426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>..\assets\icons\sporgloo-game-470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>..\assets\icons\sporgloo-game-640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>..\assets\icons\sporgloo-game-960x720.png</Android_SplashImage960>
         <Android_SplashTileMode>repeat</Android_SplashTileMode>
         <Android_SplashGravity>fill</Android_SplashGravity>
-        <Android_NotificationIcon24>..\assets\icon\sporgloo-game-24x24.png</Android_NotificationIcon24>
-        <Android_NotificationIcon36>..\assets\icon\sporgloo-game-36x36.png</Android_NotificationIcon36>
-        <Android_NotificationIcon48>..\assets\icon\sporgloo-game-48x48.png</Android_NotificationIcon48>
-        <Android_NotificationIcon72>..\assets\icon\sporgloo-game-72x72.png</Android_NotificationIcon72>
-        <Android_NotificationIcon96>..\assets\icon\sporgloo-game-96x96.png</Android_NotificationIcon96>
+        <Android_NotificationIcon24>..\assets\icons\sporgloo-game-24x24.png</Android_NotificationIcon24>
+        <Android_NotificationIcon36>..\assets\icons\sporgloo-game-36x36.png</Android_NotificationIcon36>
+        <Android_NotificationIcon48>..\assets\icons\sporgloo-game-48x48.png</Android_NotificationIcon48>
+        <Android_NotificationIcon72>..\assets\icons\sporgloo-game-72x72.png</Android_NotificationIcon72>
+        <Android_NotificationIcon96>..\assets\icons\sporgloo-game-96x96.png</Android_NotificationIcon96>
+        <Android_BackgroundColor>#FFFFFF</Android_BackgroundColor>
+        <Android_DarkBackgroundColor>#000000</Android_DarkBackgroundColor>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSDevice64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=fr;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.gamolf.$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=fr;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.gamolf.$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=0.1.0;CFBundleShortVersionString=0.1;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
         <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
         <VerInfo_BundleId>fr.gamolf.$(ModuleName)</VerInfo_BundleId>
-        <iPhone_AppIcon120>..\assets\icon\sporgloo-game-120x120.png</iPhone_AppIcon120>
-        <iPhone_AppIcon180>..\assets\icon\sporgloo-game-180x180.png</iPhone_AppIcon180>
-        <iOS_AppStore1024>..\assets\icon\sporgloo-game-1024x1024.png</iOS_AppStore1024>
-        <iPhone_Spotlight80>..\assets\icon\sporgloo-game-80x80.png</iPhone_Spotlight80>
-        <iPhone_Spotlight120>..\assets\icon\sporgloo-game-120x120.png</iPhone_Spotlight120>
-        <iPhone_Setting58>..\assets\icon\sporgloo-game-58x58.png</iPhone_Setting58>
-        <iPhone_Setting87>..\assets\icon\sporgloo-game-87x87.png</iPhone_Setting87>
-        <iPhone_Notification40>..\assets\icon\sporgloo-game-40x40.png</iPhone_Notification40>
-        <iPhone_Notification60>..\assets\icon\sporgloo-game-60x60.png</iPhone_Notification60>
-        <iPad_AppIcon152>..\assets\icon\sporgloo-game-152x152.png</iPad_AppIcon152>
-        <iPad_AppIcon167>..\assets\icon\sporgloo-game-167x167.png</iPad_AppIcon167>
-        <iPad_SpotLight80>..\assets\icon\sporgloo-game-80x80.png</iPad_SpotLight80>
-        <iPad_Setting58>..\assets\icon\sporgloo-game-58x58.png</iPad_Setting58>
-        <iPad_Notification40>..\assets\icon\sporgloo-game-40x40.png</iPad_Notification40>
+        <iPhone_AppIcon120>..\assets\icons\sporgloo-game-120x120.png</iPhone_AppIcon120>
+        <iPhone_AppIcon180>..\assets\icons\sporgloo-game-180x180.png</iPhone_AppIcon180>
+        <iOS_AppStore1024>..\assets\icons\sporgloo-game-1024x1024.png</iOS_AppStore1024>
+        <iPhone_Spotlight80>..\assets\icons\sporgloo-game-80x80.png</iPhone_Spotlight80>
+        <iPhone_Spotlight120>..\assets\icons\sporgloo-game-120x120.png</iPhone_Spotlight120>
+        <iPhone_Setting58>..\assets\icons\sporgloo-game-58x58.png</iPhone_Setting58>
+        <iPhone_Setting87>..\assets\icons\sporgloo-game-87x87.png</iPhone_Setting87>
+        <iPhone_Notification40>..\assets\icons\sporgloo-game-40x40.png</iPhone_Notification40>
+        <iPhone_Notification60>..\assets\icons\sporgloo-game-60x60.png</iPhone_Notification60>
+        <iPad_AppIcon152>..\assets\icons\sporgloo-game-152x152.png</iPad_AppIcon152>
+        <iPad_AppIcon167>..\assets\icons\sporgloo-game-167x167.png</iPad_AppIcon167>
+        <iPad_SpotLight80>..\assets\icons\sporgloo-game-80x80.png</iPad_SpotLight80>
+        <iPad_Setting58>..\assets\icons\sporgloo-game-58x58.png</iPad_Setting58>
+        <iPad_Notification40>..\assets\icons\sporgloo-game-40x40.png</iPad_Notification40>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Linux64)'!=''">
+        <Debugger_Launcher>/usr/bin/gnome-terminal -- &quot;%debuggee%&quot;</Debugger_Launcher>
+        <Manifest_File>(vide)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_OSX64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.gamolf.$(MSBuildProjectName);CFBundleVersion=1.0.3;CFBundleShortVersionString=1.0;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing the Bluetooth interface</VerInfo_Keys>
-        <Icon_MainIcon>..\assets\icon\sporgloo-game.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icon\sporgloo-game.icns</Icns_MainIcns>
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.gamolf.$(MSBuildProjectName);CFBundleVersion=0.1.3;CFBundleShortVersionString=0.1;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing the Bluetooth interface</VerInfo_Keys>
+        <Icon_MainIcon>..\assets\icons\sporgloo-game.ico</Icon_MainIcon>
+        <Icns_MainIcns>..\assets\icons\sporgloo-game.icns</Icns_MainIcns>
         <VerInfo_Build>3</VerInfo_Build>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_OSXARM64)'!=''">
         <DCC_GenerateOSXUniversalBinaryFile>true</DCC_GenerateOSXUniversalBinaryFile>
         <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.gamolf.$(MSBuildProjectName);CFBundleVersion=1.0.3;CFBundleShortVersionString=1.0;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing the Bluetooth interface</VerInfo_Keys>
-        <Icon_MainIcon>..\assets\icon\sporgloo-game.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icon\sporgloo-game.icns</Icns_MainIcns>
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.gamolf.$(MSBuildProjectName);CFBundleVersion=0.1.3;CFBundleShortVersionString=0.1;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing the Bluetooth interface</VerInfo_Keys>
+        <Icon_MainIcon>..\assets\icons\sporgloo-game.ico</Icon_MainIcon>
+        <Icns_MainIcns>..\assets\icons\sporgloo-game.icns</Icns_MainIcns>
         <VerInfo_Build>3</VerInfo_Build>
         <BT_BuildType>DeveloperID</BT_BuildType>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.2;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.gamolf.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
-        <Icon_MainIcon>..\assets\icon\sporgloo-game.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icon\sporgloo-game.icns</Icns_MainIcns>
-        <UWP_DelphiLogo44>..\assets\icon\sporgloo-game-44x44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>..\assets\icon\sporgloo-game-150x150.png</UWP_DelphiLogo150>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=0.1.0.2;InternalName=;LegalCopyright=2023-2024 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.gamolf.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=0.1;Comments=</VerInfo_Keys>
+        <Icon_MainIcon>..\assets\icons\sporgloo-game.ico</Icon_MainIcon>
+        <Icns_MainIcns>..\assets\icons\sporgloo-game.icns</Icns_MainIcns>
+        <UWP_DelphiLogo44>..\assets\icons\sporgloo-game-44x44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>..\assets\icons\sporgloo-game-150x150.png</UWP_DelphiLogo150>
         <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.gamolf.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
-        <Icon_MainIcon>..\assets\icon\sporgloo-game.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icon\sporgloo-game.icns</Icns_MainIcns>
-        <UWP_DelphiLogo44>..\assets\icon\sporgloo-game-44x44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>..\assets\icon\sporgloo-game-150x150.png</UWP_DelphiLogo150>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=0.1.0.0;InternalName=;LegalCopyright=2023-2024 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.gamolf.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=0.1;Comments=</VerInfo_Keys>
+        <Icon_MainIcon>..\assets\icons\sporgloo-game.ico</Icon_MainIcon>
+        <Icns_MainIcns>..\assets\icons\sporgloo-game.icns</Icns_MainIcns>
+        <UWP_DelphiLogo44>..\assets\icons\sporgloo-game-44x44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>..\assets\icons\sporgloo-game-150x150.png</UWP_DelphiLogo150>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -498,6 +523,16 @@
         </DCCReference>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas"/>
+        <DCCReference Include="uDMAboutBoxLogo.pas">
+            <Form>dmAboutBoxLogo</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialog.pas"/>
+        <DCCReference Include="..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialogForm.pas">
+            <Form>OlfAboutDialogForm</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -985,35 +1020,35 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\assets\icon\sporgloo-game-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
+                <DeployFile LocalName="..\assets\icons\sporgloo-game-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo150x150.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\assets\icon\sporgloo-game-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
+                <DeployFile LocalName="..\assets\icons\sporgloo-game-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
                     <Platform Name="Win64">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo150x150.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\assets\icon\sporgloo-game-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
+                <DeployFile LocalName="..\assets\icons\sporgloo-game-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\assets\icon\sporgloo-game-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
+                <DeployFile LocalName="..\assets\icons\sporgloo-game-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
                     <Platform Name="Win64">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\assets\icon\sporgloo-game.icns" Configuration="Release" Class="ProjectOSXResource">
+                <DeployFile LocalName="..\assets\icons\sporgloo-game.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
                         <RemoteName>Sporgloo.icns</RemoteName>
                         <Overwrite>true</Overwrite>
