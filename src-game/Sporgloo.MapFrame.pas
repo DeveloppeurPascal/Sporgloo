@@ -31,7 +31,7 @@ type
   protected
     procedure SubscribeToMapCellUpdateMessage;
     procedure SubscribeToMapUpdateMessage;
-    procedure SubscribeToOtherPlayerMove;
+    procedure SubscribeToPlayerMoveDeniedByTheServerMessage;
     procedure DrawMapCell(AMapCell: TSporglooMapCell);
     procedure DrawAPlayer(APlayer: TSporglooPlayer);
     procedure DrawAStar(AX, AY: TSporglooAPINumber);
@@ -56,7 +56,7 @@ begin
   TimerMapRefresh.Enabled := false;
   SubscribeToMapCellUpdateMessage;
   SubscribeToMapUpdateMessage;
-  SubscribeToOtherPlayerMove;
+  SubscribeToPlayerMoveDeniedByTheServerMessage;
 end;
 
 procedure TMapFrame.DrawAPlayer(APlayer: TSporglooPlayer);
@@ -149,9 +149,9 @@ begin
 
     case AMapCell.TileID of
       CSporglooTileForest:
-        TileImgIndex := 1; // arbres
+        TileImgIndex := 1;
       CSporglooTilePath, CSporglooTileStar:
-        TileImgIndex := 0; // chemin
+        TileImgIndex := 0;
     else
       raise exception.Create('Tile ID ' + AMapCell.TileID.ToString +
         ' non supported.');
@@ -192,6 +192,7 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     var
       Msg: TMapCellUpdateMessage;
+      Player: TSporglooPlayer;
     begin
       if not(M is TMapCellUpdateMessage) then
         exit;
@@ -199,10 +200,19 @@ begin
       if not assigned(Msg.Value) then
         exit;
 
-      if Msg.Value.TileID = CSporglooTileStar then
-        TGameData.Current.Player.TestAndChangeTarget(Msg.Value.x, Msg.Value.y);
-
-      DrawMapCell(Msg.Value);
+      Player := TGameData.Current.Player;
+      if (Msg.Value.PlayerID = Player.PlayerID) and
+        ((Msg.Value.x <> Player.PlayerX) or (Msg.Value.y <> Player.PlayerY))
+      then
+      begin
+        Player.PlayerX := Msg.Value.x;
+        Player.PlayerY := Msg.Value.y;
+        TGameData.Current.refreshmap;
+      end
+      else
+        DrawMapCell(Msg.Value);
+      TimerPlayerMove.Enabled := TimerPlayerMove.Enabled or
+        (Msg.Value.PlayerID = Player.PlayerID);
     end);
 end;
 
@@ -227,20 +237,15 @@ begin
     end);
 end;
 
-procedure TMapFrame.SubscribeToOtherPlayerMove;
+procedure TMapFrame.SubscribeToPlayerMoveDeniedByTheServerMessage;
 begin
-  TMessageManager.DefaultManager.SubscribeToMessage(TOtherPlayerUpdateMessage,
+  TMessageManager.DefaultManager.SubscribeToMessage
+    (TPlayerMoveDeniedByTheServerMessage,
     procedure(const Sender: TObject; const M: TMessage)
-    var
-      Msg: TOtherPlayerUpdateMessage;
     begin
-      if not(M is TOtherPlayerUpdateMessage) then
+      if not(M is TPlayerMoveDeniedByTheServerMessage) then
         exit;
-      Msg := M as TOtherPlayerUpdateMessage;
-      if not assigned(Msg.Value) then
-        exit;
-
-      DrawAPlayer(Msg.Value);
+      TimerPlayerMove.Enabled := true;
     end);
 end;
 
@@ -288,41 +293,39 @@ begin
     begin
       PrevMapCell := GameData.Map.GetCellAt(Player.PlayerX, Player.PlayerY);
 
+      for x := GameData.ViewportX - CColMargins to GameData.ViewportXMax + 2 *
+        CColMargins do
+        for y := GameData.ViewportY - CrowMargins to GameData.ViewportYMax + 2 *
+          CrowMargins do
+          if GameData.Map.GetCellAt(x, y).TileID = CSporglooTileStar then
+            Player.TestAndChangeTarget(x, y);
+
+      // TODO : Replace this code by a path finding algorithm
       if Player.PlayerX < Player.TargetX then
-        Player.PlayerX := Player.PlayerX + 1
+        x := Player.PlayerX + 1
       else if Player.PlayerX > Player.TargetX then
-        Player.PlayerX := Player.PlayerX - 1;
+        x := Player.PlayerX - 1
+      else
+        x := Player.PlayerX;
       if Player.PlayerY < Player.Targety then
-        Player.PlayerY := Player.PlayerY + 1
+        y := Player.PlayerY + 1
       else if Player.PlayerY > Player.Targety then
-        Player.PlayerY := Player.PlayerY - 1;
+        y := Player.PlayerY - 1
+      else
+        y := Player.PlayerY;
 
-      MapCell := GameData.Map.GetCellAt(Player.PlayerX, Player.PlayerY);
+      MapCell := GameData.Map.GetCellAt(x, y);
 
-      // TODO : add some controls on new cell (existing player, blocking element, ...) and rollback the player coordinates
-
-      if (MapCell <> PrevMapCell) then
+      if (MapCell <> PrevMapCell) and (not(MapCell.TileID = CSporglooTileForest)
+        ) and MapCell.PlayerID.IsEmpty then
       begin
-        PrevMapCell.PlayerID := '';
-        MapCell.PlayerID := Player.PlayerID;
-
         if MapCell.TileID = CSporglooTileStar then
-        begin
-          MapCell.TileID := CSporglooTilePath;
           Player.StarsCount := Player.StarsCount + 1;
 
-          // TODO : replace the coordinates loop by a loop in the starts list stored in GameData
-          for x := GameData.ViewportX - CColMargins to GameData.ViewportXMax + 2
-            * CColMargins do
-            for y := GameData.ViewportY - CrowMargins to GameData.ViewportYMax +
-              2 * CrowMargins do
-              Player.TestAndChangeTarget(x, y);
-        end;
-
-        TGameData.Current.refreshmap;
+        TimerPlayerMove.Enabled := false;
 
         GameData.APIClient.SendPlayerMove(GameData.Session.SessionID,
-          Player.PlayerID, Player.PlayerX, Player.PlayerY);
+          Player.PlayerID, x, y);
       end;
     end;
   end;

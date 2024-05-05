@@ -23,6 +23,7 @@ object MapFrame: TMapFrame
     OnResized = MapImageResized
   end
   object TimerPlayerMove: TTimer
+    Enabled = False
     Interval = 100
     OnTimer = TimerPlayerMoveTimer
     Left = 232
