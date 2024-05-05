@@ -30,6 +30,7 @@ type
     Session: TSporglooSession;
     Map: TSporglooMap;
     OtherPlayers: TSporglooPlayersList;
+    // TODO : add a stars list (add/remove depending on MapCell updates and player moves)
 
     property ViewportX: TSporglooAPINumber read FViewportX write SetViewportX;
     property ViewportY: TSporglooAPINumber read FViewportY write SetViewportY;
