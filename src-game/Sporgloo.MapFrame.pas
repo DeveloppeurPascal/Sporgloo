@@ -23,8 +23,10 @@ type
   TMapFrame = class(TFrame)
     TimerMapRefresh: TTimer;
     MapImage: TImage;
+    TimerPlayerMove: TTimer;
     procedure TimerMapRefreshTimer(Sender: TObject);
     procedure MapImageResized(Sender: TObject);
+    procedure TimerPlayerMoveTimer(Sender: TObject);
   private
   protected
     procedure SubscribeToMapCellUpdateMessage;
@@ -197,6 +199,9 @@ begin
       if not assigned(Msg.Value) then
         exit;
 
+      if Msg.Value.TileID = CSporglooTileStar then
+        TGameData.Current.Player.TestAndChangeTarget(Msg.Value.x, Msg.Value.y);
+
       DrawMapCell(Msg.Value);
     end);
 end;
@@ -265,6 +270,61 @@ begin
     GameData.ViewportNbRow := ceil(MapImage.Height / CSporglooTileSize);
 
     GameData.refreshmap;
+  end;
+end;
+
+procedure TMapFrame.TimerPlayerMoveTimer(Sender: TObject);
+var
+  Player: TSporglooPlayer;
+  MapCell, PrevMapCell: TSporglooMapCell;
+  x, y: TSporglooAPINumber;
+  GameData: TGameData;
+begin
+  if TimerPlayerMove.Enabled then
+  begin
+    GameData := TGameData.Current;
+    Player := GameData.Player;
+    if assigned(Player) then
+    begin
+      PrevMapCell := GameData.Map.GetCellAt(Player.PlayerX, Player.PlayerY);
+
+      if Player.PlayerX < Player.TargetX then
+        Player.PlayerX := Player.PlayerX + 1
+      else if Player.PlayerX > Player.TargetX then
+        Player.PlayerX := Player.PlayerX - 1;
+      if Player.PlayerY < Player.Targety then
+        Player.PlayerY := Player.PlayerY + 1
+      else if Player.PlayerY > Player.Targety then
+        Player.PlayerY := Player.PlayerY - 1;
+
+      MapCell := GameData.Map.GetCellAt(Player.PlayerX, Player.PlayerY);
+
+      // TODO : add some controls on new cell (existing player, blocking element, ...) and rollback the player coordinates
+
+      if (MapCell <> PrevMapCell) then
+      begin
+        PrevMapCell.PlayerID := '';
+        MapCell.PlayerID := Player.PlayerID;
+
+        if MapCell.TileID = CSporglooTileStar then
+        begin
+          MapCell.TileID := CSporglooTilePath;
+          Player.StarsCount := Player.StarsCount + 1;
+
+          // TODO : replace the coordinates loop by a loop in the starts list stored in GameData
+          for x := GameData.ViewportX - CColMargins to GameData.ViewportXMax + 2
+            * CColMargins do
+            for y := GameData.ViewportY - CrowMargins to GameData.ViewportYMax +
+              2 * CrowMargins do
+              Player.TestAndChangeTarget(x, y);
+        end;
+
+        TGameData.Current.refreshmap;
+
+        GameData.APIClient.SendPlayerMove(GameData.Session.SessionID,
+          Player.PlayerID, Player.PlayerX, Player.PlayerY);
+      end;
+    end;
   end;
 end;
 
