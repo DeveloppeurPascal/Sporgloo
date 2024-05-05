@@ -228,4 +228,18 @@ object frmMain: TfrmMain
     Left = 304
     Top = 224
   end
+  object OlfAboutDialog1: TOlfAboutDialog
+    Titre = 'Sporgloo'
+    VersionNumero = '0.1 alpha'
+    VersionDate = '20240505'
+    MultiResBitmap = <
+      item
+      end>
+    Images = dmAboutBoxLogo.imgLogo
+    ImageIndex = 0
+    URL = 'https://sporgloo.gamolf.fr'
+    Copyright = '(c) 2023-2024 Patrick Pr'#233'martin'
+    Left = 152
+    Top = 360
+  end
 end

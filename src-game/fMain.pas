@@ -24,7 +24,9 @@ uses
   cGrayBox,
   cYellowMenuButton,
   cViseur,
-  FMX.Objects;
+  FMX.Objects,
+  Olf.FMX.AboutDialog,
+  uDMAboutBoxLogo;
 
 type
 {$SCOPEDENUMS ON}
@@ -49,6 +51,7 @@ type
     Viseur: TcadViseur;
     TimerGamePad: TTimer;
     GameControllerPicture: TPath;
+    OlfAboutDialog1: TOlfAboutDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -78,6 +81,7 @@ type
     procedure InitializeHomePage;
     procedure DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
     procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
+procedure InitMainFormCaption;
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
@@ -108,7 +112,8 @@ uses
   udmAdobeStock_526775911,
   uBackgroundMusic,
   Gamolf.RTL.Joystick,
-  FMX.Platform;
+  FMX.Platform,
+  Olf.FMX.AboutDialogForm;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
@@ -170,6 +175,8 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+InitMainFormCaption;
+
   ActivePage := TPageType.None;
 
   FPreviousGamePadKey := 0;
@@ -318,6 +325,17 @@ procedure TfrmMain.InitializeHomePage;
 begin
   btnPlay.txtImage.Text := 'PLAY';
   btnQuit.txtImage.Text := 'QUIT';
+end;
+
+procedure TfrmMain.InitMainFormCaption;
+begin
+{$IFDEF DEBUG}
+  caption := '[DEBUG] ';
+{$ELSE}
+  caption := '';
+{$ENDIF}
+  caption := caption + OlfAboutDialog1.Titre + ' v' +
+    OlfAboutDialog1.VersionNumero;
 end;
 
 procedure TfrmMain.SetActivePage(const Value: TPageType);
