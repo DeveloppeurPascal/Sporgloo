@@ -112,6 +112,13 @@ procedure TSporglooClient.onErrorMessage(const AFromServer
   : TOlfSocketMessagingServerConnectedClient; const msg: TErrorMessage);
 begin
   // TODO : manage the received error
+  if (msg.ErrorCode = ord(TSporglooErrorCode.PlayerMoveDenied)) then
+    TThread.ForceQueue(nil,
+      procedure
+      begin
+        TMessageManager.DefaultManager.SendMessage(self,
+          TPlayerMoveDeniedByTheServerMessage.Create);
+      end);
 end;
 
 procedure TSporglooClient.onLogoff(const AFromServer
@@ -240,6 +247,5 @@ begin
     msg.Free;
   end;
 end;
-
 
 end.
