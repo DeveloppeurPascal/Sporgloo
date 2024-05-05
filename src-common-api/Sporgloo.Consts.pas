@@ -12,14 +12,21 @@ const
   CSporglooTileSize = 64;
 
   /// <summary>
-  ///   Marge used to get the all map from the server (as a viewport left/right margin)
+  /// Marge used to get the all map from the server (as a viewport left/right margin)
   /// </summary>
-  CColMargins = 10;
+{$IFDEF DEBUG}
+  CColMargins = 1;
+{$ELSE}
+  CColMargins = 3;
+{$ENDIF}
   /// <summary>
-  ///   Marge used to get the all map from the server (as a viewport top/bottom margin)
+  /// Marge used to get the all map from the server (as a viewport top/bottom margin)
   /// </summary>
-  CRowMargins = 10;
-
+{$IFDEF DEBUG}
+  CRowMargins = 1;
+{$ELSE}
+  CRowMargins = 3;
+{$ENDIF}
   CSporglooIDSize = 16;
 
   CStartStarsCount = 12;
@@ -35,7 +42,7 @@ type
   TSporglooErrorCode = (NoError = 0, WrongDeviceID = 1, WrongPlayerID = 2,
     WrongSessionID = 3, WrongAPIVersion = 4, UnknowPlayerID = 5,
     WrongDeviceForPlayerID = 6, UnknowSessionID = 7,
-    WrongDeviceOrPlayerForSessionID = 8);
+    WrongDeviceOrPlayerForSessionID = 8, PlayerMoveDenied = 9);
 
 implementation
 
