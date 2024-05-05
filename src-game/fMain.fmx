@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Sporgloo'
-  ClientHeight = 480
-  ClientWidth = 640
+  ClientHeight = 629
+  ClientWidth = 1341
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -14,12 +14,12 @@ object frmMain: TfrmMain
   inline MapFrame1: TMapFrame
     Align = Contents
     HitTest = False
-    Size.Width = 640.000000000000000000
-    Size.Height = 480.000000000000000000
+    Size.Width = 1341.000000000000000000
+    Size.Height = 629.000000000000000000
     Size.PlatformDefault = False
     inherited MapImage: TImage
-      Size.Width = 640.000000000000000000
-      Size.Height = 480.000000000000000000
+      Size.Width = 1341.000000000000000000
+      Size.Height = 629.000000000000000000
     end
   end
   object HomePage: TLayout
@@ -87,8 +87,8 @@ object frmMain: TfrmMain
     Align = Contents
     Cursor = crCross
     HitTest = True
-    Size.Width = 640.000000000000000000
-    Size.Height = 480.000000000000000000
+    Size.Width = 1341.000000000000000000
+    Size.Height = 629.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 6
     OnMouseDown = GamePageMouseDown
