@@ -311,6 +311,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Linux64\Debug\SporglooServer" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Linux64">
+                        <RemoteName>SporglooServer</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Linux64\Release\SporglooServer" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Linux64">
                         <RemoteName>SporglooServer</RemoteName>
