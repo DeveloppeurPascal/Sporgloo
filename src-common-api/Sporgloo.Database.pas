@@ -21,6 +21,10 @@ type
     FPlayerY: TSporglooAPINumber;
     FStarsCount: TSporglooAPINumber;
     FDeviceID: string;
+    FTargetX: TSporglooAPINumber;
+    FTargety: TSporglooAPINumber;
+    procedure SetTargetX(const Value: TSporglooAPINumber);
+    procedure SetTargety(const Value: TSporglooAPINumber);
     procedure SetDeviceID(const Value: string);
     procedure SetLifeLevel(const Value: TSporglooAPINumber);
     procedure SetPlayerID(const Value: string);
@@ -34,13 +38,19 @@ type
     property PlayerID: string read FPlayerID write SetPlayerID;
     property PlayerX: TSporglooAPINumber read FPlayerX write SetPlayerX;
     property PlayerY: TSporglooAPINumber read FPlayerY write SetPlayerY;
+    property TargetX: TSporglooAPINumber read FTargetX write SetTargetX;
+    property Targety: TSporglooAPINumber read FTargety write SetTargety;
     Property Score: TSporglooAPINumber read FScore write SetScore;
     property StarsCount: TSporglooAPINumber read FStarsCount
       write SetStarsCount;
     property LifeLevel: TSporglooAPINumber read FLifeLevel write SetLifeLevel;
 
+    procedure TestAndChangeTarget(AX, AY: TSporglooAPINumber);
+
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
+
+    constructor Create;
   end;
 
   TSporglooPlayersList = class(TObjectDictionary<string, TSporglooPlayer>)
@@ -126,6 +136,21 @@ implementation
 uses
   Olf.RTL.Streams,
   Sporgloo.API.Messages, Sporgloo.Consts;
+
+constructor TSporglooPlayer.Create;
+begin
+  inherited;
+  FLifeLevel := 0;
+  FScore := 0;
+  FPlayerID := '';
+  FPlayerX := 0;
+  FPlayerY := 0;
+  FStarsCount := 0;
+  FDeviceID := '';
+
+  FTargetX := 0;
+  FTargety := 0;
+end;
 
 procedure TSporglooPlayer.LoadFromStream(AStream: TStream);
 var
@@ -225,6 +250,7 @@ begin
   System.tmonitor.Enter(self);
   try
     FPlayerX := Value;
+    // TODO : si pas d'étoile dans la map affichée, positionner la target sur les coordonnées du joueur
   finally
     System.tmonitor.Exit(self);
   end;
@@ -235,6 +261,7 @@ begin
   System.tmonitor.Enter(self);
   try
     FPlayerY := Value;
+    // TODO : si pas d'étoile dans la map affichée, positionner la target sur les coordonnées du joueur
   finally
     System.tmonitor.Exit(self);
   end;
@@ -257,6 +284,30 @@ begin
     FStarsCount := Value;
   finally
     System.tmonitor.Exit(self);
+  end;
+end;
+
+procedure TSporglooPlayer.SetTargetX(const Value: TSporglooAPINumber);
+begin
+  FTargetX := Value;
+end;
+
+procedure TSporglooPlayer.SetTargety(const Value: TSporglooAPINumber);
+begin
+  FTargety := Value;
+end;
+
+procedure TSporglooPlayer.TestAndChangeTarget(AX, AY: TSporglooAPINumber);
+var
+  DistanceTarget, DistanceStar: TSporglooAPINumber;
+begin
+  DistanceTarget := abs(abs(PlayerX) - abs(TargetX)) +
+    abs(abs(PlayerY) - abs(Targety));
+  DistanceStar := abs(abs(PlayerX) - abs(AX)) + abs(abs(PlayerY) - abs(AY));
+  if DistanceStar < DistanceTarget then
+  begin
+    TargetX := AX;
+    Targety := AY;
   end;
 end;
 
