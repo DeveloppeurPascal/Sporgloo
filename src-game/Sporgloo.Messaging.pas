@@ -35,15 +35,15 @@ type
   end;
 
   /// <summary>
-  /// Sent by the client/server API when an other player moved.
-  /// </summary>
-  TOtherPlayerUpdateMessage = class(TMessage<TSporglooPlayer>)
-  end;
-
-  /// <summary>
   /// Sent from the client or the server to close the loop and the connection
   /// </summary>
   TDisconnectMessage = class(TMessage)
+  end;
+
+  /// <summary>
+  /// Sent when the server deny a player move.
+  /// </summary>
+  TPlayerMoveDeniedByTheServerMessage = class(TMessage)
   end;
 
 implementation
