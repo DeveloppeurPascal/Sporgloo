@@ -35,8 +35,8 @@ type
     property TileID: TSporglooAPIShort read FTileID write SetTileID;
     property PlayerID: string read FPlayerID write SetPlayerID;
     constructor Create; overload;
-    constructor Create(X: TSporglooAPINumber; Y: TSporglooAPINumber;
-      TileID: TSporglooAPIShort; PlayerID: string); overload;
+    constructor Create(AX: TSporglooAPINumber; AY: TSporglooAPINumber;
+      ATileID: TSporglooAPIShort; APlayerID: string); overload;
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
   end;
@@ -106,14 +106,14 @@ end;
 
 { TSporglooMapCell }
 
-constructor TSporglooMapCell.Create(X, Y: TSporglooAPINumber;
-  TileID: TSporglooAPIShort; PlayerID: string);
+constructor TSporglooMapCell.Create(AX, AY: TSporglooAPINumber;
+  ATileID: TSporglooAPIShort; APlayerID: string);
 begin
   Create;
-  FX := X;
-  FY := Y;
-  TileID := TileID;
-  PlayerID := PlayerID;
+  FX := AX;
+  FY := AY;
+  TileID := ATileID;
+  PlayerID := APlayerID;
 end;
 
 procedure TSporglooMapCell.LoadFromStream(AStream: TStream);
