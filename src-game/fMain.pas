@@ -81,7 +81,7 @@ type
     procedure InitializeHomePage;
     procedure DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
     procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
-procedure InitMainFormCaption;
+    procedure InitMainFormCaption;
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
@@ -175,7 +175,7 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-InitMainFormCaption;
+  InitMainFormCaption;
 
   ActivePage := TPageType.None;
 
@@ -210,10 +210,12 @@ end;
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
 var KeyChar: Char; Shift: TShiftState);
 begin
-  if (Key = vkReturn) and (ActivePage = TPageType.Home) then
+  if ((Key = vkReturn) or (KeyChar = ' ')) and (ActivePage = TPageType.Home)
+  then
   begin
     btnPlayClick(Sender);
     Key := 0;
+    KeyChar := #0;
   end
   else if (Key = vkEscape) or (Key = vkHardwareBack) then
   begin
@@ -243,11 +245,13 @@ begin
     Key := 0;
     KeyChar := #0;
   end
-  else if (KeyChar = ' ') and (ActivePage = TPageType.Game) then
+  else if ((Key = vkReturn) or (KeyChar = ' ')) and (ActivePage = TPageType.Game)
+  then
   begin
     GamePageMouseDown(Sender, TMouseButton.mbLeft, [],
       Viseur.Position.X + CSporglooTileSize / 2,
       Viseur.Position.Y + CSporglooTileSize / 2);
+    Key := 0;
     KeyChar := #0;
   end;
 end;
