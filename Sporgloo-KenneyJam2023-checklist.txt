@@ -7,12 +7,12 @@
 ==> écran du jeu (jeu en cours) : background du jeu, curseur souris ou contrôleur de jeu, boutons pause / play/pause musique, play/pause bruitages, score, niveau de vie, nombre de pastilles (= étoiles) dispos, actions du joueur, actions du personnage
 
 
-- gérer les déplacements du joueurs vers l'étoile la plus proche en path finding automatique
+- gérer les déplacements du joueurs vers l'étoile la plus proche en path finding
 - ajouter score, étoiles, niveau de vie à l'écran
-- implémenter "new game" et "continue"
-- configurer le VPS sous Debian pour le serveur (PAServer + version RELEASE du programme)
-- tests du programme serveur sur un serveur sous Linux Debian
+
+
 - transformation du programme serveur en démon Linux (#29)
+- tests du programme serveur sur un serveur sous Linux Debian
 
 
 - changer l'UI, ajouter boites de dialogue, actions entre joueurs et revoir le fonctionnement global du jeu
@@ -22,11 +22,6 @@
 - traiter les TODO
 
 
-- publier version de test
-
-
-- traiter les messages d'erreur côté client (provenant de l'API client/serveur)
-- traiter les messages d'erreur côté serveur (provenant de l'API client/serveur)
 - ajouter des bruitages
 
 
