@@ -20,6 +20,7 @@ To download this code repository, we recommend using "git", but you can also dow
 
 This project uses dependencies in the form of sub-modules. They will be absent from the ZIP file. You'll have to download them by hand.
 
+* [DeveloppeurPascal/AboutDialog-Delphi-Component](https://github.com/DeveloppeurPascal/AboutDialog-Delphi-Component) in the subfolder ./lib-externes/AboutDialog-Delphi-Component
 * [DeveloppeurPascal/Delphi-Game-Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) in the subfolder ./lib-externes/Delphi-Game-Engine
 * [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) in the subfolder ./lib-externes/librairies
 * [DeveloppeurPascal/Socket-Messaging-Library](https://github.com/DeveloppeurPascal/Socket-Messaging-Library) in the subfolder ./lib-externes/Socket-Messaging-Library
