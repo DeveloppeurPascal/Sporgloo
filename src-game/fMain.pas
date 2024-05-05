@@ -280,12 +280,7 @@ begin
       GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,
         GameData.Session.player.PlayerID, MapX, MapY);
 
-      // TODO : Add the star in a waiting list of server's ACK
-
       StarsCount := StarsCount - 1;
-      MapCell.TileID := CSporglooTileStar;
-      TMessageManager.DefaultManager.SendMessage(self,
-        TMapCellUpdateMessage.Create(MapCell));
     end;
   end;
 end;
@@ -314,6 +309,7 @@ end;
 
 procedure TfrmMain.InitializeGamePage;
 begin
+  MapFrame1.TimerPlayerMove.Enabled := true;
   Viseur.Width := CSporglooTileSize;
   Viseur.height := CSporglooTileSize;
   Viseur.Position.X := CSporglooTileSize *
@@ -354,6 +350,8 @@ procedure TfrmMain.SetActivePage(const Value: TPageType);
   end;
 
 begin
+  MapFrame1.TimerPlayerMove.Enabled := false;
+
   ShowGameTitle(false);
   if Value = TPageType.None then
   begin
