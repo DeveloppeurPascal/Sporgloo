@@ -70,13 +70,13 @@ inspirations :
 
 
 à coder :
-- déplacements des personnages
+X - déplacements des personnages
 - évolution du score
 - évolution du niveau de vie du joueur
-- évolution du nombre de pastilles pouvant être déposées sur la carte
+X - évolution du nombre de pastilles pouvant être déposées sur la carte
 - dessin de l'écran sur le jeu
-- gestion côté serveur (map, liste des joueurs, pastilles disponibles)
-- actions du joueur: poser des pastilles pour déplacer son personnage et gagner des points
+X - gestion côté serveur (map, liste des joueurs, pastilles disponibles)
+X - actions du joueur: poser des pastilles pour déplacer son personnage et gagner des points
 
 
 évolutions :
@@ -97,8 +97,8 @@ Niveau de vie du personnage :
 - décrémente de 1 point toutes les X cases (X = 1 au départ, à affiner plus tard)
 
 Nombre de pastilles à poser :
-- diminue de 1 à chaque pastille posée
-- augmente de 1 à chaque pastille récoltée
+X - diminue de 1 à chaque pastille posée
+X - augmente de 1 à chaque pastille récoltée
 - ajout automatique de 12 pastilles toutes les 24 heures
 - (futur) éventuellement vente de packs de pastilles en in-App
 
