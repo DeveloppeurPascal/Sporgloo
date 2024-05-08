@@ -42,7 +42,9 @@ uses
   cStarsCount in 'cStarsCount.pas' {cadStarsCount: TFrame},
   cScore in 'cScore.pas' {cadScore: TFrame},
   cLifeLevel in 'cLifeLevel.pas' {cadLifeLevel: TFrame},
-  cYellowGameButton in 'cYellowGameButton.pas' {cadYellowGameButton: TFrame};
+  cYellowGameButton in 'cYellowGameButton.pas' {cadYellowGameButton: TFrame},
+  cYellowGameButtonPause in 'cYellowGameButtonPause.pas' {cadYellowGameButtonPause: TFrame},
+  cYellowGameButtonMusicOnOff in 'cYellowGameButtonMusicOnOff.pas' {cadYellowGameButtonMusicOnOff: TFrame};
 
 {$R *.res}
 
