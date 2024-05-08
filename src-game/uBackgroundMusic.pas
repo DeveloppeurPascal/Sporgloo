@@ -21,7 +21,10 @@ uses
   System.SysUtils,
   System.IOUtils,
   uConfig,
-  Gamolf.FMX.MusicLoop;
+  Gamolf.FMX.MusicLoop,
+  System.Classes,
+  System.Messaging,
+  Sporgloo.Messaging;
 
 { TBackgroundMusic }
 
@@ -70,6 +73,13 @@ begin
 
   if aOn <> TConfig.Current.BackgroundMusic then
     TConfig.Current.BackgroundMusic := aOn;
+
+  tthread.ForceQueue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(nil,
+        TBackgroundMusicStatusMessage.Create(aOn));
+    end);
 end;
 
 procedure TBackgroundMusic.Volume(AVolume: integer);
