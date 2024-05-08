@@ -101,6 +101,84 @@ object frmMain: TfrmMain
       Size.Height = 253.000000000000000000
       Size.PlatformDefault = False
     end
+    object lDisplayScoreAndLevels: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 1331.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      inline lblStarsCount: TcadStarsCount
+        Align = MostLeft
+        HitTest = False
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 642.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        inherited Rectangle1: TRectangle
+          Size.Height = 40.000000000000000000
+        end
+        inherited OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
+          Size.Height = 30.000000000000000000
+        end
+        inherited Glyph1: TGlyph
+          Size.Height = 30.000000000000000000
+        end
+      end
+      inline lblScore: TcadScore
+        Align = Right
+        HitTest = False
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 1006.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 320.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        inherited Rectangle1: TRectangle
+          Size.Height = 40.000000000000000000
+        end
+        inherited Glyph1: TGlyph
+          Size.Height = 30.000000000000000000
+        end
+        inherited OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
+          Size.Height = 30.000000000000000000
+        end
+      end
+      inline lblLifeLevel: TcadLifeLevel
+        Align = Left
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 657.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 320.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        inherited Rectangle1: TRectangle
+          Size.Height = 40.000000000000000000
+        end
+        inherited OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
+          Size.Height = 30.000000000000000000
+        end
+        inherited Glyph1: TGlyph
+          Size.Height = 30.000000000000000000
+        end
+      end
+    end
   end
   object NewGamePage: TLayout
     Align = Contents

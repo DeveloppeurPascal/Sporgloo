@@ -26,7 +26,10 @@ uses
   cViseur,
   FMX.Objects,
   Olf.FMX.AboutDialog,
-  uDMAboutBoxLogo;
+  uDMAboutBoxLogo,
+  cStarsCount,
+  cScore,
+  cLifeLevel;
 
 type
 {$SCOPEDENUMS ON}
@@ -52,6 +55,10 @@ type
     TimerGamePad: TTimer;
     GameControllerPicture: TPath;
     OlfAboutDialog1: TOlfAboutDialog;
+    lblStarsCount: TcadStarsCount;
+    lDisplayScoreAndLevels: TLayout;
+    lblScore: TcadScore;
+    lblLifeLevel: TcadLifeLevel;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -310,6 +317,7 @@ end;
 procedure TfrmMain.InitializeGamePage;
 begin
   MapFrame1.TimerPlayerMove.Enabled := true;
+
   Viseur.Width := CSporglooTileSize;
   Viseur.height := CSporglooTileSize;
   Viseur.Position.X := CSporglooTileSize *
@@ -317,13 +325,20 @@ begin
   Viseur.Position.Y := CSporglooTileSize *
     (trunc(MapFrame1.height / CSporglooTileSize) div 2);
 
+  lDisplayScoreAndLevels.height := CSporglooTileSize * 0.8;
+  // TODO : remplacer par l'envoi d'une demande de refresh des compteurs à l'écran
+  StarsCount := TGameData.Current.player.StarsCount;
+  Score := TGameData.Current.player.Score;
+  LifeLevel := TGameData.Current.player.LifeLevel;
+
   GamePage.Cursor := crnone;
+  // TODO : masquage à conditionner dans les options de jeu (#69)
   // crNone : absent de la liste de possibilités dans l'inspecteur d'objets
 end;
 
 procedure TfrmMain.InitializeHomePage;
 begin
-  btnPlay.txtImage.Text := 'PLAY';
+  btnPlay.txtImage.Text := 'PLAY'; // TODO : traduire textes
   btnQuit.txtImage.Text := 'QUIT';
 end;
 
@@ -417,19 +432,21 @@ end;
 procedure TfrmMain.SetLifeLevel(const Value: TSporglooAPINumber);
 begin
   TGameData.Current.player.LifeLevel := Value;
-  // TODO : refresh screen if displayed
+  lblLifeLevel.LifeLevel := Value;
+  // TODO : remplacer par envoi de message de refresh
 end;
 
 procedure TfrmMain.SetScore(const Value: TSporglooAPINumber);
 begin
   TGameData.Current.player.Score := Value;
-  // TODO : refresh screen if displayed
+  lblScore.Score := Value; // TODO : remplacer par envoi de message de refresh
 end;
 
 procedure TfrmMain.SetStarsCount(const Value: TSporglooAPINumber);
 begin
   TGameData.Current.player.StarsCount := Value;
-  // TODO : refresh screen if displayed
+  lblStarsCount.StarsCount := Value;
+  // TODO : remplacer par envoi de message de refresh
 end;
 
 procedure TfrmMain.ShowGameTitle(isVisible: boolean);
