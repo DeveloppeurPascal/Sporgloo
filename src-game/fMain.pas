@@ -321,6 +321,10 @@ begin
     (trunc(MapFrame1.height / CSporglooTileSize) div 2);
 
   lDisplayScoreAndLevels.height := CSporglooTileSize * 0.8;
+
+  lblScore.Score := TGameData.Current.player.Score;
+  lblLifeLevel.LifeLevel := TGameData.Current.player.LifeLevel;
+  lblStarsCount.StarsCount := TGameData.Current.player.StarsCount;
 end;
 
 procedure TfrmMain.InitializeHomePage;
@@ -480,28 +484,22 @@ begin
     procedure(const Sender: TObject; const M: TMessage)
     begin
       if M is TPlayerScoreUpdatedMessage then
-      begin
         lblScore.Score := (M as TPlayerScoreUpdatedMessage).Value;
-      end;
     end);
   TMessageManager.DefaultManager.SubscribeToMessage
     (TPlayerStarsCountUpdatedMessage,
     procedure(const Sender: TObject; const M: TMessage)
     begin
       if M is TPlayerStarsCountUpdatedMessage then
-      begin
         lblStarsCount.StarsCount :=
           (M as TPlayerStarsCountUpdatedMessage).Value;
-      end;
     end);
   TMessageManager.DefaultManager.SubscribeToMessage
     (TPlayerLifeLevelUpdatedMessage,
     procedure(const Sender: TObject; const M: TMessage)
     begin
       if M is TPlayerLifeLevelUpdatedMessage then
-      begin
         lblLifeLevel.LifeLevel := (M as TPlayerLifeLevelUpdatedMessage).Value;
-      end;
     end);
 end;
 
