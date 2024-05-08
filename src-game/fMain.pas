@@ -93,6 +93,7 @@ type
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
     procedure SubscribeToDisconnect;
+    procedure SubscribeToPlayerLevelsUpdates;
   public
     { Déclarations publiques }
     property Score: TSporglooAPINumber read GetScore write SetScore;
@@ -198,6 +199,7 @@ begin
   SubscribeToServerConnectedMessage;
   SubscribeToLostServerMessage;
   SubscribeToDisconnect;
+  SubscribeToPlayerLevelsUpdates;
 
   TThread.ForceQueue(nil,
     procedure
@@ -326,10 +328,6 @@ begin
     (trunc(MapFrame1.height / CSporglooTileSize) div 2);
 
   lDisplayScoreAndLevels.height := CSporglooTileSize * 0.8;
-  // TODO : remplacer par l'envoi d'une demande de refresh des compteurs à l'écran
-  StarsCount := TGameData.Current.player.StarsCount;
-  Score := TGameData.Current.player.Score;
-  LifeLevel := TGameData.Current.player.LifeLevel;
 
   GamePage.Cursor := crnone;
   // TODO : masquage à conditionner dans les options de jeu (#69)
@@ -338,7 +336,8 @@ end;
 
 procedure TfrmMain.InitializeHomePage;
 begin
-  btnPlay.txtImage.Text := 'PLAY'; // TODO : traduire textes
+  // TODO : traduire textes
+  btnPlay.txtImage.Text := 'PLAY';
   btnQuit.txtImage.Text := 'QUIT';
 end;
 
@@ -432,21 +431,16 @@ end;
 procedure TfrmMain.SetLifeLevel(const Value: TSporglooAPINumber);
 begin
   TGameData.Current.player.LifeLevel := Value;
-  lblLifeLevel.LifeLevel := Value;
-  // TODO : remplacer par envoi de message de refresh
 end;
 
 procedure TfrmMain.SetScore(const Value: TSporglooAPINumber);
 begin
   TGameData.Current.player.Score := Value;
-  lblScore.Score := Value; // TODO : remplacer par envoi de message de refresh
 end;
 
 procedure TfrmMain.SetStarsCount(const Value: TSporglooAPINumber);
 begin
   TGameData.Current.player.StarsCount := Value;
-  lblStarsCount.StarsCount := Value;
-  // TODO : remplacer par envoi de message de refresh
 end;
 
 procedure TfrmMain.ShowGameTitle(isVisible: boolean);
@@ -498,6 +492,37 @@ begin
 {$IFDEF DEBUG}
       ShowMessage('Serveur lost');
 {$ENDIF}
+    end);
+end;
+
+procedure TfrmMain.SubscribeToPlayerLevelsUpdates;
+begin
+  TMessageManager.DefaultManager.SubscribeToMessage(TPlayerScoreUpdatedMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    begin
+      if M is TPlayerScoreUpdatedMessage then
+      begin
+        lblScore.Score := (M as TPlayerScoreUpdatedMessage).Value;
+      end;
+    end);
+  TMessageManager.DefaultManager.SubscribeToMessage
+    (TPlayerStarsCountUpdatedMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    begin
+      if M is TPlayerStarsCountUpdatedMessage then
+      begin
+        lblStarsCount.StarsCount :=
+          (M as TPlayerStarsCountUpdatedMessage).Value;
+      end;
+    end);
+  TMessageManager.DefaultManager.SubscribeToMessage
+    (TPlayerLifeLevelUpdatedMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    begin
+      if M is TPlayerLifeLevelUpdatedMessage then
+      begin
+        lblLifeLevel.LifeLevel := (M as TPlayerLifeLevelUpdatedMessage).Value;
+      end;
     end);
 end;
 
