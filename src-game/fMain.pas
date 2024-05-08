@@ -91,6 +91,7 @@ type
     procedure DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
     procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
     procedure InitMainFormCaption;
+    procedure MiseEnPause;
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
@@ -137,7 +138,7 @@ end;
 
 procedure TfrmMain.cadYellowGameButtonPause1Click(Sender: TObject);
 begin
-  // TODO : mise en pause du jeu
+  MiseEnPause;
 end;
 
 procedure TfrmMain.DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
@@ -236,7 +237,7 @@ begin
   else if (Key = vkEscape) or (Key = vkHardwareBack) then
   begin
     if ActivePage = TPageType.Game then
-      ActivePage := TPageType.Home
+      MiseEnPause
     else
       Close;
     Key := 0;
@@ -338,6 +339,11 @@ begin
 {$ENDIF}
   caption := caption + OlfAboutDialog1.Titre + ' v' +
     OlfAboutDialog1.VersionNumero;
+end;
+
+procedure TfrmMain.MiseEnPause;
+begin
+  ActivePage := TPageType.Home;
 end;
 
 procedure TfrmMain.SetActivePage(const Value: TPageType);
