@@ -14,12 +14,19 @@ uses
   FMX.Forms,
   FMX.Dialogs,
   FMX.StdCtrls,
-  FMX.Objects;
+  FMX.Objects,
+  Sporgloo.Images,
+  FMX.ImgList,
+  FMX.Effects;
 
 type
   TcadYellowGameButton = class(TFrame)
     rUp: TRectangle;
     rDown: TRectangle;
+    gDown: TGlyph;
+    gUp: TGlyph;
+    ShadowEffect1: TShadowEffect;
+    ShadowEffect2: TShadowEffect;
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Single);
     procedure FrameMouseLeave(Sender: TObject);
