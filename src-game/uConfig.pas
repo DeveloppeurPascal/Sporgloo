@@ -29,8 +29,8 @@ type
   public
     property DeviceID: string read GetDeviceID write SetDeviceID;
     property PlayerID: string read GetPlayerID write SetPlayerID;
-    // TODO : add music on/off
-    // TODO : add music volume
+    // TODO : add sound effects on/off
+    // TODO : add sound effects volume
     property ServerIPv4: string read GetServerIPv4 write SetServerIPv4;
     property ServerIPv4Port: word read GetServerIPv4Port
       write SetServerIPv4Port;
