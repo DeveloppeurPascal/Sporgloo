@@ -133,7 +133,7 @@ end;
 
 procedure TfrmMain.cadYellowGameButtonMusicOnOff1Click(Sender: TObject);
 begin
-  // TODO : activer/désactiver le son de la musique d'ambiance
+  TBackgroundMusic.Current.OnOff(not tconfig.Current.BackgroundMusic);
 end;
 
 procedure TfrmMain.cadYellowGameButtonPause1Click(Sender: TObject);
