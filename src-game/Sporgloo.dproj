@@ -533,6 +533,26 @@
             <Form>OlfAboutDialogForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
+        <DCCReference Include="..\_PRIVATE\fontes\AdobeStock_257147901\udmAdobeStock_257147901.pas">
+            <Form>dmAdobeStock_257147901</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="cStarsCount.pas">
+            <Form>cadStarsCount</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="cScore.pas">
+            <Form>cadScore</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="cLifeLevel.pas">
+            <Form>cadLifeLevel</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -1051,6 +1071,12 @@
                 <DeployFile LocalName="..\assets\icons\sporgloo-game.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
                         <RemoteName>Sporgloo.icns</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\Sporgloo.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>Sporgloo</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -37,7 +37,11 @@ uses
   Olf.RTL.Maths.Conversions in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas',
   uDMAboutBoxLogo in 'uDMAboutBoxLogo.pas' {dmAboutBoxLogo: TDataModule},
   Olf.FMX.AboutDialog in '..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialog.pas',
-  Olf.FMX.AboutDialogForm in '..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialogForm.pas' {OlfAboutDialogForm};
+  Olf.FMX.AboutDialogForm in '..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialogForm.pas' {OlfAboutDialogForm},
+  udmAdobeStock_257147901 in '..\_PRIVATE\fontes\AdobeStock_257147901\udmAdobeStock_257147901.pas' {dmAdobeStock_257147901: TDataModule},
+  cStarsCount in 'cStarsCount.pas' {cadStarsCount: TFrame},
+  cScore in 'cScore.pas' {cadScore: TFrame},
+  cLifeLevel in 'cLifeLevel.pas' {cadLifeLevel: TFrame};
 
 {$R *.res}
 
@@ -50,6 +54,7 @@ begin
   Application.CreateForm(TdmAdobeStock_440583506, dmAdobeStock_440583506);
   Application.CreateForm(TdmAdobeStock_526775911, dmAdobeStock_526775911);
   Application.CreateForm(TdmAboutBoxLogo, dmAboutBoxLogo);
+  Application.CreateForm(TdmAdobeStock_257147901, dmAdobeStock_257147901);
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.
