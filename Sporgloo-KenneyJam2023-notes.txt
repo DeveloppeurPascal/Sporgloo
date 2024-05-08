@@ -28,6 +28,7 @@ Crosshair Pack
 
 => fonte pour titres (Adobe Stock) : AdobeStock_526775911.ai
 => fonte pour textes (Adobe Stock) : AdobeStock_440583506.ai
+=> fonte pour chiffres (Adobe Stock) : AdobeStock_257147901.ai
 
 -----
 
@@ -102,19 +103,19 @@ X - augmente de 1 à chaque pastille récoltée
 - ajout automatique de 12 pastilles toutes les 24 heures
 - (futur) éventuellement vente de packs de pastilles en in-App
 
-Infos (stockées) du joueur :
-- position (x,y) sur la map
-- score
-- niveau de vie
-- nombre de pastilles disponibles
-- ID du logiciel/ordinateur associé au joueur
+X Infos (stockées) du joueur :
+X - position (x,y) sur la map
+X - score
+X - niveau de vie
+X - nombre de pastilles disponibles
+X - ID du logiciel/ordinateur associé au joueur
 
-Infos (stockées) de la map :
-- position (x,y) et niveau (Z-index) des éléments disponibles (chemins + éléments par dessus)
-=> par défaut c'est une forêt
-=> on ne stocke que les éléments modifiés (les chemins et plus tard les PNJ)
-- la liste des pastilles disponibles sur la map (x,y)
-- la liste des joueurs disponibles sur la map (x,y, ID)
+X Infos (stockées) de la map :
+X - position (x,y) et niveau (Z-index) des éléments disponibles (chemins + éléments par dessus)
+X => par défaut c'est une forêt
+X => on ne stocke que les éléments modifiés (les chemins et plus tard les PNJ)
+X - la liste des pastilles disponibles sur la map (x,y)
+X - la liste des joueurs disponibles sur la map (x,y, ID)
 
 
 ----------
