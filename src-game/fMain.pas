@@ -29,7 +29,10 @@ uses
   uDMAboutBoxLogo,
   cStarsCount,
   cScore,
-  cLifeLevel;
+  cLifeLevel,
+  cYellowGameButton,
+  cYellowGameButtonPause,
+  cYellowGameButtonMusicOnOff;
 
 type
 {$SCOPEDENUMS ON}
@@ -59,6 +62,9 @@ type
     lDisplayScoreAndLevels: TLayout;
     lblScore: TcadScore;
     lblLifeLevel: TcadLifeLevel;
+    lRightButtons: TLayout;
+    cadYellowGameButtonPause1: TcadYellowGameButtonPause;
+    cadYellowGameButtonMusicOnOff1: TcadYellowGameButtonMusicOnOff;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -70,6 +76,8 @@ type
     procedure GamePageMouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Single);
     procedure TimerGamePadTimer(Sender: TObject);
+    procedure cadYellowGameButtonPause1Click(Sender: TObject);
+    procedure cadYellowGameButtonMusicOnOff1Click(Sender: TObject);
   private
     FActivePage: TPageType;
     FPreviousGamePadKey: Word;
@@ -120,6 +128,16 @@ end;
 procedure TfrmMain.btnQuitClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TfrmMain.cadYellowGameButtonMusicOnOff1Click(Sender: TObject);
+begin
+  // TODO : activer/désactiver le son de la musique d'ambiance
+end;
+
+procedure TfrmMain.cadYellowGameButtonPause1Click(Sender: TObject);
+begin
+  // TODO : mise en pause du jeu
 end;
 
 procedure TfrmMain.DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
@@ -302,10 +320,6 @@ begin
     (trunc(MapFrame1.height / CSporglooTileSize) div 2);
 
   lDisplayScoreAndLevels.height := CSporglooTileSize * 0.8;
-
-  GamePage.Cursor := crnone;
-  // TODO : masquage à conditionner dans les options de jeu (#69)
-  // crNone : absent de la liste de possibilités dans l'inspecteur d'objets
 end;
 
 procedure TfrmMain.InitializeHomePage;
