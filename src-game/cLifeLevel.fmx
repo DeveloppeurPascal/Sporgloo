@@ -38,7 +38,7 @@ object cadLifeLevel: TcadLifeLevel
     Size.Width = 50.000000000000000000
     Size.Height = 230.000000000000000000
     Size.PlatformDefault = False
-    ImageIndex = 3
+    ImageIndex = 5
     Images = dmSporglooImages.MapImages
   end
 end
