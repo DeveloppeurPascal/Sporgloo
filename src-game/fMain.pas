@@ -76,12 +76,6 @@ type
     FPreviousGamePadKeyChar: widechar;
     FPreviousGamePadTempo: int64;
     procedure SetActivePage(const Value: TPageType);
-    procedure SetLifeLevel(const Value: TSporglooAPINumber);
-    procedure SetScore(const Value: TSporglooAPINumber);
-    procedure SetStarsCount(const Value: TSporglooAPINumber);
-    function GetLifeLevel: TSporglooAPINumber;
-    function GetScore: TSporglooAPINumber;
-    function GetStarsCount: TSporglooAPINumber;
     property ActivePage: TPageType read FActivePage write SetActivePage;
     procedure ShowGameTitle(isVisible: boolean = true);
     procedure InitializeGamePage;
@@ -95,11 +89,6 @@ type
     procedure SubscribeToDisconnect;
     procedure SubscribeToPlayerLevelsUpdates;
   public
-    { Déclarations publiques }
-    property Score: TSporglooAPINumber read GetScore write SetScore;
-    property LifeLevel: TSporglooAPINumber read GetLifeLevel write SetLifeLevel;
-    property StarsCount: TSporglooAPINumber read GetStarsCount
-      write SetStarsCount;
   end;
 
 var
@@ -275,9 +264,9 @@ begin
   Viseur.Position.X := trunc(X / CSporglooTileSize) * CSporglooTileSize;
   Viseur.Position.Y := trunc(Y / CSporglooTileSize) * CSporglooTileSize;
 
-  if (StarsCount > 0) then
+  GameData := TGameData.Current;
+  if (GameData.player.StarsCount > 0) then
   begin
-    GameData := TGameData.Current;
     MapX := trunc(X / CSporglooTileSize) + GameData.ViewportX;
     MapY := trunc(Y / CSporglooTileSize) + GameData.ViewportY;
 
@@ -287,9 +276,9 @@ begin
       MapCell.PlayerID.IsEmpty then
     begin
       GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,
-        GameData.Session.player.PlayerID, MapX, MapY);
+        GameData.player.PlayerID, MapX, MapY);
 
-      StarsCount := StarsCount - 1;
+      GameData.player.StarsCount := GameData.player.StarsCount - 1;
     end;
   end;
 end;
@@ -299,21 +288,6 @@ X, Y: Single);
 begin
   Viseur.Position.X := trunc(X / CSporglooTileSize) * CSporglooTileSize;
   Viseur.Position.Y := trunc(Y / CSporglooTileSize) * CSporglooTileSize;
-end;
-
-function TfrmMain.GetLifeLevel: TSporglooAPINumber;
-begin
-  result := TGameData.Current.player.LifeLevel;
-end;
-
-function TfrmMain.GetScore: TSporglooAPINumber;
-begin
-  result := TGameData.Current.player.Score;
-end;
-
-function TfrmMain.GetStarsCount: TSporglooAPINumber;
-begin
-  result := TGameData.Current.player.StarsCount;
 end;
 
 procedure TfrmMain.InitializeGamePage;
@@ -426,21 +400,6 @@ begin
     HidePage(OptionsPage);
 
   FActivePage := Value;
-end;
-
-procedure TfrmMain.SetLifeLevel(const Value: TSporglooAPINumber);
-begin
-  TGameData.Current.player.LifeLevel := Value;
-end;
-
-procedure TfrmMain.SetScore(const Value: TSporglooAPINumber);
-begin
-  TGameData.Current.player.Score := Value;
-end;
-
-procedure TfrmMain.SetStarsCount(const Value: TSporglooAPINumber);
-begin
-  TGameData.Current.player.StarsCount := Value;
 end;
 
 procedure TfrmMain.ShowGameTitle(isVisible: boolean);
