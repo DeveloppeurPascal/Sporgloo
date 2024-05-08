@@ -10,11 +10,14 @@ uses
   Sporgloo.Database in '..\src-common-api\Sporgloo.Database.pas',
   Sporgloo.Server in 'Sporgloo.Server.pas',
   Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas',
-  Olf.Net.Socket.Messaging in '..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas',
+  Olf.Net.Socket.Messaging
+    in '..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas',
   Olf.RTL.Streams in '..\lib-externes\librairies\src\Olf.RTL.Streams.pas',
   Olf.RTL.Params in '..\lib-externes\librairies\src\Olf.RTL.Params.pas',
-  Olf.RTL.Maths.Conversions in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas',
-  uGameData in 'uGameData.pas';
+  Olf.RTL.Maths.Conversions
+    in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas',
+  uGameData in 'uGameData.pas',
+  Sporgloo.Messaging in 'Sporgloo.Messaging.pas';
 
 var
   GameServer: TSporglooServer;
@@ -25,7 +28,6 @@ begin
 {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown := true;
 {$ENDIF}
-
   try
     GameServer := TSporglooServer.Create('0.0.0.0', 8080);
     try
