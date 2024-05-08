@@ -46,6 +46,24 @@ type
   TPlayerMoveDeniedByTheServerMessage = class(TMessage)
   end;
 
+  /// <summary>
+  /// Sent when the score is changed. The UI must refresh score panel with the new value.
+  /// </summary>
+  TPlayerScoreUpdatedMessage = class(TMessage<TSporglooAPINumber>)
+  end;
+
+  /// <summary>
+  /// Sent when the stars count is changed. The UI must refresh stars count panel with the new value.
+  /// </summary>
+  TPlayerStarsCountUpdatedMessage = class(TMessage<TSporglooAPINumber>)
+  end;
+
+  /// <summary>
+  /// Sent when the life level is changed. The UI must refresh life level panel with the new value.
+  /// </summary>
+  TPlayerLifeLevelUpdatedMessage = class(TMessage<TSporglooAPINumber>)
+  end;
+
 implementation
 
 end.
