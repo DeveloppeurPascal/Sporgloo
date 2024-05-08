@@ -135,7 +135,10 @@ implementation
 
 uses
   Olf.RTL.Streams,
-  Sporgloo.API.Messages, Sporgloo.Consts;
+  Sporgloo.API.Messages,
+  Sporgloo.Consts,
+  Sporgloo.Messaging,
+  System.Messaging;
 
 constructor TSporglooPlayer.Create;
 begin
@@ -233,6 +236,13 @@ begin
   finally
     System.tmonitor.Exit(self);
   end;
+  if SporglooProjectType = TSporglooProjectType.Client then
+    tthread.ForceQueue(nil,
+      procedure
+      begin
+        TMessageManager.DefaultManager.SendMessage(nil,
+          TPlayerLifeLevelUpdatedMessage.Create(Value));
+      end);
 end;
 
 procedure TSporglooPlayer.SetPlayerID(const Value: string);
@@ -275,6 +285,13 @@ begin
   finally
     System.tmonitor.Exit(self);
   end;
+  if SporglooProjectType = TSporglooProjectType.Client then
+    tthread.ForceQueue(nil,
+      procedure
+      begin
+        TMessageManager.DefaultManager.SendMessage(nil,
+          TPlayerScoreUpdatedMessage.Create(Value));
+      end);
 end;
 
 procedure TSporglooPlayer.SetStarsCount(const Value: TSporglooAPINumber);
@@ -285,6 +302,13 @@ begin
   finally
     System.tmonitor.Exit(self);
   end;
+  if SporglooProjectType = TSporglooProjectType.Client then
+    tthread.ForceQueue(nil,
+      procedure
+      begin
+        TMessageManager.DefaultManager.SendMessage(nil,
+          TPlayerStarsCountUpdatedMessage.Create(Value));
+      end);
 end;
 
 procedure TSporglooPlayer.SetTargetX(const Value: TSporglooAPINumber);
