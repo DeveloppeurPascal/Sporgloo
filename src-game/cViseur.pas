@@ -3,13 +3,23 @@ unit cViseur;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  System.Skia, FMX.Skia, FMX.Effects;
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+  FMX.Types,
+  FMX.Graphics,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Dialogs,
+  FMX.StdCtrls,
+  Sporgloo.Images,
+  FMX.ImgList;
 
 type
   TcadViseur = class(TFrame)
-    SkSvg1: TSkSvg;
+    Glyph1: TGlyph;
   private
     { Déclarations privées }
   public
