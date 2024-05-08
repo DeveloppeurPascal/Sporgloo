@@ -4,11 +4,9 @@
 ==> écran des crédits du jeu : background du jeu, boite de dialogue avec titre, texte
 ==> écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
 ==> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
-==> écran du jeu (jeu en cours) : background du jeu, curseur souris ou contrôleur de jeu, boutons pause / play/pause musique, play/pause bruitages, score, niveau de vie, nombre de pastilles (= étoiles) dispos, actions du joueur, actions du personnage
 
 
-- gérer les déplacements du joueurs vers l'étoile la plus proche en path finding
-- ajouter score, étoiles, niveau de vie à l'écran
+- gérer les déplacements du joueurs vers l'étoile la plus proche en pathfinding
 
 
 - transformation du programme serveur en démon Linux (#29)
