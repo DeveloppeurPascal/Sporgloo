@@ -41,7 +41,8 @@ uses
   udmAdobeStock_257147901 in '..\_PRIVATE\fontes\AdobeStock_257147901\udmAdobeStock_257147901.pas' {dmAdobeStock_257147901: TDataModule},
   cStarsCount in 'cStarsCount.pas' {cadStarsCount: TFrame},
   cScore in 'cScore.pas' {cadScore: TFrame},
-  cLifeLevel in 'cLifeLevel.pas' {cadLifeLevel: TFrame};
+  cLifeLevel in 'cLifeLevel.pas' {cadLifeLevel: TFrame},
+  cYellowGameButton in 'cYellowGameButton.pas' {cadYellowGameButton: TFrame};
 
 {$R *.res}
 
