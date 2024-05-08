@@ -323,14 +323,16 @@ end;
 
 procedure TSporglooPlayer.TestAndChangeTarget(AX, AY: TSporglooAPINumber);
 var
-  DistanceTarget, DistanceStar: TSporglooAPINumber;
+  DistanceTarget, DistanceStar: extended;
 begin
-  DistanceStar := abs(PlayerX - AX) + abs(PlayerY - AY);
+  DistanceStar := sqrt(sqr(abs(PlayerX - AX)) + sqr(abs(PlayerY - AY)));
 
+  // TODO : calculer distance à la target uniquement après changement de la target, pas à chaque comparaison
   if (TargetX = PlayerX) and (Targety = PlayerY) then
     DistanceTarget := DistanceStar + 1
   else
-    DistanceTarget := abs(PlayerX - TargetX) + abs(PlayerY - Targety);
+    DistanceTarget := sqrt(sqr(abs(PlayerX - TargetX)) +
+      sqr(abs(PlayerY - Targety)));
 
   if DistanceStar < DistanceTarget then
   begin
