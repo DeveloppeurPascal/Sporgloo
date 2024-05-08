@@ -64,6 +64,12 @@ type
   TPlayerLifeLevelUpdatedMessage = class(TMessage<TSporglooAPINumber>)
   end;
 
+  /// <summary>
+  /// Sent by the TBackgroundMusic class when the music status change (Play or Pause/Stop)
+  /// </summary>
+  TBackgroundMusicStatusMessage = class(TMessage<boolean>)
+  end;
+
 implementation
 
 end.
