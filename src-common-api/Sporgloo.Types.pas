@@ -14,7 +14,7 @@ type
 
   TSporglooMapCell = class
   private const
-    CVersion = 1;
+    CVersion = 3;
 
   var
     FTileID: TSporglooAPIShort;
@@ -22,6 +22,14 @@ type
     FY: TSporglooAPINumber;
     FPlayerID: string;
     FHasChanged: boolean;
+    FLivesCount: TSporglooAPINumber;
+    FCoinsCount: TSporglooAPINumber;
+    FStarsCount: TSporglooAPINumber;
+    FPlayerImageID: integer;
+    procedure SetCoinsCount(const Value: TSporglooAPINumber);
+    procedure SetLivesCount(const Value: TSporglooAPINumber);
+    procedure SetPlayerImageID(const Value: integer);
+    procedure SetStarsCount(const Value: TSporglooAPINumber);
     procedure SetHasChanged(const Value: boolean);
     procedure SetTileID(const Value: TSporglooAPIShort);
     procedure SetX(const Value: TSporglooAPINumber);
@@ -34,6 +42,13 @@ type
     property Y: TSporglooAPINumber read FY write SetY;
     property TileID: TSporglooAPIShort read FTileID write SetTileID;
     property PlayerID: string read FPlayerID write SetPlayerID;
+    property PlayerImageID: integer read FPlayerImageID write SetPlayerImageID;
+    property CoinsCount: TSporglooAPINumber read FCoinsCount
+      write SetCoinsCount;
+    property LivesCount: TSporglooAPINumber read FLivesCount
+      write SetLivesCount;
+    property StarsCount: TSporglooAPINumber read FStarsCount
+      write SetStarsCount;
     constructor Create; overload;
     constructor Create(AX: TSporglooAPINumber; AY: TSporglooAPINumber;
       ATileID: TSporglooAPIShort; APlayerID: string); overload;
@@ -141,6 +156,22 @@ begin
       FPlayerID := ''
     else
       PlayerID := LoadStringFromStream(AStream);
+
+    if not((VersionNum >= 3) and (sizeof(FLivesCount) = AStream.
+      read(FLivesCount, sizeof(FLivesCount)))) then
+      FLivesCount := 0;
+
+    if not((VersionNum >= 3) and (sizeof(FCoinsCount) = AStream.
+      read(FCoinsCount, sizeof(FCoinsCount)))) then
+      FCoinsCount := 0;
+
+    if not((VersionNum >= 3) and (sizeof(FStarsCount) = AStream.
+      read(FStarsCount, sizeof(FStarsCount)))) then
+      FStarsCount := 0;
+
+    if not((VersionNum >= 3) and (sizeof(FPlayerImageID) = AStream.
+      read(FPlayerImageID, sizeof(FPlayerImageID)))) then
+      FPlayerImageID := -1;
   finally
     System.tmonitor.Exit(self);
   end;
@@ -154,6 +185,10 @@ begin
   FTileID := 0;
   FPlayerID := '';
   FHasChanged := false;
+  FLivesCount := 0;
+  FCoinsCount := 0;
+  FStarsCount := 0;
+  FPlayerImageID := -1;
 end;
 
 procedure TSporglooMapCell.SaveToStream(AStream: TStream);
@@ -168,8 +203,21 @@ begin
     AStream.Write(FX, sizeof(FX));
     AStream.Write(FY, sizeof(FY));
     SaveStringToStream(FPlayerID, AStream);
+    AStream.Write(FLivesCount, sizeof(FLivesCount));
+    AStream.Write(FCoinsCount, sizeof(FCoinsCount));
+    AStream.Write(FStarsCount, sizeof(FStarsCount));
+    AStream.Write(FPlayerImageID, sizeof(FPlayerImageID));
   finally
     System.tmonitor.Exit(self);
+  end;
+end;
+
+procedure TSporglooMapCell.SetCoinsCount(const Value: TSporglooAPINumber);
+begin
+  if (FCoinsCount <> Value) then
+  begin
+    FCoinsCount := Value;
+    HasChanged := true;
   end;
 end;
 
@@ -178,6 +226,15 @@ begin
   FHasChanged := Value;
   if SporglooProjectType = TSporglooProjectType.Serveur then
     ChangedMapCellList.enqueue(self);
+end;
+
+procedure TSporglooMapCell.SetLivesCount(const Value: TSporglooAPINumber);
+begin
+  if (FLivesCount <> Value) then
+  begin
+    FLivesCount := Value;
+    HasChanged := true;
+  end;
 end;
 
 procedure TSporglooMapCell.SetPlayerID(const Value: string);
@@ -209,6 +266,24 @@ begin
       end;
     end;
     FPlayerID := Value;
+    HasChanged := true;
+  end;
+end;
+
+procedure TSporglooMapCell.SetPlayerImageID(const Value: integer);
+begin
+  if (FPlayerImageID <> Value) then
+  begin
+    FPlayerImageID := Value;
+    HasChanged := true;
+  end;
+end;
+
+procedure TSporglooMapCell.SetStarsCount(const Value: TSporglooAPINumber);
+begin
+  if (FStarsCount <> Value) then
+  begin
+    FStarsCount := Value;
     HasChanged := true;
   end;
 end;
