@@ -12,7 +12,7 @@
 // ****************************************
 // File generator : Socket Messaging Code Generator (v1.1)
 // Website : https://smcodegenerator.olfsoftware.fr/ 
-// Generation date : 10/05/2024 17:35:29
+// Generation date : 10/05/2024 18:08:53
 // 
 // Don't do any change on this file. They will be erased by next generation !
 // ****************************************
@@ -291,9 +291,9 @@ type
   end;
 
   /// <summary>
-  /// Message ID 16: Coins change
+  /// Message ID 16: Coins count change
   /// </summary>
-  TCoinsChangeMessage = class(TOlfSMMessage)
+  TCoinsCountChangeMessage = class(TOlfSMMessage)
   private
     FCoinsCount: TSporglooAPINumber;
     procedure SetCoinsCount(const Value: TSporglooAPINumber);
@@ -756,8 +756,8 @@ type
       : TOlfSMReceivedMessageEvent<TClientLoginResponseMessage>;
     onReceiveClientRegisterResponseMessage
       : TOlfSMReceivedMessageEvent<TClientRegisterResponseMessage>;
-    onReceiveCoinsChangeMessage
-      : TOlfSMReceivedMessageEvent<TCoinsChangeMessage>;
+    onReceiveCoinsCountChangeMessage
+      : TOlfSMReceivedMessageEvent<TCoinsCountChangeMessage>;
     onReceiveCurrentPlayerKilledMessage
       : TOlfSMReceivedMessageEvent<TCurrentPlayerKilledMessage>;
     onReceiveErrorMessage
@@ -869,7 +869,7 @@ procedure RegisterMessagesReceivedByTheClient(Const Client: TOlfSMClient);
 begin
   Client.RegisterMessageToReceive(TClientLoginResponseMessage.Create);
   Client.RegisterMessageToReceive(TClientRegisterResponseMessage.Create);
-  Client.RegisterMessageToReceive(TCoinsChangeMessage.Create);
+  Client.RegisterMessageToReceive(TCoinsCountChangeMessage.Create);
   Client.RegisterMessageToReceive(TCurrentPlayerKilledMessage.Create);
   Client.RegisterMessageToReceive(TErrorMessage.Create);
   Client.RegisterMessageToReceive(THallOfFameMessage.Create);
@@ -1075,11 +1075,11 @@ end;
 procedure TSporglooSocketMessagesClient.onReceiveMessage16(const ASender: TOlfSMSrvConnectedClient;
 const AMessage: TOlfSMMessage);
 begin
-  if not(AMessage is TCoinsChangeMessage) then
+  if not(AMessage is TCoinsCountChangeMessage) then
     exit;
-  if not assigned(onReceiveCoinsChangeMessage) then
+  if not assigned(onReceiveCoinsCountChangeMessage) then
     exit;
-  onReceiveCoinsChangeMessage(ASender, AMessage as TCoinsChangeMessage);
+  onReceiveCoinsCountChangeMessage(ASender, AMessage as TCoinsCountChangeMessage);
 end;
 
 procedure TSporglooSocketMessagesClient.onReceiveMessage25(const ASender: TOlfSMSrvConnectedClient;
@@ -1572,34 +1572,34 @@ end;
 
 {$ENDREGION}
 
-{$REGION 'TCoinsChangeMessage' }
+{$REGION 'TCoinsCountChangeMessage' }
 
-constructor TCoinsChangeMessage.Create;
+constructor TCoinsCountChangeMessage.Create;
 begin
   inherited;
   MessageID := 16;
   FCoinsCount := 0;
 end;
 
-function TCoinsChangeMessage.GetNewInstance: TOlfSMMessage;
+function TCoinsCountChangeMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TCoinsChangeMessage.Create;
+  result := TCoinsCountChangeMessage.Create;
 end;
 
-procedure TCoinsChangeMessage.LoadFromStream(Stream: TStream);
+procedure TCoinsCountChangeMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FCoinsCount, sizeof(FCoinsCount)) <> sizeof(FCoinsCount)) then
     raise exception.Create('Can''t load "CoinsCount" value.');
 end;
 
-procedure TCoinsChangeMessage.SaveToStream(Stream: TStream);
+procedure TCoinsCountChangeMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FCoinsCount, sizeof(FCoinsCount));
 end;
 
-procedure TCoinsChangeMessage.SetCoinsCount(const Value: TSporglooAPINumber);
+procedure TCoinsCountChangeMessage.SetCoinsCount(const Value: TSporglooAPINumber);
 begin
   FCoinsCount := Value;
 end;
