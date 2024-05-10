@@ -6,17 +6,9 @@
 **********
 * API
 
-- messages pour le jeu : +/- d'étoiles
-- messages pour le jeu : +/- de coeurs
-- messages pour le jeu : +/- de coins (score)
-- messages pour le jeu : ajouter un refresh du player (coordonnées, ID de l'image, quotas)
-- messages pour le jeu : choix de l'image du player
-- messages pour le jeu : ajouter un ServerAuthKey en demande au REGISTER et un DeviceAuthKey en réponse avec le DeviceID
-- messages pour le jeu : ajouter un TokenID dans le LOGIN afin de s'assurer de la validité de l'appareil, ce qui implique de faire un LOGINv2 et garder l'ancien pour refuser les accès car programme obsolète
-- messages pour le jeu : ajouter un mot de passe pour le LOGIN2
 - messages pour le jeu : scores de tous les joueurs sous forme de liste paginée (pour le hall of fame)
-- messages pour le jeu : nouvelle partie, ce qui implique l'abandon du joueur actuel associé à un DeviceID et la mise en désactivé (hors map) de celui-ci
-- messages pour le jeu : modifier le message de mise à jour d'une cellule pour y ajouter l'ID de l'image du player actif dessus, le nombre d'étoiles, de coeurs et de coins à gagner dessus
+=> à modifier, un type "tableau de scores" ou liste doit être déclaré dans les types du jeu et dans les messages
+
 - messages pour backoffice : faire un LOGINBO
 - messages pour backoffice : faire un LOGOUTBO
 - messages pour backoffice : demande d'arrêt
