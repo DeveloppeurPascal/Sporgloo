@@ -42,7 +42,7 @@ type
   TSporglooErrorCode = (NoError = 0, WrongDeviceID = 1, WrongPlayerID = 2,
     WrongSessionID = 3, WrongAPIVersion = 4, UnknowPlayerID = 5,
     WrongDeviceForPlayerID = 6, UnknowSessionID = 7,
-    WrongDeviceOrPlayerForSessionID = 8, PlayerMoveDenied = 9);
+    WrongDeviceOrPlayerForSessionID = 8, PlayerMoveDenied = 9, WrongToken = 10);
 
 implementation
 
