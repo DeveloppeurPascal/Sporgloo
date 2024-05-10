@@ -12,7 +12,7 @@
 // ****************************************
 // File generator : Socket Messaging Code Generator (v1.1)
 // Website : https://smcodegenerator.olfsoftware.fr/ 
-// Generation date : 10/05/2024 16:17:58
+// Generation date : 10/05/2024 17:35:29
 // 
 // Don't do any change on this file. They will be erased by next generation !
 // ****************************************
@@ -410,9 +410,9 @@ type
   end;
 
   /// <summary>
-  /// Message ID 15: Lifes count change
+  /// Message ID 15: Lives count change
   /// </summary>
-  TLifesCountChangeMessage = class(TOlfSMMessage)
+  TLivesCountChangeMessage = class(TOlfSMMessage)
   private
     FLivesCount: TSporglooAPINumber;
     procedure SetLivesCount(const Value: TSporglooAPINumber);
@@ -486,7 +486,7 @@ type
     /// </summary>
     property StarsCount: TSporglooAPINumber read FStarsCount write SetStarsCount;
     /// <summary>
-    /// Number of lifes to collect
+    /// Number of lives to collect
     /// </summary>
     property LivesCount: TSporglooAPINumber read FLivesCount write SetLivesCount;
     /// <summary>
@@ -570,14 +570,14 @@ type
     FImageID: integer;
     FCoinsCount: TSporglooAPINumber;
     FStarsCount: TSporglooAPINumber;
-    FLifesCount: TSporglooAPINumber;
+    FLivesCount: TSporglooAPINumber;
     procedure SetPlayerID(const Value: string);
     procedure SetX(const Value: TSporglooAPINumber);
     procedure SetY(const Value: TSporglooAPINumber);
     procedure SetImageID(const Value: integer);
     procedure SetCoinsCount(const Value: TSporglooAPINumber);
     procedure SetStarsCount(const Value: TSporglooAPINumber);
-    procedure SetLifesCount(const Value: TSporglooAPINumber);
+    procedure SetLivesCount(const Value: TSporglooAPINumber);
   public
     /// <summary>
     /// Player unique identifier
@@ -604,9 +604,9 @@ type
     /// </summary>
     property StarsCount: TSporglooAPINumber read FStarsCount write SetStarsCount;
     /// <summary>
-    /// Lifes count
+    /// Lives count
     /// </summary>
-    property LifesCount: TSporglooAPINumber read FLifesCount write SetLifesCount;
+    property LivesCount: TSporglooAPINumber read FLivesCount write SetLivesCount;
     constructor Create; override;
     procedure LoadFromStream(Stream: TStream); override;
     procedure SaveToStream(Stream: TStream); override;
@@ -764,8 +764,8 @@ type
       : TOlfSMReceivedMessageEvent<TErrorMessage>;
     onReceiveHallOfFameMessage
       : TOlfSMReceivedMessageEvent<THallOfFameMessage>;
-    onReceiveLifesCountChangeMessage
-      : TOlfSMReceivedMessageEvent<TLifesCountChangeMessage>;
+    onReceiveLivesCountChangeMessage
+      : TOlfSMReceivedMessageEvent<TLivesCountChangeMessage>;
     onReceiveLogoffMessage
       : TOlfSMReceivedMessageEvent<TLogoffMessage>;
     onReceiveMapCellInfoMessage
@@ -873,7 +873,7 @@ begin
   Client.RegisterMessageToReceive(TCurrentPlayerKilledMessage.Create);
   Client.RegisterMessageToReceive(TErrorMessage.Create);
   Client.RegisterMessageToReceive(THallOfFameMessage.Create);
-  Client.RegisterMessageToReceive(TLifesCountChangeMessage.Create);
+  Client.RegisterMessageToReceive(TLivesCountChangeMessage.Create);
   Client.RegisterMessageToReceive(TLogoffMessage.Create);
   Client.RegisterMessageToReceive(TMapCellInfoMessage.Create);
   Client.RegisterMessageToReceive(TPlayerInfosMessage.Create);
@@ -1115,11 +1115,11 @@ end;
 procedure TSporglooSocketMessagesClient.onReceiveMessage15(const ASender: TOlfSMSrvConnectedClient;
 const AMessage: TOlfSMMessage);
 begin
-  if not(AMessage is TLifesCountChangeMessage) then
+  if not(AMessage is TLivesCountChangeMessage) then
     exit;
-  if not assigned(onReceiveLifesCountChangeMessage) then
+  if not assigned(onReceiveLivesCountChangeMessage) then
     exit;
-  onReceiveLifesCountChangeMessage(ASender, AMessage as TLifesCountChangeMessage);
+  onReceiveLivesCountChangeMessage(ASender, AMessage as TLivesCountChangeMessage);
 end;
 
 procedure TSporglooSocketMessagesClient.onReceiveMessage13(const ASender: TOlfSMSrvConnectedClient;
@@ -1773,34 +1773,34 @@ end;
 
 {$ENDREGION}
 
-{$REGION 'TLifesCountChangeMessage' }
+{$REGION 'TLivesCountChangeMessage' }
 
-constructor TLifesCountChangeMessage.Create;
+constructor TLivesCountChangeMessage.Create;
 begin
   inherited;
   MessageID := 15;
   FLivesCount := 0;
 end;
 
-function TLifesCountChangeMessage.GetNewInstance: TOlfSMMessage;
+function TLivesCountChangeMessage.GetNewInstance: TOlfSMMessage;
 begin
-  result := TLifesCountChangeMessage.Create;
+  result := TLivesCountChangeMessage.Create;
 end;
 
-procedure TLifesCountChangeMessage.LoadFromStream(Stream: TStream);
+procedure TLivesCountChangeMessage.LoadFromStream(Stream: TStream);
 begin
   inherited;
   if (Stream.read(FLivesCount, sizeof(FLivesCount)) <> sizeof(FLivesCount)) then
     raise exception.Create('Can''t load "LivesCount" value.');
 end;
 
-procedure TLifesCountChangeMessage.SaveToStream(Stream: TStream);
+procedure TLivesCountChangeMessage.SaveToStream(Stream: TStream);
 begin
   inherited;
   Stream.Write(FLivesCount, sizeof(FLivesCount));
 end;
 
-procedure TLifesCountChangeMessage.SetLivesCount(const Value: TSporglooAPINumber);
+procedure TLivesCountChangeMessage.SetLivesCount(const Value: TSporglooAPINumber);
 begin
   FLivesCount := Value;
 end;
@@ -2041,7 +2041,7 @@ begin
   FImageID := 0;
   FCoinsCount := 0;
   FStarsCount := 0;
-  FLifesCount := 0;
+  FLivesCount := 0;
 end;
 
 function TPlayerInfosMessage.GetNewInstance: TOlfSMMessage;
@@ -2063,8 +2063,8 @@ begin
     raise exception.Create('Can''t load "CoinsCount" value.');
   if (Stream.read(FStarsCount, sizeof(FStarsCount)) <> sizeof(FStarsCount)) then
     raise exception.Create('Can''t load "StarsCount" value.');
-  if (Stream.read(FLifesCount, sizeof(FLifesCount)) <> sizeof(FLifesCount)) then
-    raise exception.Create('Can''t load "LifesCount" value.');
+  if (Stream.read(FLivesCount, sizeof(FLivesCount)) <> sizeof(FLivesCount)) then
+    raise exception.Create('Can''t load "LivesCount" value.');
 end;
 
 procedure TPlayerInfosMessage.SaveToStream(Stream: TStream);
@@ -2076,7 +2076,7 @@ begin
   Stream.Write(FImageID, sizeof(FImageID));
   Stream.Write(FCoinsCount, sizeof(FCoinsCount));
   Stream.Write(FStarsCount, sizeof(FStarsCount));
-  Stream.Write(FLifesCount, sizeof(FLifesCount));
+  Stream.Write(FLivesCount, sizeof(FLivesCount));
 end;
 
 procedure TPlayerInfosMessage.SetPlayerID(const Value: string);
@@ -2109,9 +2109,9 @@ begin
   FStarsCount := Value;
 end;
 
-procedure TPlayerInfosMessage.SetLifesCount(const Value: TSporglooAPINumber);
+procedure TPlayerInfosMessage.SetLivesCount(const Value: TSporglooAPINumber);
 begin
-  FLifesCount := Value;
+  FLivesCount := Value;
 end;
 
 {$ENDREGION}
