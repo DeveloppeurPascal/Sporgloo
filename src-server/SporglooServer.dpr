@@ -16,7 +16,9 @@ uses
   Olf.RTL.Maths.Conversions in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas',
   uGameData in 'uGameData.pas',
   Sporgloo.Messaging in 'Sporgloo.Messaging.pas',
-  Olf.RTL.CryptDecrypt in '..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas';
+  Olf.RTL.CryptDecrypt in '..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas',
+  Sporgloo.Utils in '..\src-common-api\Sporgloo.Utils.pas',
+  Olf.RTL.GenRandomID in '..\lib-externes\librairies\src\Olf.RTL.GenRandomID.pas';
 
 var
   GameServer: TSporglooServer;
