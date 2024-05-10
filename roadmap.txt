@@ -36,14 +36,6 @@
 - modifier les cellules de la carte et le stockage, ajouter nb coeurs, coins, étoiles, l'id d'image du joueur
 - modifier les players et leur stockage, ajouter le numéro de session active, le timestamp d'activité, l'ID d'image à utiliser, ...
 
-- ajouter une XOR key pour le stockage des paramètres du jeu en DEBUG
-- ajouter un mot de passe à utiliser pour les LOGIN/REGISTER clients (en DEBUG et RELEASE) - string "password"
-- ajouter un chiffrement XOR pour les LOGIN/REGISTER clients (en DEBUG et RELEASE) - array "keys"
-- ajouter un mot de passe à utiliser pour les backoffices (en DEBUG et RELEASE) - string "password"
-- ajouter un chiffrement XOR pour les LOGIN backoffices (en DEBUG et RELEASE) - array "keys"
-- ajouter un mot de passe à utiliser pour les viewers (en DEBUG et RELEASE) - string "password"
-- ajouter un chiffrement XOR pour les LOGIN viewers (en DEBUG et RELEASE) - array "keys"
-
 
 **********
 * Dans le jeu
