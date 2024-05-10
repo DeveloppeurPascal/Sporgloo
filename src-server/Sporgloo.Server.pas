@@ -242,8 +242,45 @@ end;
 procedure TSporglooServer.onKillCurrentPlayer(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
 const msg: TKillCurrentPlayerMessage);
+var
+  Session: TSporglooSession;
 begin
-  // TODO : à compléter
+{$IFDEF DEBUG}
+  // writeln('onKillCurrentPlayer');
+{$ENDIF}
+  if msg.SessionID.IsEmpty then
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongSessionID,
+      'Session ID needed.');
+
+  if assigned(AFromGame.tagobject) and (AFromGame.tagobject is TSporglooSession)
+    and (msg.SessionID = (AFromGame.tagobject as TSporglooSession).SessionID)
+  then
+    Session := AFromGame.tagobject as TSporglooSession
+  else if SporglooSessions.TryGetValue(msg.SessionID, Session) then
+    AFromGame.tagobject := Session
+  else
+    SendErrorMessage(AFromGame, TSporglooErrorCode.UnknowSessionID,
+      'Unknow Session !');
+
+  if msg.PlayerID.IsEmpty then
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongPlayerID,
+      'Player ID needed.');
+
+  if (msg.PlayerID <> Session.Player.PlayerID) then
+    SendErrorMessage(AFromGame,
+      TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
+      'Wrong player for this session.');
+
+  // plus de lien entre le joueur en cours et l'appareil du joueur
+  Session.Player.DeviceID := '';
+
+  // annulation de la session
+  AFromGame.tagobject := nil;
+  Session.SocketClient := nil;
+  Session.Free;
+
+  // Confirmation de la suppression du lien entre le player et son joueur
+  SendCurrentPlayerKilledResponse(AFromGame);
 end;
 
 procedure TSporglooServer.onLogoff(const AFromGame
@@ -603,8 +640,29 @@ end;
 procedure TSporglooServer.onPlayerImageChanged(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
 const msg: TPlayerImageChangedMessage);
+var
+  Session: TSporglooSession;
 begin
-  // TODO : à compléter
+{$IFDEF DEBUG}
+  // writeln('onPlayerImageChanged');
+{$ENDIF}
+  if msg.SessionID.IsEmpty then
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongSessionID,
+      'Session ID needed.');
+
+  if assigned(AFromGame.tagobject) and (AFromGame.tagobject is TSporglooSession)
+    and (msg.SessionID = (AFromGame.tagobject as TSporglooSession).SessionID)
+  then
+    Session := AFromGame.tagobject as TSporglooSession
+  else if SporglooSessions.TryGetValue(msg.SessionID, Session) then
+    AFromGame.tagobject := Session
+  else
+    SendErrorMessage(AFromGame, TSporglooErrorCode.UnknowSessionID,
+      'Unknow Session !');
+
+  Session.Player.ImageID := msg.ImageID;
+  SporglooMap.GetCellAt(Session.Player.PlayerX, Session.Player.PlayerY)
+    .PlayerImageID := msg.ImageID;
 end;
 
 procedure TSporglooServer.SaveGameData;
