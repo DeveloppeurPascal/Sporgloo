@@ -322,8 +322,8 @@ begin
 
   lDisplayScoreAndLevels.height := CSporglooTileSize * 0.8;
 
-  lblScore.Score := TGameData.Current.player.Score;
-  lblLifeLevel.LifeLevel := TGameData.Current.player.LifeLevel;
+  lblScore.Score := TGameData.Current.player.CoinsCount;
+  lblLifeLevel.LifeLevel := TGameData.Current.player.LivesCount;
   lblStarsCount.StarsCount := TGameData.Current.player.StarsCount;
 end;
 
@@ -480,11 +480,12 @@ end;
 
 procedure TfrmMain.SubscribeToPlayerLevelsUpdates;
 begin
-  TMessageManager.DefaultManager.SubscribeToMessage(TPlayerScoreUpdatedMessage,
+  TMessageManager.DefaultManager.SubscribeToMessage
+    (TPlayerCoinsCountUpdatedMessage,
     procedure(const Sender: TObject; const M: TMessage)
     begin
-      if M is TPlayerScoreUpdatedMessage then
-        lblScore.Score := (M as TPlayerScoreUpdatedMessage).Value;
+      if M is TPlayerCoinsCountUpdatedMessage then
+        lblScore.Score := (M as TPlayerCoinsCountUpdatedMessage).Value;
     end);
   TMessageManager.DefaultManager.SubscribeToMessage
     (TPlayerStarsCountUpdatedMessage,
@@ -495,11 +496,11 @@ begin
           (M as TPlayerStarsCountUpdatedMessage).Value;
     end);
   TMessageManager.DefaultManager.SubscribeToMessage
-    (TPlayerLifeLevelUpdatedMessage,
+    (TPlayerLivesCountUpdatedMessage,
     procedure(const Sender: TObject; const M: TMessage)
     begin
-      if M is TPlayerLifeLevelUpdatedMessage then
-        lblLifeLevel.LifeLevel := (M as TPlayerLifeLevelUpdatedMessage).Value;
+      if M is TPlayerLivesCountUpdatedMessage then
+        lblLifeLevel.LifeLevel := (M as TPlayerLivesCountUpdatedMessage).Value;
     end);
 end;
 
