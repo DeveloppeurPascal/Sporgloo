@@ -142,6 +142,7 @@ implementation
 { TSporglooPlayer }
 
 uses
+  System.SysUtils,
   Olf.RTL.Streams,
   Sporgloo.API.Messages,
   Sporgloo.Consts,
@@ -253,6 +254,8 @@ begin
   System.tmonitor.Enter(self);
   try
     FDeviceID := Value;
+    if Value.IsEmpty then
+      FDeviceAuthKey := '';
   finally
     System.tmonitor.Exit(self);
   end;
