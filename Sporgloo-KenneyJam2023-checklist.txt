@@ -1,16 +1,10 @@
-=> faire un TFrame pour un champ de saisie
-=> coder les écrans du jeu :
-==> écran des scores (hall of fame) : background du jeu, boite de dialogue avec titre, liste des scores à l'intérieur (plus tard aussi les pseudos après modération)
-==> écran des crédits du jeu : background du jeu, boite de dialogue avec titre, texte
-==> écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
-==> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
+=> écran des scores (hall of fame) : background du jeu, boite de dialogue avec titre, liste des scores à l'intérieur (plus tard aussi les pseudos après modération)
+=> écran des crédits du jeu : background du jeu, boite de dialogue avec titre, texte
+=> écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
+=> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
 
 
 - gérer les déplacements du joueurs vers l'étoile la plus proche en pathfinding
-
-
-- transformation du programme serveur en démon Linux (#29)
-- tests du programme serveur sur un serveur sous Linux Debian
 
 
 - changer l'UI, ajouter boites de dialogue, actions entre joueurs et revoir le fonctionnement global du jeu
