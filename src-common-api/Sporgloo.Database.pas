@@ -14,7 +14,7 @@ type
     CVersion = 2;
 
   var
-    FLifesCount: TSporglooAPINumber;
+    FLivesCount: TSporglooAPINumber;
     FCoinsCount: TSporglooAPINumber;
     FPlayerID: string;
     FPlayerX: TSporglooAPINumber;
@@ -28,7 +28,7 @@ type
     procedure SetTargetX(const Value: TSporglooAPINumber);
     procedure SetTargety(const Value: TSporglooAPINumber);
     procedure SetDeviceID(const Value: string);
-    procedure SetLifesCount(const Value: TSporglooAPINumber);
+    procedure SetLivesCount(const Value: TSporglooAPINumber);
     procedure SetPlayerID(const Value: string);
     procedure SetPlayerX(const Value: TSporglooAPINumber);
     procedure SetPlayerY(const Value: TSporglooAPINumber);
@@ -46,8 +46,8 @@ type
       write SetCoinsCount;
     property StarsCount: TSporglooAPINumber read FStarsCount
       write SetStarsCount;
-    property LifesCount: TSporglooAPINumber read FLifesCount
-      write SetLifesCount;
+    property LivesCount: TSporglooAPINumber read FLivesCount
+      write SetLivesCount;
     property ImageID: integer read FImageID write SetImageID;
 
     procedure TestAndChangeTarget(AX, AY: TSporglooAPINumber);
@@ -148,7 +148,7 @@ uses
 constructor TSporglooPlayer.Create;
 begin
   inherited;
-  FLifesCount := 0;
+  FLivesCount := 0;
   FCoinsCount := 0;
   FPlayerID := '';
   FPlayerX := 0;
@@ -169,9 +169,9 @@ begin
     if (sizeof(VersionNum) <> AStream.read(VersionNum, sizeof(VersionNum))) then
       VersionNum := -1; // pas d'info de version, fichier de sauvegarde foireux
 
-    if not((VersionNum >= 0) and (sizeof(FLifesCount) = AStream.
-      read(FLifesCount, sizeof(FLifesCount)))) then
-      FLifesCount := 0;
+    if not((VersionNum >= 0) and (sizeof(FLivesCount) = AStream.
+      read(FLivesCount, sizeof(FLivesCount)))) then
+      FLivesCount := 0;
 
     if not((VersionNum >= 0) and (sizeof(FCoinsCount) = AStream.
       read(FCoinsCount, sizeof(FCoinsCount)))) then
@@ -215,7 +215,7 @@ begin
   try
     VersionNum := CVersion;
     AStream.Write(VersionNum, sizeof(VersionNum));
-    AStream.Write(FLifesCount, sizeof(FLifesCount));
+    AStream.Write(FLivesCount, sizeof(FLivesCount));
     AStream.Write(FCoinsCount, sizeof(FCoinsCount));
     SaveStringToStream(FPlayerID, AStream);
     AStream.Write(FPlayerX, sizeof(FPlayerX));
@@ -248,11 +248,11 @@ begin
   end;
 end;
 
-procedure TSporglooPlayer.SetLifesCount(const Value: TSporglooAPINumber);
+procedure TSporglooPlayer.SetLivesCount(const Value: TSporglooAPINumber);
 begin
   System.tmonitor.Enter(self);
   try
-    FLifesCount := Value;
+    FLivesCount := Value;
   finally
     System.tmonitor.Exit(self);
   end;
@@ -261,7 +261,7 @@ begin
       procedure
       begin
         TMessageManager.DefaultManager.SendMessage(nil,
-          TPlayerLifesCountUpdatedMessage.Create(Value));
+          TPlayerLivesCountUpdatedMessage.Create(Value));
       end);
 end;
 
