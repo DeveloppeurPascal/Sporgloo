@@ -1,0 +1,98 @@
+********************************************
+* Feuille de route Sporgloo au 10 mai 2024 *
+********************************************
+
+
+**********
+* API
+
+- messages pour le jeu : +/- d'étoiles
+- messages pour le jeu : +/- de coeurs
+- messages pour le jeu : +/- de coins (score)
+- messages pour le jeu : ajouter un refresh du player (coordonnées, ID de l'image, quotas)
+- messages pour le jeu : choix de l'image du player
+- messages pour le jeu : ajouter un ServerAuthKey en demande au REGISTER et un DeviceAuthKey en réponse avec le DeviceID
+- messages pour le jeu : ajouter un TokenID dans le LOGIN afin de s'assurer de la validité de l'appareil, ce qui implique de faire un LOGINv2 et garder l'ancien pour refuser les accès car programme obsolète
+- messages pour le jeu : ajouter un mot de passe pour le LOGIN2
+- messages pour le jeu : scores de tous les joueurs sous forme de liste paginée (pour le hall of fame)
+- messages pour le jeu : nouvelle partie, ce qui implique l'abandon du joueur actuel associé à un DeviceID et la mise en désactivé (hors map) de celui-ci
+- messages pour le jeu : modifier le message de mise à jour d'une cellule pour y ajouter l'ID de l'image du player actif dessus, le nombre d'étoiles, de coeurs et de coins à gagner dessus
+- messages pour backoffice : faire un LOGINBO
+- messages pour backoffice : faire un LOGOUTBO
+- messages pour backoffice : demande d'arrêt
+- messages pour backoffice : demande de copie de la base de données
+- messages pour backoffice : PING
+- messages pour backoffice : statistiques
+- messages pour le viewer : faire un LOGINVW
+- messages pour le viewer : faire un LOGOUTVW
+- messages pour le viewer : pouvoir récupérer la base de données
+- messages pour le viewer : pouvoir se référencer au niveau de cellules pour obtenir le refresh de leur affichage (même système de viewport que pour les jeux)
+
+
+**********
+* Base de données
+
+- modifier les données de device pour prendre en charge les nouveaux tokens d'identification
+- modifier les cellules de la carte et le stockage, ajouter nb coeurs, coins, étoiles, l'id d'image du joueur
+- modifier les players et leur stockage, ajouter le numéro de session active, le timestamp d'activité, l'ID d'image à utiliser, ...
+
+- ajouter une XOR key pour le stockage des paramètres du jeu en DEBUG
+- ajouter un mot de passe à utiliser pour les LOGIN/REGISTER clients (en DEBUG et RELEASE) - string "password"
+- ajouter un chiffrement XOR pour les LOGIN/REGISTER clients (en DEBUG et RELEASE) - array "keys"
+- ajouter un mot de passe à utiliser pour les backoffices (en DEBUG et RELEASE) - string "password"
+- ajouter un chiffrement XOR pour les LOGIN backoffices (en DEBUG et RELEASE) - array "keys"
+- ajouter un mot de passe à utiliser pour les viewers (en DEBUG et RELEASE) - string "password"
+- ajouter un chiffrement XOR pour les LOGIN viewers (en DEBUG et RELEASE) - array "keys"
+
+
+**********
+* Dans le jeu
+
+- signer les paramètres du jeu en DEBUG aussi, histoire d'éviter les bidouilles et avoir le même fonctionnement partout
+- implémenter les nouveaux messages REGISTER et LOGIN (avec ajout des nouveaux champs et chiffrement d'une clé contenant le mot de passe de connexion)
+- générer une nouvelle version (en DEBUG) des programmes
+
+
+**********
+* Dans le serveur
+
+- déplacer la gestion des étoiles du client vers le serveur (à part le -1 quand on en pose une)
+- prendre en charge le renouvellement du nombre d'étoiles côté serveur (ajout d'une par heure ou à l'ouverture de session)
+- prendre en charge le calcul du score selon les actions des joueurs
+- prendre en charge la baisse du niveau de vie des joueurs
+- prendre en charge la mise en place de coffres forts à la disparition de joueurs de la carte (inactivité de plus de 7 jours hors session, suppression d'un joueur à la demande de création d'une nouvelle partie)
+- changer le fonctionnement de la mise à jour des cellules avec gestion d'une liste d'abonnés pour ne pas l'envoyer à tous les appareils connectés inutilement
+- implémenter le mode "démon Linux" sur le serveur
+- ajouter une rotation des backups afin d'éviter des pertes en cas de corruption en cours de route
+
+
+**********
+* Dans le jeu
+
+- passer uConfig en mode jeu normal (ne pas réinitialiser DeviceID/PlayerId à chaque lancement du programme)
+- choisir une image pour les coffres forts
+- remplacer les listes de bitmaps par des listes en SVG
+- sortir les images du personnage du joueur dans une liste d'images séparée (pour gérer le choix au démarrage d'une partie)
+- implémenter les modifications liées aux changements de l'API
+- implémenter les changements d'affichages au niveau d'une cellule de la carte (coffres forts, ...)
+- implémenter les changements au niveau du déplacement du joueur (détection de cases autorisées ou pas)
+- implémenter les changements au niveau du placement d'une étoile (détection de cases autorisées ou pas)
+- implémenter le lancement d'une nouvelle partie
+- modifier le lancement d'une partie existante
+- implémenter les écrans manquants (crédits du jeu, options, hall of fame, jouer, nouvelle partie)
+- implémenter le changement de boutons d'interface au clavier ou des raccourcis en mode jeu pour PAUSE / MUSIC / EFFETS
+- choisir des effets sonores à jouer sur certaines actions
+- implémenter l'émission des effets sonores
+- ajouter une animation au ramassage de bonus (étoiles, coeurs, coins, coffres)
+- ajouter une animation aux changements de valeurs sur les nombres affichés à l'écran (défilement de la valeur affichée jusqu'à la valeur actuelle)
+
+
+**********
+* Dans le backoffice
+
+
+
+**********
+* Dans le viewer
+
+
