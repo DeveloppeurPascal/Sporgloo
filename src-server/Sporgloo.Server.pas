@@ -19,23 +19,41 @@ type
     SporglooMap: TSporglooMap;
     SporglooSessions: TSporglooSessionsList;
 
-    procedure onClientRegister(Const AFromGame
+    procedure DeprecatedOnClientRegister(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const msg: TClientRegisterMessage);
-    procedure onClientLogin(Const AFromGame
+      Const msg: TClientRegisterDeprecatedMessage);
+    procedure DeprecatedOnClientLogin(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const msg: TClientLoginMessage);
-    procedure onMapRefresh(Const AFromGame
+      Const msg: TClientLoginDeprecatedMessage);
+    procedure onAskForMapRefresh(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
       Const msg: TAskForMapRefreshMessage);
     procedure onPlayerMove(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
       Const msg: TPlayerMoveMessage);
-    procedure onPlayerPutAStar(Const AFromGame
+    procedure onPlayerAddAStarOnTheMap(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
       Const msg: TPlayerAddAStarOnTheMapMessage);
     procedure onLogoff(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient; Const msg: TLogoffMessage);
+    procedure onAskForPlayerInfos(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TAskForPlayerInfosMessage);
+    procedure onClientLogin(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TClientLoginMessage);
+    procedure onClientRegister(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TClientRegisterMessage);
+    procedure onGetHallOfFameScores(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TGetHallOfFameScoresMessage);
+    procedure onKillCurrentPlayer(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TKillCurrentPlayerMessage);
+    procedure onPlayerImageChanged(Const AFromGame
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TPlayerImageChangedMessage);
 
     procedure onErrorMessage(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient; Const msg: TErrorMessage);
@@ -76,13 +94,19 @@ uses
 constructor TSporglooServer.Create(AIP: string; APort: Word);
 begin
   inherited;
-  onReceiveClientRegisterMessage := onClientRegister;
+  onReceiveAskForMapRefreshMessage := onAskForMapRefresh;
+  onReceiveAskForPlayerInfosMessage := onAskForPlayerInfos;
+  onReceiveClientLoginDeprecatedMessage := DeprecatedOnClientLogin;
   onReceiveClientLoginMessage := onClientLogin;
-  onReceiveAskForMapRefreshMessage := onMapRefresh;
-  onReceivePlayerMoveMessage := onPlayerMove;
-  onReceivePlayerAddAStarOnTheMapMessage := onPlayerPutAStar;
+  onReceiveClientRegisterDeprecatedMessage := DeprecatedOnClientRegister;
+  onReceiveClientRegisterMessage := onClientRegister;
   onReceiveErrorMessage := onErrorMessage;
+  onReceiveGetHallOfFameScoresMessage := onGetHallOfFameScores;
+  onReceiveKillCurrentPlayerMessage := onKillCurrentPlayer;
   onReceiveLogoffMessage := onLogoff;
+  onReceivePlayerAddAStarOnTheMapMessage := onPlayerAddAStarOnTheMap;
+  onReceivePlayerImageChangedMessage := onPlayerImageChanged;
+  onReceivePlayerMoveMessage := onPlayerMove;
 
   SporglooPlayers := TSporglooPlayersList.Create([doownsvalues]);
   SporglooMap := TSporglooMap.Create;
@@ -167,6 +191,116 @@ begin
       fs.Free;
     end;
   end;
+end;
+
+procedure TSporglooServer.DeprecatedOnClientLogin(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TClientLoginDeprecatedMessage);
+begin
+end;
+
+procedure TSporglooServer.DeprecatedOnClientRegister(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TClientRegisterDeprecatedMessage);
+begin
+end;
+
+procedure TSporglooServer.onErrorMessage(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient; const msg: TErrorMessage);
+begin
+{$IFDEF DEBUG}
+  // writeln('onErrorMessage n°' + msg.ErrorCode.tostring +  ' received from a client.');
+{$ENDIF}
+  // TODO : manage the received error
+end;
+
+procedure TSporglooServer.onGetHallOfFameScores(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TGetHallOfFameScoresMessage);
+begin
+
+end;
+
+procedure TSporglooServer.onKillCurrentPlayer(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TKillCurrentPlayerMessage);
+begin
+
+end;
+
+procedure TSporglooServer.onLogoff(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient; const msg: TLogoffMessage);
+var
+  SessionID: string;
+{$IFDEF DEBUG}
+  nb: integer;
+{$ENDIF}
+begin
+  if assigned(AFromGame.tagobject) and (AFromGame.tagobject is TSporglooSession)
+  then
+  begin
+{$IFDEF DEBUG}
+    // writeln('onLogOff');
+    // writeln('nb sessions = ', SporglooSessions.count);
+    nb := 0;
+    ForEachConnectedClient(
+      procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
+      begin
+        AtomicIncrement(nb);
+      end);
+    // writeln('nb = ', nb);
+{$ENDIF}
+    tthread.CurrentThread.Terminate;
+    SessionID := (AFromGame.tagobject as TSporglooSession).SessionID;
+    (AFromGame.tagobject as TSporglooSession).SocketClient := nil;
+    AFromGame.tagobject := nil;
+    System.Tmonitor.enter(SporglooSessions);
+    try
+      SporglooSessions.Remove(SessionID);
+    finally
+      System.Tmonitor.Exit(SporglooSessions);
+    end;
+{$IFDEF DEBUG}
+    // writeln('nb sessions = ', SporglooSessions.count);
+    nb := 0;
+    ForEachConnectedClient(
+      procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
+      begin
+        AtomicIncrement(nb);
+      end);
+    // writeln('nb = ', nb);
+{$ENDIF}
+  end;
+end;
+
+procedure TSporglooServer.onAskForMapRefresh(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TAskForMapRefreshMessage);
+var
+  X, Y: TSporglooAPINumber;
+begin
+{$IFDEF DEBUG}
+  // writeln('onMapRefresh');
+{$ENDIF}
+  if msg.ColNumber < 1 then
+    Exit;
+  if msg.RowNumber < 1 then
+    Exit;
+
+  // TODO : envoyer un message avec toutes les données plutôt que X messages pour chaque case
+  for X := msg.X to msg.X + msg.ColNumber - 1 do
+    for Y := msg.Y to msg.Y + msg.RowNumber - 1 do
+    begin
+      SendMapCell(AFromGame, SporglooMap.GetCellAt(X, Y));
+      // TODO : référencer la session au niveau de la liste des sessions à mettre à jour en cas de changement de chaque cellule
+    end;
+end;
+
+procedure TSporglooServer.onAskForPlayerInfos(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TAskForPlayerInfosMessage);
+begin
+
 end;
 
 procedure TSporglooServer.onClientLogin(const AFromGame
@@ -285,83 +419,6 @@ begin
       'A player is already registered for this device.');
 end;
 
-procedure TSporglooServer.onErrorMessage(const AFromGame
-  : TOlfSocketMessagingServerConnectedClient; const msg: TErrorMessage);
-begin
-{$IFDEF DEBUG}
-  // writeln('onErrorMessage n°' + msg.ErrorCode.tostring +  ' received from a client.');
-{$ENDIF}
-  // TODO : manage the received error
-end;
-
-procedure TSporglooServer.onLogoff(const AFromGame
-  : TOlfSocketMessagingServerConnectedClient; const msg: TLogoffMessage);
-var
-  SessionID: string;
-{$IFDEF DEBUG}
-  nb: integer;
-{$ENDIF}
-begin
-  if assigned(AFromGame.tagobject) and (AFromGame.tagobject is TSporglooSession)
-  then
-  begin
-{$IFDEF DEBUG}
-    // writeln('onLogOff');
-    // writeln('nb sessions = ', SporglooSessions.count);
-    nb := 0;
-    ForEachConnectedClient(
-      procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
-      begin
-        AtomicIncrement(nb);
-      end);
-    // writeln('nb = ', nb);
-{$ENDIF}
-    tthread.CurrentThread.Terminate;
-    SessionID := (AFromGame.tagobject as TSporglooSession).SessionID;
-    (AFromGame.tagobject as TSporglooSession).SocketClient := nil;
-    AFromGame.tagobject := nil;
-    System.Tmonitor.enter(SporglooSessions);
-    try
-      SporglooSessions.Remove(SessionID);
-    finally
-      System.Tmonitor.Exit(SporglooSessions);
-    end;
-{$IFDEF DEBUG}
-    // writeln('nb sessions = ', SporglooSessions.count);
-    nb := 0;
-    ForEachConnectedClient(
-      procedure(Const AConnectedClient: TOlfSMSrvConnectedClient)
-      begin
-        AtomicIncrement(nb);
-      end);
-    // writeln('nb = ', nb);
-{$ENDIF}
-  end;
-end;
-
-procedure TSporglooServer.onMapRefresh(const AFromGame
-  : TOlfSocketMessagingServerConnectedClient;
-const msg: TAskForMapRefreshMessage);
-var
-  X, Y: TSporglooAPINumber;
-begin
-{$IFDEF DEBUG}
-  // writeln('onMapRefresh');
-{$ENDIF}
-  if msg.ColNumber < 1 then
-    Exit;
-  if msg.RowNumber < 1 then
-    Exit;
-
-  // TODO : envoyer un message avec toutes les données plutôt que X messages pour chaque case
-  for X := msg.X to msg.X + msg.ColNumber - 1 do
-    for Y := msg.Y to msg.Y + msg.RowNumber - 1 do
-    begin
-      SendMapCell(AFromGame, SporglooMap.GetCellAt(X, Y));
-      // TODO : référencer la session au niveau de la liste des sessions à mettre à jour en cas de changement de chaque cellule
-    end;
-end;
-
 procedure TSporglooServer.onPlayerMove(const AFromGame
   : TOlfSocketMessagingServerConnectedClient; const msg: TPlayerMoveMessage);
 var
@@ -435,7 +492,7 @@ begin
   end;
 end;
 
-procedure TSporglooServer.onPlayerPutAStar(const AFromGame
+procedure TSporglooServer.onPlayerAddAStarOnTheMap(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
 const msg: TPlayerAddAStarOnTheMapMessage);
 var
@@ -473,6 +530,13 @@ begin
     // writeln('StarsCount = ' + Session.player.StarsCount.tostring);
 {$ENDIF}
   end;
+end;
+
+procedure TSporglooServer.onPlayerImageChanged(const AFromGame
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TPlayerImageChangedMessage);
+begin
+
 end;
 
 procedure TSporglooServer.SaveGameData;
