@@ -19,7 +19,8 @@ type
       : TOlfSocketMessagingServerConnectedClient;
       Const msg: TClientLoginResponseMessage);
     procedure onMapCell(Const AFromServer
-      : TOlfSocketMessagingServerConnectedClient; Const msg: TMapCellMessage);
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TMapCellInfoMessage);
     procedure onLogoff(Const AFromServer
       : TOlfSocketMessagingServerConnectedClient; Const msg: TLogoffMessage);
 
@@ -59,7 +60,7 @@ begin
   inherited;
   onReceiveClientRegisterResponseMessage := onClientRegisterResponse;
   onReceiveClientLoginResponseMessage := onClientLoginResponse;
-  onReceiveMapCellMessage := onMapCell;
+  onReceiveMapCellInfoMessage := onMapCell;
   OnReceiveErrorMessage := onErrorMessage;
   onReceiveLogoffMessage := onLogoff;
 end;
@@ -80,13 +81,14 @@ begin
 
   LGameData := TGameData.Current;
   LGameData.Session.SessionID := msg.SessionID;
-  LGameData.Player.PlayerX := msg.X;
-  LGameData.Player.PlayerY := msg.Y;
-  LGameData.Player.Score := msg.Score;
-  LGameData.Player.StarsCount := msg.Stars;
-  LGameData.Player.LifeLevel := msg.Life;
+  // TODO : login response changed - send a request for infos about the PlayerID
+  // LGameData.Player.PlayerX := msg.X;
+  // LGameData.Player.PlayerY := msg.Y;
+  // LGameData.Player.Score := msg.Score;
+  // LGameData.Player.StarsCount := msg.Stars;
+  // LGameData.Player.LifeLevel := msg.Life;
 
-  LGameData.RefreshMap;
+  // LGameData.RefreshMap;
 end;
 
 procedure TSporglooClient.onClientRegisterResponse(const AFromServer
@@ -133,7 +135,7 @@ begin
 end;
 
 procedure TSporglooClient.onMapCell(const AFromServer
-  : TOlfSocketMessagingServerConnectedClient; const msg: TMapCellMessage);
+  : TOlfSocketMessagingServerConnectedClient; const msg: TMapCellInfoMessage);
 var
   MapCell: TSporglooMapCell;
 begin
@@ -200,9 +202,9 @@ end;
 procedure TSporglooClient.SendMapRefresh(const X, Y, ColNumber,
   RowNumber: TSporglooAPINumber);
 var
-  msg: TMapRefreshDemandMessage;
+  msg: TAskForMapRefreshMessage;
 begin
-  msg := TMapRefreshDemandMessage.Create;
+  msg := TAskForMapRefreshMessage.Create;
   try
     msg.X := X;
     msg.Y := Y;
