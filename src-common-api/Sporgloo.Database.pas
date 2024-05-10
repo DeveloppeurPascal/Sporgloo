@@ -15,7 +15,7 @@ type
 
   var
     FLifesCount: TSporglooAPINumber;
-    FScore: TSporglooAPINumber;
+    FCoinsCount: TSporglooAPINumber;
     FPlayerID: string;
     FPlayerX: TSporglooAPINumber;
     FPlayerY: TSporglooAPINumber;
@@ -30,7 +30,7 @@ type
     procedure SetPlayerID(const Value: string);
     procedure SetPlayerX(const Value: TSporglooAPINumber);
     procedure SetPlayerY(const Value: TSporglooAPINumber);
-    procedure SetScore(const Value: TSporglooAPINumber);
+    procedure SetCoinsCount(const Value: TSporglooAPINumber);
     procedure SetStarsCount(const Value: TSporglooAPINumber);
   protected
   public
@@ -40,7 +40,8 @@ type
     property PlayerY: TSporglooAPINumber read FPlayerY write SetPlayerY;
     property TargetX: TSporglooAPINumber read FTargetX write SetTargetX;
     property Targety: TSporglooAPINumber read FTargety write SetTargety;
-    Property Score: TSporglooAPINumber read FScore write SetScore;
+    Property CoinsCount: TSporglooAPINumber read FCoinsCount
+      write SetCoinsCount;
     property StarsCount: TSporglooAPINumber read FStarsCount
       write SetStarsCount;
     property LifesCount: TSporglooAPINumber read FLifesCount
@@ -145,7 +146,7 @@ constructor TSporglooPlayer.Create;
 begin
   inherited;
   FLifesCount := 0;
-  FScore := 0;
+  FCoinsCount := 0;
   FPlayerID := '';
   FPlayerX := 0;
   FPlayerY := 0;
@@ -169,9 +170,9 @@ begin
       read(FLifesCount, sizeof(FLifesCount)))) then
       FLifesCount := 0;
 
-    if not((VersionNum >= 0) and (sizeof(FScore) = AStream.read(FScore,
-      sizeof(FScore)))) then
-      FScore := 0;
+    if not((VersionNum >= 0) and (sizeof(FCoinsCount) = AStream.
+      read(FCoinsCount, sizeof(FCoinsCount)))) then
+      FCoinsCount := 0;
 
     if not(VersionNum >= 0) then
       FPlayerID := ''
@@ -208,7 +209,7 @@ begin
     VersionNum := CVersion;
     AStream.Write(VersionNum, sizeof(VersionNum));
     AStream.Write(FLifesCount, sizeof(FLifesCount));
-    AStream.Write(FScore, sizeof(FScore));
+    AStream.Write(FCoinsCount, sizeof(FCoinsCount));
     SaveStringToStream(FPlayerID, AStream);
     AStream.Write(FPlayerX, sizeof(FPlayerX));
     AStream.Write(FPlayerY, sizeof(FPlayerY));
@@ -278,11 +279,11 @@ begin
   end;
 end;
 
-procedure TSporglooPlayer.SetScore(const Value: TSporglooAPINumber);
+procedure TSporglooPlayer.SetCoinsCount(const Value: TSporglooAPINumber);
 begin
   System.tmonitor.Enter(self);
   try
-    FScore := Value;
+    FCoinsCount := Value;
   finally
     System.tmonitor.Exit(self);
   end;
@@ -291,7 +292,7 @@ begin
       procedure
       begin
         TMessageManager.DefaultManager.SendMessage(nil,
-          TPlayerScoreUpdatedMessage.Create(Value));
+          TPlayerCoinsCountUpdatedMessage.Create(Value));
       end);
 end;
 

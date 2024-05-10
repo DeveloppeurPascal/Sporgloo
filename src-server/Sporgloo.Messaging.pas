@@ -15,7 +15,7 @@ type
   /// <summary>
   /// For COMPILATION reason in the server program, don't use this class !
   /// </summary>
-  TPlayerScoreUpdatedMessage = class(TMessage<TSporglooAPINumber>)
+  TPlayerCoinsCountUpdatedMessage = class(TMessage<TSporglooAPINumber>)
   end;
 
   /// <summary>
