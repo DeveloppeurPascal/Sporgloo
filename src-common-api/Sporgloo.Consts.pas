@@ -3,7 +3,7 @@ unit Sporgloo.Consts;
 interface
 
 const
-  CAPIVersion = 20240501;
+  CAPIVersion = 20240510;
 
   CSporglooTileForest = 0;
   CSporglooTilePath = 1;
