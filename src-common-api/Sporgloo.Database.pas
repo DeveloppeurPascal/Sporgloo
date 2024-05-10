@@ -11,7 +11,7 @@ uses
 type
   TSporglooPlayer = class
   private const
-    CVersion = 1;
+    CVersion = 2;
 
   var
     FLifesCount: TSporglooAPINumber;
@@ -23,6 +23,8 @@ type
     FDeviceID: string;
     FTargetX: TSporglooAPINumber;
     FTargety: TSporglooAPINumber;
+    FImageID: integer;
+    procedure SetImageID(const Value: integer);
     procedure SetTargetX(const Value: TSporglooAPINumber);
     procedure SetTargety(const Value: TSporglooAPINumber);
     procedure SetDeviceID(const Value: string);
@@ -46,6 +48,7 @@ type
       write SetStarsCount;
     property LifesCount: TSporglooAPINumber read FLifesCount
       write SetLifesCount;
+    property ImageID: integer read FImageID write SetImageID;
 
     procedure TestAndChangeTarget(AX, AY: TSporglooAPINumber);
 
@@ -152,9 +155,9 @@ begin
   FPlayerY := 0;
   FStarsCount := 0;
   FDeviceID := '';
-
   FTargetX := 0;
   FTargety := 0;
+  FImageID := -1;
 end;
 
 procedure TSporglooPlayer.LoadFromStream(AStream: TStream);
@@ -195,6 +198,10 @@ begin
       FDeviceID := ''
     else
       FDeviceID := LoadStringFromStream(AStream);
+
+    if not((VersionNum >= 2) and (sizeof(FImageID) = AStream.read(FImageID,
+      sizeof(FImageID)))) then
+      FImageID := -1;
   finally
     System.tmonitor.Exit(self);
   end;
@@ -215,6 +222,7 @@ begin
     AStream.Write(FPlayerY, sizeof(FPlayerY));
     AStream.Write(FStarsCount, sizeof(FStarsCount));
     SaveStringToStream(FDeviceID, AStream);
+    AStream.Write(FImageID, sizeof(FImageID));
   finally
     System.tmonitor.Exit(self);
   end;
@@ -225,6 +233,16 @@ begin
   System.tmonitor.Enter(self);
   try
     FDeviceID := Value;
+  finally
+    System.tmonitor.Exit(self);
+  end;
+end;
+
+procedure TSporglooPlayer.SetImageID(const Value: integer);
+begin
+  System.tmonitor.Enter(self);
+  try
+    FImageID := Value;
   finally
     System.tmonitor.Exit(self);
   end;
