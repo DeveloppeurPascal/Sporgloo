@@ -27,7 +27,7 @@ type
   /// <summary>
   /// For COMPILATION reason in the server program, don't use this class !
   /// </summary>
-  TPlayerLifeLevelUpdatedMessage = class(TMessage<TSporglooAPINumber>)
+  TPlayerLifesCountUpdatedMessage = class(TMessage<TSporglooAPINumber>)
   end;
 
 implementation
