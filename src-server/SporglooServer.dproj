@@ -241,6 +241,7 @@
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas"/>
         <DCCReference Include="uGameData.pas"/>
         <DCCReference Include="Sporgloo.Messaging.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
