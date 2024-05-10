@@ -24,6 +24,8 @@ type
     FTargetX: TSporglooAPINumber;
     FTargety: TSporglooAPINumber;
     FImageID: integer;
+    FDeviceAuthKey: string;
+    procedure SetDeviceAuthKey(const Value: string);
     procedure SetImageID(const Value: integer);
     procedure SetTargetX(const Value: TSporglooAPINumber);
     procedure SetTargety(const Value: TSporglooAPINumber);
@@ -37,6 +39,7 @@ type
   protected
   public
     property DeviceID: string read FDeviceID write SetDeviceID;
+    property DeviceAuthKey: string read FDeviceAuthKey write SetDeviceAuthKey;
     property PlayerID: string read FPlayerID write SetPlayerID;
     property PlayerX: TSporglooAPINumber read FPlayerX write SetPlayerX;
     property PlayerY: TSporglooAPINumber read FPlayerY write SetPlayerY;
@@ -155,6 +158,7 @@ begin
   FPlayerY := 0;
   FStarsCount := 0;
   FDeviceID := '';
+  FDeviceAuthKey := '';
   FTargetX := 0;
   FTargety := 0;
   FImageID := -1;
@@ -202,6 +206,11 @@ begin
     if not((VersionNum >= 2) and (sizeof(FImageID) = AStream.read(FImageID,
       sizeof(FImageID)))) then
       FImageID := -1;
+
+    if not(VersionNum >= 2) then
+      FDeviceAuthKey := ''
+    else
+      FDeviceAuthKey := LoadStringFromStream(AStream);
   finally
     System.tmonitor.Exit(self);
   end;
@@ -223,6 +232,17 @@ begin
     AStream.Write(FStarsCount, sizeof(FStarsCount));
     SaveStringToStream(FDeviceID, AStream);
     AStream.Write(FImageID, sizeof(FImageID));
+    SaveStringToStream(FDeviceAuthKey, AStream);
+  finally
+    System.tmonitor.Exit(self);
+  end;
+end;
+
+procedure TSporglooPlayer.SetDeviceAuthKey(const Value: string);
+begin
+  System.tmonitor.Enter(self);
+  try
+    FDeviceAuthKey := Value;
   finally
     System.tmonitor.Exit(self);
   end;
