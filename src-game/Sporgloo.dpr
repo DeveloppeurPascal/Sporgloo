@@ -44,7 +44,8 @@ uses
   cLifeLevel in 'cLifeLevel.pas' {cadLifeLevel: TFrame},
   cYellowGameButton in 'cYellowGameButton.pas' {cadYellowGameButton: TFrame},
   cYellowGameButtonPause in 'cYellowGameButtonPause.pas' {cadYellowGameButtonPause: TFrame},
-  cYellowGameButtonMusicOnOff in 'cYellowGameButtonMusicOnOff.pas' {cadYellowGameButtonMusicOnOff: TFrame};
+  cYellowGameButtonMusicOnOff in 'cYellowGameButtonMusicOnOff.pas' {cadYellowGameButtonMusicOnOff: TFrame},
+  Sporgloo.Utils in '..\src-common-api\Sporgloo.Utils.pas';
 
 {$R *.res}
 
