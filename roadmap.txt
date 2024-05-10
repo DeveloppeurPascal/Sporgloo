@@ -15,6 +15,7 @@
 - messages pour backoffice : demande de copie de la base de données
 - messages pour backoffice : PING
 - messages pour backoffice : statistiques
+
 - messages pour le viewer : faire un LOGINVW
 - messages pour le viewer : faire un LOGOUTVW
 - messages pour le viewer : pouvoir récupérer la base de données
@@ -24,9 +25,7 @@
 **********
 * Base de données
 
-- modifier les données de device pour prendre en charge les nouveaux tokens d'identification
-- modifier les cellules de la carte et le stockage, ajouter nb coeurs, coins, étoiles, l'id d'image du joueur
-- modifier les players et leur stockage, ajouter le numéro de session active, le timestamp d'activité, l'ID d'image à utiliser, ...
+- modifier les players et leur stockage, ajouter le numéro de session active & le timestamp d'activité
 
 
 **********
