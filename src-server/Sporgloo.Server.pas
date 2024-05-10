@@ -103,7 +103,9 @@ uses
   System.Classes,
   System.SysUtils,
   System.IOutils,
-  Olf.RTL.Params;
+  Olf.RTL.Params,
+  Sporgloo.Utils,
+  Olf.RTL.GenRandomID;
 
 { TSporglooServer }
 
@@ -237,6 +239,7 @@ procedure TSporglooServer.onGetHallOfFameScores(const AFromGame
 const msg: TGetHallOfFameScoresMessage);
 begin
   // TODO : à compléter
+  SendHallOfFame(AFromGame, 0);
 end;
 
 procedure TSporglooServer.onKillCurrentPlayer(const AFromGame
@@ -424,7 +427,9 @@ begin
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceForPlayerID,
       'Can''t log with this player on your device.');
 
-  // TODO : tester cohérence du TokenID
+  if (msg.TokenID <> GetTokenID(Player.PlayerID, Player.DeviceID,
+    Player.DeviceAuthKey)) then
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongToken, 'Wrong token.');
 
   Session := TSporglooSession.Create;
   Session.SessionID := GetUniqID;
@@ -451,7 +456,6 @@ var
   Session: TSporglooSession;
   ok: boolean;
   MapCell: TSporglooMapCell;
-  DeviceAuthKey: string;
 begin
 {$IFDEF DEBUG}
   // writeln('onClientRegister');
@@ -464,13 +468,15 @@ begin
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongAPIVersion,
       'Wrong API.');
 
-  // TODO : tester la cohérence du ServerAuthKey
+  if (msg.ServerAuthKey <> GetServerAuthKey(msg.DeviceID)) then
+    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongToken, 'Wrong token.');
 
   Player := SporglooPlayers.GetPlayerByDevice(msg.DeviceID);
   if not assigned(Player) then
   begin
     Player := TSporglooPlayer.Create;
     Player.DeviceID := msg.DeviceID;
+    Player.DeviceAuthKey := TOlfRandomIDGenerator.getIDBase62(50);
     Player.PlayerID := GetUniqID;
 
     if (SporglooSessions.count > 0) then
@@ -509,10 +515,8 @@ begin
     MapCell.PlayerID := Player.PlayerID;
     MapCell.PlayerImageID := Player.ImageID;
 
-    // TODO : calculer et stocker le DeviceAuthKey
-
     SendClientRegisterResponse(AFromGame, Player.DeviceID, Player.PlayerID,
-      DeviceAuthKey);
+      Player.DeviceAuthKey);
   end
   else
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceForPlayerID,
