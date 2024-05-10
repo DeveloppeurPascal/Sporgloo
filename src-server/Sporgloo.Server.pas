@@ -27,7 +27,7 @@ type
       Const msg: TClientLoginMessage);
     procedure onMapRefresh(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
-      Const msg: TMapRefreshDemandMessage);
+      Const msg: TAskForMapRefreshMessage);
     procedure onPlayerMove(Const AFromGame
       : TOlfSocketMessagingServerConnectedClient;
       Const msg: TPlayerMoveMessage);
@@ -78,7 +78,7 @@ begin
   inherited;
   onReceiveClientRegisterMessage := onClientRegister;
   onReceiveClientLoginMessage := onClientLogin;
-  onReceiveMapRefreshDemandMessage := onMapRefresh;
+  onReceiveAskForMapRefreshMessage := onMapRefresh;
   onReceivePlayerMoveMessage := onPlayerMove;
   onReceivePlayerAddAStarOnTheMapMessage := onPlayerPutAStar;
   onReceiveErrorMessage := onErrorMessage;
@@ -341,7 +341,7 @@ end;
 
 procedure TSporglooServer.onMapRefresh(const AFromGame
   : TOlfSocketMessagingServerConnectedClient;
-const msg: TMapRefreshDemandMessage);
+const msg: TAskForMapRefreshMessage);
 var
   X, Y: TSporglooAPINumber;
 begin
@@ -510,11 +510,7 @@ begin
   try
     msg.DeviceID := DeviceID;
     msg.SessionID := SessionID;
-    msg.X := X;
-    msg.Y := Y;
-    msg.Score := Score;
-    msg.Stars := Stars;
-    msg.Life := Life;
+    // TODO : login answer changed
     AToGame.SendMessage(msg);
   finally
     msg.Free;
@@ -562,12 +558,12 @@ end;
 procedure TSporglooServer.SendMapCell(Const AToGame
   : TOlfSocketMessagingServerConnectedClient; Const MapCell: TSporglooMapCell);
 var
-  msg: TMapCellMessage;
+  msg: TMapCellInfoMessage;
 begin
 {$IFDEF DEBUG}
   // writeln('=> ', MapCell.PlayerID, ' - ', MapCell.X, ',', MapCell.Y, '=',  MapCell.TileID);
 {$ENDIF}
-  msg := TMapCellMessage.Create;
+  msg := TMapCellInfoMessage.Create;
   try
     msg.X := MapCell.X;
     msg.Y := MapCell.Y;
