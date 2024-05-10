@@ -47,9 +47,9 @@ type
   end;
 
   /// <summary>
-  /// Sent when the score is changed. The UI must refresh score panel with the new value.
+  /// Sent when the coins count is changed. The UI must refresh score panel with the new value.
   /// </summary>
-  TPlayerScoreUpdatedMessage = class(TMessage<TSporglooAPINumber>)
+  TPlayerCoinsCountUpdatedMessage = class(TMessage<TSporglooAPINumber>)
   end;
 
   /// <summary>
@@ -59,9 +59,9 @@ type
   end;
 
   /// <summary>
-  /// Sent when the life level is changed. The UI must refresh life level panel with the new value.
+  /// Sent when the lives count is changed. The UI must refresh life level panel with the new value.
   /// </summary>
-  TPlayerLifeLevelUpdatedMessage = class(TMessage<TSporglooAPINumber>)
+  TPlayerLivesCountUpdatedMessage = class(TMessage<TSporglooAPINumber>)
   end;
 
   /// <summary>
