@@ -25,9 +25,12 @@ type
     function GetBackgroundMusicVolume: integer;
     procedure SetBackgroundMusic(const Value: boolean);
     procedure SetBackgroundMusicVolume(const Value: integer);
+    procedure SetDeviceAuthKey(const Value: string);
+    function GetDeviceAuthKey: string;
   protected
   public
     property DeviceID: string read GetDeviceID write SetDeviceID;
+    property DeviceAuthKey: string read GetDeviceAuthKey write SetDeviceAuthKey;
     property PlayerID: string read GetPlayerID write SetPlayerID;
     // TODO : add sound effects on/off
     // TODO : add sound effects volume
@@ -138,6 +141,11 @@ begin
   result := FParams.getValue('MusicVol', 100);
 end;
 
+function TConfig.GetDeviceAuthKey: string;
+begin
+  result := FParams.getValue('DeviceAuthKey', '');
+end;
+
 function TConfig.GetDeviceID: string;
 begin
   result := FParams.getValue('DeviceID', '');
@@ -156,14 +164,11 @@ end;
 function TConfig.GetServerIPv4: string;
 begin
 {$IFDEF RELEASE}
-  result := FParams.getValue('ServerIPv4', '141.94.221.190');
+  result := FParams.getValue('ServerIPv4', '92.222.216.2');
   // VPS Sporgloo (temporary address)
 {$ELSE}
-  // TODO : for local tests
-  // result := FParams.getValue('ServerIPv4', '127.0.0.1');
+  result := FParams.getValue('ServerIPv4', '127.0.0.1');
 {$ENDIF}
-  result := '92.222.216.2';
-  // result := '127.0.0.1';
 end;
 
 function TConfig.GetServerIPv4Port: word;
@@ -194,6 +199,12 @@ end;
 procedure TConfig.SetBackgroundMusicVolume(const Value: integer);
 begin
   FParams.setValue('MusicVol', Value);
+  FParams.Save;
+end;
+
+procedure TConfig.SetDeviceAuthKey(const Value: string);
+begin
+  FParams.setValue('DeviceAuthKey', Value);
   FParams.Save;
 end;
 
