@@ -34,12 +34,15 @@ object cadYellowGameButton: TcadYellowGameButton
     Size.Height = 49.000000000000000000
     Size.PlatformDefault = False
     Stroke.Kind = None
-    object gUp: TGlyph
+    object imgUp: TImage
+      MultiResBitmap = <
+        item
+        end>
       Align = Center
+      HitTest = False
       Size.Width = 34.000000000000000000
       Size.Height = 34.000000000000000000
       Size.PlatformDefault = False
-      Images = dmSporglooImages.ButtonsImages
       object ShadowEffect2: TShadowEffect
         Distance = 3.000000000000000000
         Direction = 45.000000000000000000
@@ -76,12 +79,15 @@ object cadYellowGameButton: TcadYellowGameButton
     Size.Height = 45.000000000000000000
     Size.PlatformDefault = False
     Stroke.Kind = None
-    object gDown: TGlyph
+    object imgDown: TImage
+      MultiResBitmap = <
+        item
+        end>
       Align = Center
+      HitTest = False
       Size.Width = 34.000000000000000000
       Size.Height = 34.000000000000000000
       Size.PlatformDefault = False
-      Images = dmSporglooImages.ButtonsImages
       object ShadowEffect1: TShadowEffect
         Distance = 3.000000000000000000
         Direction = 45.000000000000000000
