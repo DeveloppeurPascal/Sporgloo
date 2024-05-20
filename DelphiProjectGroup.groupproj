@@ -9,6 +9,9 @@
         <Projects Include="src-server\SporglooServer.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="src-SVG-graphics-tester\SporglooSVGTester.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="SporglooServer:Make">
         <MSBuild Projects="src-server\SporglooServer.dproj" Targets="Make"/>
     </Target>
+    <Target Name="SporglooSVGTester">
+        <MSBuild Projects="src-SVG-graphics-tester\SporglooSVGTester.dproj"/>
+    </Target>
+    <Target Name="SporglooSVGTester:Clean">
+        <MSBuild Projects="src-SVG-graphics-tester\SporglooSVGTester.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SporglooSVGTester:Make">
+        <MSBuild Projects="src-SVG-graphics-tester\SporglooSVGTester.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Sporgloo;SporglooServer"/>
+        <CallTarget Targets="Sporgloo;SporglooServer;SporglooSVGTester"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Sporgloo:Clean;SporglooServer:Clean"/>
+        <CallTarget Targets="Sporgloo:Clean;SporglooServer:Clean;SporglooSVGTester:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Sporgloo:Make;SporglooServer:Make"/>
+        <CallTarget Targets="Sporgloo:Make;SporglooServer:Make;SporglooSVGTester:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
