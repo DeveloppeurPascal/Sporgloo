@@ -16,7 +16,6 @@ uses
   FMX.StdCtrls,
   cYellowGameButton,
   FMX.Effects,
-  FMX.ImgList,
   FMX.Objects;
 
 type
@@ -38,7 +37,9 @@ implementation
 uses
   System.Messaging,
   Sporgloo.Messaging,
-  uConfig;
+  uConfig,
+  Olf.Skia.SVGToBitmap,
+  USVGUserInterface;
 
 { TcadYellowGameButtonMusicOnOff }
 
@@ -46,7 +47,11 @@ procedure TcadYellowGameButtonMusicOnOff.AfterConstruction;
 begin
   inherited;
 
-  SetGlyphImage(TConfig.Current.BackgroundMusic);
+  tthread.ForceQueue(nil,
+    procedure
+    begin
+      SetGlyphImage(TConfig.Current.BackgroundMusic);
+    end);
 
   TMessageManager.DefaultManager.SubscribeToMessage
     (TBackgroundMusicStatusMessage,
@@ -59,13 +64,21 @@ end;
 
 procedure TcadYellowGameButtonMusicOnOff.SetGlyphImage(const MusicOnOff
   : boolean);
+var
+  bmp: TBitmap;
 begin
   if MusicOnOff then
-    gUp.ImageIndex := 1
+    bmp := SVGToBitmap(round(imgUp.Width), round(imgUp.Height),
+      SVGUserInterface[CSVGMusicOff], imgUp.bitmap.BitmapScale)
   else
-    gUp.ImageIndex := 0;
-  gdown.ImageIndex := gUp.ImageIndex;
-
+    bmp := SVGToBitmap(round(imgUp.Width), round(imgUp.Height),
+      SVGUserInterface[CSVGMusicOn], imgUp.bitmap.BitmapScale);
+  try
+    imgUp.bitmap.Assign(bmp);
+    imgdown.bitmap.Assign(bmp);
+  finally
+    bmp.free;
+  end;
 end;
 
 end.
