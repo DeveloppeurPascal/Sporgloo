@@ -3,12 +3,14 @@ object cadViseur: TcadViseur
   Size.Width = 241.000000000000000000
   Size.Height = 253.000000000000000000
   Size.PlatformDefault = False
-  object Glyph1: TGlyph
+  object Image1: TImage
+    MultiResBitmap = <
+      item
+      end>
     Align = Client
+    HitTest = False
     Size.Width = 241.000000000000000000
     Size.Height = 253.000000000000000000
     Size.PlatformDefault = False
-    ImageIndex = 4
-    Images = dmSporglooImages.MapImages
   end
 end

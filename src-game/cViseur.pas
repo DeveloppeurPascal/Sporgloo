@@ -13,21 +13,43 @@ uses
   FMX.Controls,
   FMX.Forms,
   FMX.Dialogs,
-  FMX.StdCtrls,
-  Sporgloo.Images,
-  FMX.ImgList;
+  FMX.Objects;
 
 type
   TcadViseur = class(TFrame)
-    Glyph1: TGlyph;
+    Image1: TImage;
   private
-    { Déclarations privées }
   public
-    { Déclarations publiques }
+    procedure AfterConstruction; override;
   end;
 
 implementation
 
 {$R *.fmx}
+
+uses
+  Olf.Skia.SVGToBitmap,
+  USVGUserInterface;
+
+{ TcadViseur }
+
+procedure TcadViseur.AfterConstruction;
+begin
+  inherited;
+
+  tthread.forcequeue(nil,
+    procedure
+    var
+      bmp: tbitmap;
+    begin
+      bmp := SVGToBitmap(round(Image1.Width), round(Image1.height),
+        SVGUserInterface[CSVGTargetRoundB], Image1.Bitmap.bitmapscale);
+      try
+        Image1.Bitmap.Assign(bmp);
+      finally
+        bmp.free;
+      end;
+    end);
+end;
 
 end.
