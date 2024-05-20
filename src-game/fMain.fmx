@@ -338,8 +338,8 @@ object frmMain: TfrmMain
   end
   object OlfAboutDialog1: TOlfAboutDialog
     Titre = 'Sporgloo'
-    VersionNumero = '0.2 alpha'
-    VersionDate = '20240508'
+    VersionNumero = '0.3 alpha'
+    VersionDate = '20240520'
     MultiResBitmap = <
       item
       end>
