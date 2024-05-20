@@ -27,18 +27,20 @@ object cadLifeLevel: TcadLifeLevel
     Size.Height = 230.000000000000000000
     Size.PlatformDefault = False
   end
-  object Glyph1: TGlyph
+  object Image1: TImage
+    MultiResBitmap = <
+      item
+      end>
+    Align = MostLeft
+    HitTest = False
     Margins.Left = 5.000000000000000000
     Margins.Top = 5.000000000000000000
     Margins.Right = 5.000000000000000000
     Margins.Bottom = 5.000000000000000000
-    Align = MostLeft
     Position.X = 5.000000000000000000
     Position.Y = 5.000000000000000000
     Size.Width = 50.000000000000000000
     Size.Height = 230.000000000000000000
     Size.PlatformDefault = False
-    ImageIndex = 5
-    Images = dmSporglooImages.MapImages
   end
 end
