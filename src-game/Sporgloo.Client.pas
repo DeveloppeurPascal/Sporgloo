@@ -23,6 +23,24 @@ type
       Const msg: TMapCellInfoMessage);
     procedure onLogoff(Const AFromServer
       : TOlfSocketMessagingServerConnectedClient; Const msg: TLogoffMessage);
+    procedure onCoinsCountChange(Const AFromServer
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TCoinsCountChangeMessage);
+    procedure onCurrentPlayerKilled(Const AFromServer
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TCurrentPlayerKilledMessage);
+    procedure onHallOfFame(Const AFromServer
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: THallOfFameMessage);
+    procedure onLivesCountChange(Const AFromServer
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TLivesCountChangeMessage);
+    procedure onPlayerInfos(Const AFromServer
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TPlayerInfosMessage);
+    procedure onStarsCountChange(Const AFromServer
+      : TOlfSocketMessagingServerConnectedClient;
+      Const msg: TStarsCountChangeMessage);
 
     procedure onErrorMessage(Const AFromServer
       : TOlfSocketMessagingServerConnectedClient; Const msg: TErrorMessage);
@@ -32,11 +50,18 @@ type
     procedure SendClientRegister(Const DeviceID: string);
     procedure SendClientLogin(Const DeviceID, PlayerID: string);
     procedure SendMapRefresh(Const X, Y, ColNumber,
-      RowNumber: TSporglooAPINumber);
+      RowNumber: TSporglooAPINumber; Const SessionID: string);
     procedure SendPlayerMove(Const SessionID, PlayerID: string;
       Const X, Y: TSporglooAPINumber);
     procedure SendPlayerPutAStar(Const SessionID, PlayerID: string;
       Const X, Y: TSporglooAPINumber);
+
+    procedure SendAskForPlayerInfos(Const SessionID, PlayerID: string);
+    procedure SendGetHallOfFameScores(Const SessionID: string;
+      Const PageNumber: integer);
+    procedure SendKillCurrentPlayer(Const SessionID, PlayerID: string);
+    procedure SendPlayerImageChanged(Const SessionID: string;
+      Const ImageID: integer);
 
     procedure SendErrorMessage(const AErrorCode: TSporglooErrorCode;
       const AErrorText: string; const ARaiseException: boolean = true);
@@ -51,18 +76,25 @@ Uses
   uGameData,
   uConfig,
   Sporgloo.Messaging,
-  Sporgloo.Database;
+  Sporgloo.Database,
+  Sporgloo.Utils;
 
 { TSporglooClient }
 
 constructor TSporglooClient.Create(AServerIP: string; AServerPort: word);
 begin
   inherited;
-  onReceiveClientRegisterResponseMessage := onClientRegisterResponse;
   onReceiveClientLoginResponseMessage := onClientLoginResponse;
-  onReceiveMapCellInfoMessage := onMapCell;
-  OnReceiveErrorMessage := onErrorMessage;
+  onReceiveClientRegisterResponseMessage := onClientRegisterResponse;
+  onReceiveCoinsCountChangeMessage := onCoinsCountChange;
+  onReceiveCurrentPlayerKilledMessage := onCurrentPlayerKilled;
+  onReceiveErrorMessage := onErrorMessage;
+  onReceiveHallOfFameMessage := onHallOfFame;
+  onReceiveLivesCountChangeMessage := onLivesCountChange;
   onReceiveLogoffMessage := onLogoff;
+  onReceiveMapCellInfoMessage := onMapCell;
+  onReceivePlayerInfosMessage := onPlayerInfos;
+  onReceiveStarsCountChangeMessage := onStarsCountChange;
 end;
 
 procedure TSporglooClient.onClientLoginResponse(const AFromServer
@@ -81,14 +113,7 @@ begin
 
   LGameData := TGameData.Current;
   LGameData.Session.SessionID := msg.SessionID;
-  // TODO : login response changed - send a request for infos about the PlayerID
-  // LGameData.Player.PlayerX := msg.X;
-  // LGameData.Player.PlayerY := msg.Y;
-  // LGameData.Player.Score := msg.Score;
-  // LGameData.Player.StarsCount := msg.Stars;
-  // LGameData.Player.LifeLevel := msg.Life;
-
-  // LGameData.RefreshMap;
+  SendAskForPlayerInfos(msg.SessionID, msg.PlayerID);
 end;
 
 procedure TSporglooClient.onClientRegisterResponse(const AFromServer
@@ -107,7 +132,23 @@ begin
   TGameData.Current.Player.PlayerID := msg.PlayerID;
   TGameData.Current.Session.Player := TGameData.Current.Player;
 
+  tconfig.Current.DeviceAuthKey := msg.DeviceAuthKey;
+
   SendClientLogin(msg.DeviceID, msg.PlayerID);
+end;
+
+procedure TSporglooClient.onCoinsCountChange(const AFromServer
+  : TOlfSocketMessagingServerConnectedClient;
+  const msg: TCoinsCountChangeMessage);
+begin
+  // TODO : à compléter
+end;
+
+procedure TSporglooClient.onCurrentPlayerKilled(const AFromServer
+  : TOlfSocketMessagingServerConnectedClient;
+  const msg: TCurrentPlayerKilledMessage);
+begin
+  // TODO : à compléter
 end;
 
 procedure TSporglooClient.onErrorMessage(const AFromServer
@@ -121,6 +162,19 @@ begin
         TMessageManager.DefaultManager.SendMessage(self,
           TPlayerMoveDeniedByTheServerMessage.Create);
       end);
+end;
+
+procedure TSporglooClient.onHallOfFame(const AFromServer
+  : TOlfSocketMessagingServerConnectedClient; const msg: THallOfFameMessage);
+begin
+  // TODO : à compléter
+end;
+
+procedure TSporglooClient.onLivesCountChange(const AFromServer
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TLivesCountChangeMessage);
+begin
+  // TODO : à compléter
 end;
 
 procedure TSporglooClient.onLogoff(const AFromServer
@@ -151,15 +205,67 @@ begin
     end);
 end;
 
+procedure TSporglooClient.onPlayerInfos(const AFromServer
+  : TOlfSocketMessagingServerConnectedClient; const msg: TPlayerInfosMessage);
+var
+  LGameData: TGameData;
+  LPlayer: tsporglooplayer;
+begin
+  LGameData := TGameData.Current;
+  if (LGameData.Player.PlayerID = msg.PlayerID) then
+    LPlayer := LGameData.Player
+  else
+    LPlayer := LGameData.OtherPlayers.GetPlayer(msg.PlayerID);
+
+  if assigned(LPlayer) then
+  begin
+    LPlayer.PlayerX := msg.X;
+    LPlayer.PlayerY := msg.Y;
+    LPlayer.CoinsCount := msg.CoinsCount;
+    LPlayer.StarsCount := msg.StarsCount;
+    LPlayer.LivesCount := msg.LivesCount;
+    LPlayer.ImageID := msg.ImageID;
+  end;
+
+  // TODO : voir si utile ou si le déplacement du jouer suffit à se repositionner
+
+  // if (LPlayer = LGameData.Player) then
+  // LGameData.RefreshMap;
+end;
+
+procedure TSporglooClient.onStarsCountChange(const AFromServer
+  : TOlfSocketMessagingServerConnectedClient;
+const msg: TStarsCountChangeMessage);
+begin
+  // TODO : à compléter
+end;
+
+procedure TSporglooClient.SendAskForPlayerInfos(const SessionID,
+  PlayerID: string);
+var
+  msg: TAskForPlayerInfosMessage;
+begin
+  msg := TAskForPlayerInfosMessage.Create;
+  try
+    msg.SessionID := SessionID;
+    msg.PlayerID := PlayerID;
+    SendMessage(msg);
+  finally
+    msg.Free;
+  end;
+end;
+
 procedure TSporglooClient.SendClientLogin(const DeviceID, PlayerID: string);
 var
   msg: TClientLoginMessage;
 begin
   msg := TClientLoginMessage.Create;
   try
+    msg.VersionAPI := CAPIVersion;
     msg.DeviceID := DeviceID;
     msg.PlayerID := PlayerID;
-    msg.VersionAPI := CAPIVersion;
+    msg.TokenID := GetTokenID(PlayerID, DeviceID,
+      tconfig.Current.DeviceAuthKey);
     SendMessage(msg);
   finally
     msg.Free;
@@ -172,8 +278,9 @@ var
 begin
   msg := TClientRegisterMessage.Create;
   try
-    msg.DeviceID := DeviceID;
     msg.VersionAPI := CAPIVersion;
+    msg.DeviceID := DeviceID;
+    msg.ServerAuthKey := GetServerAuthKey(DeviceID);
     SendMessage(msg);
   finally
     msg.Free;
@@ -199,8 +306,39 @@ begin
     raise TSporglooException.Create(AErrorCode, AErrorText);
 end;
 
+procedure TSporglooClient.SendGetHallOfFameScores(const SessionID: string;
+const PageNumber: integer);
+var
+  msg: TGetHallOfFameScoresMessage;
+begin
+  // TODO : à revoir lorsqu'on saura comment afficher la liste de scores
+  msg := TGetHallOfFameScoresMessage.Create;
+  try
+    msg.SessionID := SessionID;
+    msg.PageNumber := 0;
+    SendMessage(msg);
+  finally
+    msg.Free;
+  end;
+end;
+
+procedure TSporglooClient.SendKillCurrentPlayer(const SessionID,
+  PlayerID: string);
+var
+  msg: TKillCurrentPlayerMessage;
+begin
+  msg := TKillCurrentPlayerMessage.Create;
+  try
+    msg.SessionID := SessionID;
+    msg.PlayerID := PlayerID;
+    SendMessage(msg);
+  finally
+    msg.Free;
+  end;
+end;
+
 procedure TSporglooClient.SendMapRefresh(const X, Y, ColNumber,
-  RowNumber: TSporglooAPINumber);
+  RowNumber: TSporglooAPINumber; Const SessionID: string);
 var
   msg: TAskForMapRefreshMessage;
 begin
@@ -210,6 +348,22 @@ begin
     msg.Y := Y;
     msg.ColNumber := ColNumber;
     msg.RowNumber := RowNumber;
+    msg.SessionID := SessionID;
+    SendMessage(msg);
+  finally
+    msg.Free;
+  end;
+end;
+
+procedure TSporglooClient.SendPlayerImageChanged(const SessionID: string;
+const ImageID: integer);
+var
+  msg: TPlayerImageChangedMessage;
+begin
+  msg := TPlayerImageChangedMessage.Create;
+  try
+    msg.SessionID := SessionID;
+    msg.ImageID := ImageID;
     SendMessage(msg);
   finally
     msg.Free;
