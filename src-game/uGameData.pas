@@ -133,7 +133,8 @@ begin
     end);
 
   APIClient.SendMapRefresh(ViewportX - CColMargins, ViewportY - CRowMargins,
-    ViewportNbCol + 2 * CColMargins, ViewportNbRow + 2 * CRowMargins);
+    ViewportNbCol + 2 * CColMargins, ViewportNbRow + 2 * CRowMargins,
+    TGameData.Current.Session.SessionID);
 end;
 
 procedure TGameData.SetViewportNbCol(const Value: TSporglooAPINumber);
