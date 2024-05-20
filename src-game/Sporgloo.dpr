@@ -20,7 +20,6 @@ uses
   Sporgloo.Consts in '..\src-common-api\Sporgloo.Consts.pas',
   Sporgloo.Messaging in 'Sporgloo.Messaging.pas',
   Sporgloo.MapFrame in 'Sporgloo.MapFrame.pas' {MapFrame: TFrame},
-  Sporgloo.Images in 'Sporgloo.Images.pas' {dmSporglooImages: TDataModule},
   Sporgloo.Client in 'Sporgloo.Client.pas',
   Olf.Net.Socket.Messaging in '..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas',
   Olf.FMX.TextImageFrame in '..\lib-externes\librairies\src\Olf.FMX.TextImageFrame.pas' {OlfFMXTextImageFrame: TFrame},
@@ -45,7 +44,13 @@ uses
   cYellowGameButton in 'cYellowGameButton.pas' {cadYellowGameButton: TFrame},
   cYellowGameButtonPause in 'cYellowGameButtonPause.pas' {cadYellowGameButtonPause: TFrame},
   cYellowGameButtonMusicOnOff in 'cYellowGameButtonMusicOnOff.pas' {cadYellowGameButtonMusicOnOff: TFrame},
-  Sporgloo.Utils in '..\src-common-api\Sporgloo.Utils.pas';
+  Sporgloo.Utils in '..\src-common-api\Sporgloo.Utils.pas',
+  USVGBackgrounds in '..\assets\graphics\Backgrounds\USVGBackgrounds.pas',
+  USVGItems in '..\assets\graphics\Items\USVGItems.pas',
+  USVGPersos in '..\assets\graphics\Persos\USVGPersos.pas',
+  USVGTrees in '..\assets\graphics\Trees\USVGTrees.pas',
+  USVGUserInterface in '..\assets\graphics\UserInterface\USVGUserInterface.pas',
+  Olf.Skia.SVGToBitmap in '..\lib-externes\librairies\src\Olf.Skia.SVGToBitmap.pas';
 
 {$R *.res}
 
@@ -54,7 +59,6 @@ begin
   GlobalUseSkia := True;
   Application.Initialize;
   Application.FormFactor.Orientations := [TFormOrientation.Portrait, TFormOrientation.InvertedPortrait, TFormOrientation.Landscape, TFormOrientation.InvertedLandscape];
-  Application.CreateForm(TdmSporglooImages, dmSporglooImages);
   Application.CreateForm(TdmAdobeStock_440583506, dmAdobeStock_440583506);
   Application.CreateForm(TdmAdobeStock_526775911, dmAdobeStock_526775911);
   Application.CreateForm(TdmAboutBoxLogo, dmAboutBoxLogo);

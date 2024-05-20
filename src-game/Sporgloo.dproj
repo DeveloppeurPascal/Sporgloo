@@ -481,11 +481,6 @@
             <FormType>fmx</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="Sporgloo.Images.pas">
-            <Form>dmSporglooImages</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
         <DCCReference Include="Sporgloo.Client.pas"/>
         <DCCReference Include="..\lib-externes\Socket-Messaging-Library\src\Olf.Net.Socket.Messaging.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.FMX.TextImageFrame.pas">
@@ -570,6 +565,12 @@
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\src-common-api\Sporgloo.Utils.pas"/>
+        <DCCReference Include="..\assets\graphics\Backgrounds\USVGBackgrounds.pas"/>
+        <DCCReference Include="..\assets\graphics\Items\USVGItems.pas"/>
+        <DCCReference Include="..\assets\graphics\Persos\USVGPersos.pas"/>
+        <DCCReference Include="..\assets\graphics\Trees\USVGTrees.pas"/>
+        <DCCReference Include="..\assets\graphics\UserInterface\USVGUserInterface.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.Skia.SVGToBitmap.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -1110,6 +1111,12 @@
                 </DeployFile>
                 <DeployFile LocalName="OSX64\Release\Sporgloo" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="OSX64">
+                        <RemoteName>Sporgloo</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\Sporgloo.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
                         <RemoteName>Sporgloo</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
