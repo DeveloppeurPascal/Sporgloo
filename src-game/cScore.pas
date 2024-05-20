@@ -15,20 +15,21 @@ uses
   FMX.Dialogs,
   FMX.StdCtrls,
   FMX.Objects,
-  Sporgloo.Images,
   Olf.FMX.TextImageFrame,
   FMX.ImgList;
 
 type
   TcadScore = class(TFrame)
     Rectangle1: TRectangle;
-    Glyph1: TGlyph;
     OlfFMXTextImageFrame1: TOlfFMXTextImageFrame;
+    Image1: TImage;
     procedure FrameResized(Sender: TObject);
   private
     FScore: int64;
     procedure SetScore(const Value: int64);
   public
+    procedure RefreshImage;
+    procedure AfterConstruction; override;
     property Score: int64 read FScore write SetScore;
     constructor Create(AOwner: TComponent); override;
   end;
@@ -38,9 +39,22 @@ implementation
 {$R *.fmx}
 
 uses
-  udmAdobeStock_257147901;
+  udmAdobeStock_257147901,
+  Olf.Skia.SVGToBitmap,
+  USVGItems;
 
 { TcadScore }
+
+procedure TcadScore.AfterConstruction;
+begin
+  inherited;
+
+  tthread.forcequeue(nil,
+    procedure
+    begin
+      RefreshImage;
+    end);
+end;
 
 constructor TcadScore.Create(AOwner: TComponent);
 begin
@@ -51,16 +65,30 @@ end;
 
 procedure TcadScore.FrameResized(Sender: TObject);
 begin
-  Glyph1.height := height - Glyph1.margins.left - Glyph1.margins.Right;
-  Glyph1.width := Glyph1.height;
+  Image1.height := height - Image1.margins.left - Image1.margins.Right;
+  Image1.Width := Image1.height;
+  RefreshImage;
+end;
+
+procedure TcadScore.RefreshImage;
+var
+  bmp: tbitmap;
+begin
+  bmp := SVGToBitmap(round(Image1.Width), round(Image1.height),
+    SVGItems[CSVGJeton1], Image1.Bitmap.bitmapscale);
+  try
+    Image1.Bitmap.Assign(bmp);
+  finally
+    bmp.free;
+  end;
 end;
 
 procedure TcadScore.SetScore(const Value: int64);
 begin
   FScore := Value;
   OlfFMXTextImageFrame1.Text := FScore.ToString;
-  width := Glyph1.margins.left + Glyph1.width + Glyph1.margins.Right +
-    OlfFMXTextImageFrame1.margins.left + OlfFMXTextImageFrame1.width +
+  Width := Image1.margins.left + Image1.Width + Image1.margins.Right +
+    OlfFMXTextImageFrame1.margins.left + OlfFMXTextImageFrame1.Width +
     OlfFMXTextImageFrame1.margins.Right;
 end;
 
