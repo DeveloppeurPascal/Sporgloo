@@ -39,7 +39,11 @@ begin
   folder := System.IOUtils.tpath.GetDocumentsPath;
 {$ELSEIF defined(MSWINDOWS)}
   // deploy in ;\
+{$IFDEF DEBUG}
+  folder := '..\..\..\_PRIVATE\music\JoelSteudlerMusic_com\';
+{$ELSE}
   folder := extractfilepath(paramstr(0));
+{$ENDIF}
 {$ELSEIF defined(IOS)}
   // deploy in .\
   folder := extractfilepath(paramstr(0));
