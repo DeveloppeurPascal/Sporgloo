@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16.1 24">
+  <g id="Calque_1-2" data-name="Calque 1-2">
+    <g id="Layer0_96_FILL" data-name="Layer0 96 FILL">
+      <path d="M6.05,10H2v8h2.05v-6h2v-2M12.05,12v6h2.05v-8h-4.05v2h2Z" fill="#e9c07f" stroke-width="0"/>
+      <path d="M12.05,22v-4H4.05v4h8M10.05,8v-4h-4v4H2v2h4.05v2h-2v2h8v-2h-2v-2h4.05v-2h-4.05Z" fill="#ffd18b" stroke-width="0"/>
+      <path d="M12.05,18v-4H4.05v4h8Z" fill="#e27952" stroke-width="0"/>
+      <path d="M10.05,4v-2h-4v2h4Z" fill="#c48647" stroke-width="0"/>
+      <path d="M10.05,6v2h4.05v10h-2.05v4H4.05v-4h-2.05v-10h4.05v-2H2c-.57,0-1.03.2-1.4.6-.4.37-.6.83-.6,1.4v10c0,.57.2,1.05.6,1.45.37.37.83.55,1.4.55h.05v2c0,.57.2,1.05.6,1.45.37.37.83.55,1.4.55h8c.57,0,1.05-.18,1.45-.55.37-.4.55-.88.55-1.45v-2h.05c.57,0,1.05-.18,1.45-.55.37-.4.55-.88.55-1.45v-10c0-.57-.18-1.03-.55-1.4-.4-.4-.85-.6-1.35-.6,0,0-4.15,0-4.15,0Z" fill="#af8f5e" stroke-width="0"/>
+      <path d="M11.5.6C11.1.2,10.62,0,10.05,0h-4C5.48,0,5.02.2,4.65.6c-.4.37-.6.83-.6,1.4v4h2V2h4v4h2V2c0-.57-.18-1.03-.55-1.4Z" fill="#9a6836" stroke-width="0"/>
+    </g>
+  </g>
+</svg>

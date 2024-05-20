@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16.1 24">
+  <g id="Calque_1-2" data-name="Calque 1-2">
+    <g id="Layer0_90_FILL" data-name="Layer0 90 FILL">
+      <path d="M4.05,22v2h8v-2H4.05M2,10v-4c-.57,0-1.03.2-1.4.6C.2,6.97,0,7.43,0,8v10C0,18.57.2,19.05.6,19.45c.37.37.83.55,1.4.55v-10M14.1,6h-.05v2h.05v12c.57,0,1.05-.18,1.45-.55.37-.4.55-.88.55-1.45v-10c0-.57-.18-1.03-.55-1.4-.4-.4-.88-.6-1.45-.6Z" fill="#af8f5e" stroke-width="0"/>
+      <path d="M4.05,18h-2.05v2h.05v2c0,.57.2,1.05.6,1.45.37.37.83.55,1.4.55v-6M14.1,18h-2.05v6c.57,0,1.05-.18,1.45-.55.37-.4.55-.88.55-1.45v-2h.05v-2Z" fill="#157da8" stroke-width="0"/>
+      <path d="M4.05,12v-2h-2.05v8h2.05v-6M14.1,10h-2.05v8h2.05v-8Z" fill="#e9c07f" stroke-width="0"/>
+      <path d="M4.05,8h-2.05v2h2.05v-2M12.05,14v-2H4.05v2h8M14.05,8h-2v2h2.05v-2h-.05M10.05,4h-4v4h4v-4Z" fill="#ffd18b" stroke-width="0"/>
+      <path d="M12.05,18v-4H4.05v8h8v-4M12.05,10v-2H4.05v4h8v-2Z" fill="#1ea7e1" stroke-width="0"/>
+      <path d="M6.05,2l-2,2v4h2v-4h4v4h2v-4l-2-2h-4Z" fill="#c48647" stroke-width="0"/>
+      <path d="M2.65,2.6c-.4.37-.6.83-.6,1.4v2h-.05v2h2.05v-4l2-2h4l2,2v4h2v-4c0-.57-.18-1.03-.55-1.4l-2-2C11.1.2,10.62,0,10.05,0h-4C5.48,0,5.02.2,4.65.6l-2,2Z" fill="#9a6836" stroke-width="0"/>
+    </g>
+  </g>
+</svg>
