@@ -27,7 +27,8 @@ var
   s: string;
 begin
   s := DeviceID + Password;
-  result := TOlfCryptDecrypt.XORCrypt(s, Keys);
+  result := s;
+  // TODO :  result := TOlfCryptDecrypt.XORCrypt(s, Keys);
 end;
 
 function GetTokenID(PlayerID, DeviceID, DeviceAuthKey: string): string;
@@ -35,7 +36,8 @@ var
   s: string;
 begin
   s := PlayerID + DeviceID + DeviceAuthKey + Password;
-  result := TOlfCryptDecrypt.XORCrypt(s, Keys);
+  result := s;
+  // TODO :  result := TOlfCryptDecrypt.XORCrypt(s, Keys);
 end;
 
 initialization
