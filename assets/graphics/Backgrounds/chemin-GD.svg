@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64">
+  <g id="Calque_1-2" data-name="Calque 1-2">
+    <g id="Layer0_38_FILL" data-name="Layer0 38 FILL">
+      <path d="M36,60v4h4v-4h-4M64,4h-4v4h4v-4M24,48h4v-4h-4v4M36,40v-4h-4v4h4M36,24v-4h-4v4h4M12,16v-4h-4v4h4M56,56v-8h-8v8h8Z" fill="#24a159" stroke-width="0"/>
+      <path d="M60,4h4V0H0v64h36v-4h4v4h24V8h-4v-4M60,16h-4v-4h4v4M56,48v8h-8v-8h8M28,8h4v4h-4v-4M16,16h8v8h-8v-8M12,12v4h-4v-4h4M12,32v-4h4v4h-4M8,48v4h-4v-4h4M36,20v4h-4v-4h4M36,36v4h-4v-4h4M28,48h-4v-4h4v4M40,44h4v4h-4v-4Z" fill="#27ae60" stroke-width="0"/>
+      <path d="M44,44h-4v4h4v-4M8,52v-4h-4v4h4M12,28v4h4v-4h-4M24,16h-8v8h8v-8M32,8h-4v4h4v-4M56,16h4v-4h-4v4Z" fill="#29b865" stroke-width="0"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_FILL" data-name="Layer0 38 MEMBER 0 FILL">
+      <path d="M64,21.05c-.3,0-.6.08-.9.25-10.07,5.1-20.13,5.1-30.2,0C21.93,15.73,10.97,15.58,0,20.85v2.2c10.67-5.4,21.33-5.4,32,0,10.67,5.43,21.33,5.43,32,0v-2M64,43.2v-2.25c-10.67,5.4-21.33,5.4-32,0-9.33-4.77-18.67-5.35-28-1.75l-2,.8c-.67.3-1.33.62-2,.95v2c.3,0,.6-.07.9-.2.63-.33,1.27-.63,1.9-.9h-.05l1.95-.8h.05c8.8-3.37,17.58-2.8,26.35,1.7,10.97,5.53,21.93,5.68,32.9.45Z" fill="#219853" stroke-width="0"/>
+      <path d="M64,40.95v-17.9c-10.67,5.43-21.33,5.43-32,0-10.67-5.4-21.33-5.4-32,0v17.9c.67-.33,1.33-.65,2-.95l2-.8c9.33-3.6,18.67-3.02,28,1.75,10.67,5.4,21.33,5.4,32,0Z" fill="#d9a24d" stroke-width="0"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_0_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 0 FILL">
+      <path d="M10,30v-4h-4v4h4Z" fill="#e2a94f" stroke-width="0"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_1_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 1 FILL">
+      <path d="M12,22v4h4v-4h-4Z" fill="#cd9948" stroke-width="0"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_2_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 2 FILL">
+      <path d="M34,40h4v-4h-4v4Z" fill="#e2a94f" stroke-width="0"/>
+    </g>
+    <g id="Layer0_38_MEMBER_0_MEMBER_3_FILL" data-name="Layer0 38 MEMBER 0 MEMBER 3 FILL">
+      <path d="M56,40v-4h-4v4h4Z" fill="#cd9948" stroke-width="0"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64">
+  <g id="Calque_1-2" data-name="Calque 1-2">
+    <g id="Layer0_26_FILL" data-name="Layer0 26 FILL">
+      <path d="M36,60v4h4v-4h-4M64,4h-4v4h4v-4M8,16h4v-4h-4v4M56,56v-8h-8v8h8M28,48v-4h-4v4h4M36,36h-4v4h4v-4M36,20h-4v4h4v-4Z" fill="#24a159" stroke-width="0"/>
+      <path d="M64,4V0H0v64h36v-4h4v4h24V8h-4v-4h4M28,12v-4h4v4h-4M60,12v4h-4v-4h4M32,20h4v4h-4v-4M32,36h4v4h-4v-4M40,44h4v4h-4v-4M28,44v4h-4v-4h4M56,48v8h-8v-8h8M12,16h-4v-4h4v4M16,16h8v8h-8v-8M16,28v4h-4v-4h4M4,52v-4h4v4h-4Z" fill="#27ae60" stroke-width="0"/>
+      <path d="M4,48v4h4v-4h-4M16,32v-4h-4v4h4M24,16h-8v8h8v-8M44,44h-4v4h4v-4M60,16v-4h-4v4h4M28,8v4h4v-4h-4Z" fill="#29b865" stroke-width="0"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_FILL" data-name="Layer0 26 MEMBER 0 FILL">
+      <path d="M15.5,38.9c.62.08,1.06.44,1.3,1.1.46,1.28.56,3.14.3,5.6v.05c-.44,6.12.79,12.23,3.7,18.35h2.25c-3.07-6.07-4.38-12.13-3.95-18.2.6-5.73-.55-8.7-3.45-8.9C10.42,36.93,5.2,38.28,0,40.95v2c.32,0,.62-.08.9-.25,4.86-2.47,9.73-3.73,14.6-3.8M43.4,44.7c-4.27-1.2-6.43.35-6.5,4.65.2,4.87,1.55,9.75,4.05,14.65h2c0-.31-.09-.61-.25-.9-2.32-4.59-3.59-9.17-3.8-13.75v-.1c.04-1.26.32-2.14.85-2.65.7-.37,1.73-.37,3.1,0,.09.04.18.06.25.05,6.98,1.01,13.94-.16,20.9-3.5v-2.2c-6.87,3.47-13.73,4.72-20.6,3.75M64,23.05v-2c-.31,0-.61.07-.9.2-10.07,5.14-20.13,5.14-30.2,0C21.93,15.71,10.97,15.56,0,20.8v2.25c10.67-5.4,21.33-5.4,32,0,10.67,5.43,21.33,5.43,32,0Z" fill="#219853" stroke-width="0"/>
+      <path d="M64,40.95v-17.9c-10.67,5.43-21.33,5.43-32,0-10.67-5.4-21.33-5.4-32,0v17.9c5.2-2.67,10.42-4.02,15.65-4.05,2.9.2,4.05,3.17,3.45,8.9-.43,6.07.88,12.13,3.95,18.2h17.9c-2.5-4.9-3.85-9.78-4.05-14.65.07-4.3,2.23-5.85,6.5-4.65,6.87.97,13.73-.28,20.6-3.75Z" fill="#d9a24d" stroke-width="0"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_0_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 0 FILL">
+      <path d="M36,54h-4v4h4v-4Z" fill="#e2a94f" stroke-width="0"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_1_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 1 FILL">
+      <path d="M26,49v-4h-4v4h4Z" fill="#cd9948" stroke-width="0"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_2_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 2 FILL">
+      <path d="M50,33v-4h-4v4h4Z" fill="#e2a94f" stroke-width="0"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_3_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 3 FILL">
+      <path d="M8,34h4v-4h-4v4Z" fill="#e2a94f" stroke-width="0"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_4_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 4 FILL">
+      <path d="M14,28v4h4v-4h-4Z" fill="#cd9948" stroke-width="0"/>
+    </g>
+    <g id="Layer0_26_MEMBER_0_MEMBER_5_FILL" data-name="Layer0 26 MEMBER 0 MEMBER 5 FILL">
+      <path d="M60,36h-4v4h4v-4Z" fill="#cd9948" stroke-width="0"/>
+    </g>
+  </g>
+</svg>

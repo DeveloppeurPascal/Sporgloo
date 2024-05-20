@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64">
+  <g id="Calque_1-2" data-name="Calque 1-2">
+    <g id="Layer0_10_FILL" data-name="Layer0 10 FILL">
+      <path d="M4,12H0v8h4v-8M64,12h-4v8h4v-8M28,60v-4h-4v4h4M12,24h-4v4h4v-4M32,24h-4v4h4v-4M40,40h-4v4h4v-4M44,12h4v-4h-4v4Z" fill="#24a159" stroke-width="0"/>
+      <path d="M60,12h4V0H0v12h4v8H0v44h64V20h-4v-8M48,16h4v4h-4v-4M48,12h-4v-4h4v4M36,40h4v4h-4v-4M48,28v8h-8v-8h8M52,52v-4h4v4h-4M16,8h-4v-4h4v4M28,24h4v4h-4v-4M8,24h4v4h-4v-4M8,52h4v4h-4v-4M20,48h-4v-4h4v4M28,56v4h-4v-4h4Z" fill="#27ae60" stroke-width="0"/>
+      <path d="M16,48h4v-4h-4v4M12,52h-4v4h4v-4M12,8h4v-4h-4v4M52,48v4h4v-4h-4M48,36v-8h-8v8h8M52,16h-4v4h4v-4Z" fill="#29b865" stroke-width="0"/>
+    </g>
+  </g>
+</svg>
