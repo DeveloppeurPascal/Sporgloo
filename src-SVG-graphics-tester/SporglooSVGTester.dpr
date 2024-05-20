@@ -9,7 +9,8 @@ uses
   USVGItems in '..\assets\graphics\Items\USVGItems.pas',
   USVGPersos in '..\assets\graphics\Persos\USVGPersos.pas',
   USVGTrees in '..\assets\graphics\Trees\USVGTrees.pas',
-  USVGUserInterface in '..\assets\graphics\UserInterface\USVGUserInterface.pas';
+  USVGUserInterface in '..\assets\graphics\UserInterface\USVGUserInterface.pas',
+  Olf.Skia.SVGToBitmap in '..\lib-externes\librairies\src\Olf.Skia.SVGToBitmap.pas';
 
 {$R *.res}
 

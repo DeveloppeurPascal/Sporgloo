@@ -63,7 +63,8 @@ uses
   USVGItems,
   USVGPersos,
   USVGTrees,
-  USVGUserInterface;
+  USVGUserInterface,
+  Olf.skia.SVGToBitmap;
 
 procedure TForm1.btnBackgroundsClick(Sender: TObject);
 begin
@@ -113,6 +114,8 @@ begin
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
+var
+  bmp: tbitmap;
 begin
   Timer1.Tag := Timer1.Tag + 1;
   if (Timer1.Tag >= length(PTabSVG^)) then
@@ -124,21 +127,17 @@ begin
     Image1.Bitmap.SetSize(trunc(Image1.Width * Image1.Bitmap.bitmapscale),
       trunc(Image1.Height * Image1.Bitmap.bitmapscale));
 
-  Image1.Bitmap.SkiaDraw(
-    procedure(const ACanvas: ISKCanvas)
-    var
-      LSvgBrush: TSkSvgBrush;
-    begin
-      LSvgBrush := TSkSvgBrush.Create;
-      try
-        LSvgBrush.Source := PTabSVG^[Timer1.Tag];
-        LSvgBrush.Render(ACanvas, RectF(0, 0, Image1.Bitmap.Width /
-          Image1.Bitmap.bitmapscale, Image1.Bitmap.Height /
-          Image1.Bitmap.bitmapscale), 1);
-      finally
-        LSvgBrush.Free;
-      end;
-    end);
+  bmp := SVGToBitmap(Image1.Bitmap.Width, Image1.Bitmap.Height,
+    PTabSVG^[Timer1.Tag], Image1.Bitmap.bitmapscale);
+  try
+    Image1.Bitmap.Assign(bmp);
+  finally
+    bmp.free;
+  end;
 end;
+
+initialization
+
+ReportMemoryLeaksOnShutdown := true;
 
 end.
