@@ -15,8 +15,8 @@ uses
   FMX.Dialogs,
   FMX.StdCtrls,
   cYellowGameButton,
-  FMX.ImgList,
-  FMX.Objects, FMX.Effects;
+  FMX.Effects,
+  FMX.Objects;
 
 type
   TcadYellowGameButtonPause = class(TcadYellowGameButton)
@@ -32,13 +32,31 @@ var
 implementation
 
 {$R *.fmx}
+
+uses
+  Olf.Skia.SVGToBitmap,
+  USVGUserInterface;
+
 { TcadYellowGameButtonPause }
 
 procedure TcadYellowGameButtonPause.AfterConstruction;
 begin
   inherited;
-  gUp.ImageIndex := 2;
-  gDown.ImageIndex := gUp.ImageIndex;
+
+  tthread.ForceQueue(nil,
+    procedure
+    var
+      bmp: TBitmap;
+    begin
+      bmp := SVGToBitmap(round(imgUp.Width), round(imgUp.Height),
+        SVGUserInterface[CSVGPause], imgUp.bitmap.BitmapScale);
+      try
+        imgUp.bitmap.Assign(bmp);
+        imgdown.bitmap.Assign(bmp);
+      finally
+        bmp.free;
+      end;
+    end);
 end;
 
 end.
