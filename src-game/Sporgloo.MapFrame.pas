@@ -15,7 +15,6 @@ uses
   FMX.Dialogs,
   FMX.StdCtrls,
   Sporgloo.Types,
-  Sporgloo.Images,
   FMX.Objects,
   Sporgloo.Database;
 
@@ -48,7 +47,12 @@ uses
   System.Math,
   uGameData,
   Sporgloo.Consts,
-  Sporgloo.Messaging;
+  Sporgloo.Messaging,
+  Olf.Skia.SVGToBitmap,
+  USVGPersos,
+  USVGItems,
+  USVGTrees,
+  USVGBackgrounds;
 
 constructor TMapFrame.Create(AOwner: TComponent);
 begin
@@ -84,14 +88,17 @@ begin
       (CSporglooTileSize - h) / 2;
 
     BitmapScale := MapImage.Bitmap.BitmapScale;
-    bmp := dmSporglooImages.MapImages.Bitmap(tsizef.Create(w * BitmapScale,
-      h * BitmapScale), 3); // Image index 3 - player, original size (18x25)
-    MapImage.Bitmap.Canvas.BeginScene;
+    bmp := SVGToBitmap(Round(w), Round(h), SVGPersos[CSVGPerso10], BitmapScale);
     try
-      MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
-        rectf(x, y, x + w + 1 * BitmapScale, y + h + 1 * BitmapScale), 1);
+      MapImage.Bitmap.Canvas.BeginScene;
+      try
+        MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
+          rectf(x, y, x + w + 1 * BitmapScale, y + h + 1 * BitmapScale), 1);
+      finally
+        MapImage.Bitmap.Canvas.EndScene;
+      end;
     finally
-      MapImage.Bitmap.Canvas.EndScene;
+      bmp.free;
     end;
   end;
 end;
@@ -116,14 +123,17 @@ begin
     (CSporglooTileSize - h) / 2;
 
   BitmapScale := MapImage.Bitmap.BitmapScale;
-  bmp := dmSporglooImages.MapImages.Bitmap(tsizef.Create(w * BitmapScale,
-    h * BitmapScale), 2); // Image index 2 - star, original size (113x113)
-  MapImage.Bitmap.Canvas.BeginScene;
+  bmp := SVGToBitmap(Round(w), Round(h), SVGItems[CSVGStar], BitmapScale);
   try
-    MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
-      rectf(x, y, x + w + 1 * BitmapScale, y + h + 1 * BitmapScale), 1);
+    MapImage.Bitmap.Canvas.BeginScene;
+    try
+      MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
+        rectf(x, y, x + w + 1 * BitmapScale, y + h + 1 * BitmapScale), 1);
+    finally
+      MapImage.Bitmap.Canvas.EndScene;
+    end;
   finally
-    MapImage.Bitmap.Canvas.EndScene;
+    bmp.free;
   end;
 end;
 
@@ -132,8 +142,8 @@ var
   x, y: single;
   BitmapScale: single;
   bmp: tbitmap;
-  TileImgIndex: integer;
   GameData: TGameData;
+  SVG: string;
 begin
   if not assigned(MapImage.Bitmap) then
     MapImage.Bitmap := tbitmap.Create;
@@ -149,25 +159,27 @@ begin
 
     case AMapCell.TileID of
       CSporglooTileForest:
-        TileImgIndex := 1;
+        SVG := SVGTrees[CSVGArbres6];
       CSporglooTilePath, CSporglooTileStar:
-        TileImgIndex := 0;
+        SVG := SVGBackgrounds[CSVGFond1];
     else
       raise exception.Create('Tile ID ' + AMapCell.TileID.ToString +
         ' non supported.');
     end;
 
     BitmapScale := MapImage.Bitmap.BitmapScale;
-    bmp := dmSporglooImages.MapImages.Bitmap
-      (tsizef.Create(CSporglooTileSize * BitmapScale,
-      CSporglooTileSize * BitmapScale), TileImgIndex);
-    MapImage.Bitmap.Canvas.BeginScene;
+    bmp := SVGToBitmap(CSporglooTileSize, CSporglooTileSize, SVG, BitmapScale);
     try
-      MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
-        rectf(x, y, x + CSporglooTileSize + 1 * BitmapScale,
-        y + CSporglooTileSize + 1 * BitmapScale), 1);
+      MapImage.Bitmap.Canvas.BeginScene;
+      try
+        MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
+          rectf(x, y, x + CSporglooTileSize + 1 * BitmapScale,
+          y + CSporglooTileSize + 1 * BitmapScale), 1);
+      finally
+        MapImage.Bitmap.Canvas.EndScene;
+      end;
     finally
-      MapImage.Bitmap.Canvas.EndScene;
+      bmp.free;
     end;
 
     if AMapCell.TileID = CSporglooTileStar then
