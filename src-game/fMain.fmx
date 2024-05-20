@@ -131,7 +131,7 @@ object frmMain: TfrmMain
         inherited OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
           Size.Height = 30.000000000000000000
         end
-        inherited Glyph1: TGlyph
+        inherited Image1: TImage
           Size.Height = 30.000000000000000000
         end
       end
@@ -150,10 +150,10 @@ object frmMain: TfrmMain
         inherited Rectangle1: TRectangle
           Size.Height = 40.000000000000000000
         end
-        inherited Glyph1: TGlyph
+        inherited OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
           Size.Height = 30.000000000000000000
         end
-        inherited OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
+        inherited Image1: TImage
           Size.Height = 30.000000000000000000
         end
       end
@@ -174,7 +174,7 @@ object frmMain: TfrmMain
         inherited OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
           Size.Height = 30.000000000000000000
         end
-        inherited Glyph1: TGlyph
+        inherited Image1: TImage
           Size.Height = 30.000000000000000000
         end
       end
