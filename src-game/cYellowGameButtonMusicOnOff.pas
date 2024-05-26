@@ -39,7 +39,8 @@ uses
   Sporgloo.Messaging,
   uConfig,
   Olf.Skia.SVGToBitmap,
-  USVGUserInterface;
+  USVGUserInterface,
+  uSVGRegister;
 
 { TcadYellowGameButtonMusicOnOff }
 
@@ -68,14 +69,14 @@ var
   bmp: TBitmap;
 begin
   if MusicOnOff then
-    bmp := SVGToBitmap(round(imgUp.Width), round(imgUp.Height),
-      SVGUserInterface[CSVGMusicOff], imgUp.bitmap.BitmapScale)
+    bmp := TOlfSVGBitmapList.Bitmap(SVGUserInterfaceListIndex, CSVGMusicOff,
+      round(imgUp.Width), round(imgUp.height), imgUp.Bitmap.bitmapscale)
   else
-    bmp := SVGToBitmap(round(imgUp.Width), round(imgUp.Height),
-      SVGUserInterface[CSVGMusicOn], imgUp.bitmap.BitmapScale);
+    bmp := TOlfSVGBitmapList.Bitmap(SVGUserInterfaceListIndex, CSVGMusicOn,
+      round(imgUp.Width), round(imgUp.height), imgUp.Bitmap.bitmapscale);
   try
-    imgUp.bitmap.Assign(bmp);
-    imgdown.bitmap.Assign(bmp);
+    imgUp.Bitmap.Assign(bmp);
+    imgdown.Bitmap.Assign(bmp);
   finally
     bmp.free;
   end;
