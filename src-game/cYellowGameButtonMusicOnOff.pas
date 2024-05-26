@@ -74,12 +74,9 @@ begin
   else
     bmp := TOlfSVGBitmapList.Bitmap(SVGUserInterfaceListIndex, CSVGMusicOn,
       round(imgUp.Width), round(imgUp.height), imgUp.Bitmap.bitmapscale);
-  try
-    imgUp.Bitmap.Assign(bmp);
-    imgdown.Bitmap.Assign(bmp);
-  finally
-    bmp.free;
-  end;
+
+  imgUp.Bitmap.Assign(bmp);
+  imgdown.Bitmap.Assign(bmp);
 end;
 
 end.
