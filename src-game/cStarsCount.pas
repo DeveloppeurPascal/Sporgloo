@@ -41,7 +41,8 @@ implementation
 uses
   udmAdobeStock_257147901,
   Olf.Skia.SVGToBitmap,
-  USVGItems;
+  USVGItems,
+  uSVGRegister;
 
 { TcadStarsCount }
 
@@ -71,16 +72,9 @@ begin
 end;
 
 procedure TcadStarsCount.RefreshImage;
-var
-  bmp: tbitmap;
 begin
-  bmp := SVGToBitmap(round(Image1.Width), round(Image1.height),
-    SVGItems[CSVGStar], Image1.Bitmap.bitmapscale);
-  try
-    Image1.Bitmap.Assign(bmp);
-  finally
-    bmp.free;
-  end;
+  Image1.Bitmap.Assign(TOlfSVGBitmapList.Bitmap(SVGItemsListIndex, CSVGStar,
+    round(Image1.Width), round(Image1.height), Image1.Bitmap.bitmapscale));
 end;
 
 procedure TcadStarsCount.SetStarsCount(const Value: int64);
