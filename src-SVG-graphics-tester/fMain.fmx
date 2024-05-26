@@ -108,6 +108,7 @@ object Form1: TForm1
     Size.Width = 845.000000000000000000
     Size.Height = 370.000000000000000000
     Size.PlatformDefault = False
+    WrapMode = Original
     OnResize = Image1Resize
   end
   object Layout2: TLayout
@@ -148,6 +149,7 @@ object Form1: TForm1
     end
   end
   object Timer1: TTimer
+    Interval = 50
     OnTimer = Timer1Timer
     Left = 40
     Top = 104
