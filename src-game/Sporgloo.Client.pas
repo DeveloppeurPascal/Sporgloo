@@ -141,7 +141,7 @@ procedure TSporglooClient.onCoinsCountChange(const AFromServer
   : TOlfSocketMessagingServerConnectedClient;
   const msg: TCoinsCountChangeMessage);
 begin
-  // TODO : à compléter
+  TGameData.Current.Player.CoinsCount := msg.CoinsCount;
 end;
 
 procedure TSporglooClient.onCurrentPlayerKilled(const AFromServer
@@ -174,7 +174,7 @@ procedure TSporglooClient.onLivesCountChange(const AFromServer
   : TOlfSocketMessagingServerConnectedClient;
 const msg: TLivesCountChangeMessage);
 begin
-  // TODO : à compléter
+  TGameData.Current.Player.LivesCount := msg.LivesCount;
 end;
 
 procedure TSporglooClient.onLogoff(const AFromServer
@@ -227,17 +227,15 @@ begin
     LPlayer.ImageID := msg.ImageID;
   end;
 
-  // TODO : voir si utile ou si le déplacement du jouer suffit à se repositionner
-
-  // if (LPlayer = LGameData.Player) then
-  // LGameData.RefreshMap;
+  if (LPlayer = LGameData.Player) then
+    LGameData.RefreshMap;
 end;
 
 procedure TSporglooClient.onStarsCountChange(const AFromServer
   : TOlfSocketMessagingServerConnectedClient;
 const msg: TStarsCountChangeMessage);
 begin
-  // TODO : à compléter
+  TGameData.Current.Player.StarsCount := msg.StarsCount;
 end;
 
 procedure TSporglooClient.SendAskForPlayerInfos(const SessionID,
