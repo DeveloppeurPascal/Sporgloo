@@ -29,7 +29,8 @@ implementation
 
 uses
   Olf.Skia.SVGToBitmap,
-  USVGUserInterface;
+  USVGUserInterface,
+  uSVGRegister;
 
 { TcadViseur }
 
@@ -39,16 +40,10 @@ begin
 
   tthread.forcequeue(nil,
     procedure
-    var
-      bmp: tbitmap;
     begin
-      bmp := SVGToBitmap(round(Image1.Width), round(Image1.height),
-        SVGUserInterface[CSVGTargetRoundB], Image1.Bitmap.bitmapscale);
-      try
-        Image1.Bitmap.Assign(bmp);
-      finally
-        bmp.free;
-      end;
+      Image1.Bitmap.Assign(TOlfSVGBitmapList.Bitmap(SVGUserInterfaceListIndex,
+        CSVGTargetRoundB, round(Image1.Width), round(Image1.height),
+        Image1.Bitmap.bitmapscale));
     end);
 end;
 
