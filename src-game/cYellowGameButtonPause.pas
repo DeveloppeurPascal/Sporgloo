@@ -35,7 +35,8 @@ implementation
 
 uses
   Olf.Skia.SVGToBitmap,
-  USVGUserInterface;
+  USVGUserInterface,
+  uSVGRegister;
 
 { TcadYellowGameButtonPause }
 
@@ -48,14 +49,10 @@ begin
     var
       bmp: TBitmap;
     begin
-      bmp := SVGToBitmap(round(imgUp.Width), round(imgUp.Height),
-        SVGUserInterface[CSVGPause], imgUp.bitmap.BitmapScale);
-      try
-        imgUp.bitmap.Assign(bmp);
-        imgdown.bitmap.Assign(bmp);
-      finally
-        bmp.free;
-      end;
+      bmp := TOlfSVGBitmapList.Bitmap(SVGUserInterfaceListIndex, CSVGPause,
+        round(imgUp.Width), round(imgUp.height), imgUp.Bitmap.bitmapscale);
+      imgUp.Bitmap.Assign(bmp);
+      imgdown.Bitmap.Assign(bmp);
     end);
 end;
 
