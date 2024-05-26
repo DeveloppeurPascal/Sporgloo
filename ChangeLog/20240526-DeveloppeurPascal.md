@@ -11,3 +11,9 @@
 
 * ajout du référencement des SVG indépendants dans la nouvelle liste de SVG prenant en charge un cache des bitmaps
 * remplacement des créations de bitmaps à l'utilisation par le cache des images
+
+* correction d'un bogue ou deux liés à des effacements de zones mémoire hors mémoire (lié à la conversion entre l'ancien affichage et le nouveaupour les bitmaps des SVG)
+
+* déplacement du bloc d'info "score" vers la gauche avec les autres
+
+* publication d'une alpha 0.4a une fois les programmes fonctionnels sous Windows et Mac
