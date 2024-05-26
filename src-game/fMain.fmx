@@ -136,13 +136,13 @@ object frmMain: TfrmMain
         end
       end
       inline lblScore: TcadScore
-        Align = Right
+        Align = Left
         HitTest = False
         Margins.Left = 5.000000000000000000
         Margins.Top = 5.000000000000000000
         Margins.Right = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
-        Position.X = 1006.000000000000000000
+        Position.X = 987.000000000000000000
         Position.Y = 5.000000000000000000
         Size.Width = 320.000000000000000000
         Size.Height = 40.000000000000000000
@@ -338,8 +338,8 @@ object frmMain: TfrmMain
   end
   object OlfAboutDialog1: TOlfAboutDialog
     Titre = 'Sporgloo'
-    VersionNumero = '0.3 alpha'
-    VersionDate = '20240520'
+    VersionNumero = '0.4 alpha'
+    VersionDate = '20240526'
     MultiResBitmap = <
       item
       end>
