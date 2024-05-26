@@ -32,8 +32,6 @@
 * Dans le jeu
 
 - signer les paramètres du jeu en DEBUG aussi, histoire d'éviter les bidouilles et avoir le même fonctionnement partout
-- implémenter les nouveaux messages REGISTER et LOGIN (avec ajout des nouveaux champs et chiffrement d'une clé contenant le mot de passe de connexion)
-- générer une nouvelle version (en DEBUG) des programmes
 
 
 **********
@@ -54,9 +52,7 @@
 
 - passer uConfig en mode jeu normal (ne pas réinitialiser DeviceID/PlayerId à chaque lancement du programme)
 - choisir une image pour les coffres forts
-- remplacer les listes de bitmaps par des listes en SVG
 - sortir les images du personnage du joueur dans une liste d'images séparée (pour gérer le choix au démarrage d'une partie)
-- implémenter les modifications liées aux changements de l'API
 - implémenter les changements d'affichages au niveau d'une cellule de la carte (coffres forts, ...)
 - implémenter les changements au niveau du déplacement du joueur (détection de cases autorisées ou pas)
 - implémenter les changements au niveau du placement d'une étoile (détection de cases autorisées ou pas)
