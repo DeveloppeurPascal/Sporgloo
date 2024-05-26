@@ -41,7 +41,8 @@ implementation
 uses
   udmAdobeStock_257147901,
   Olf.Skia.SVGToBitmap,
-  USVGItems;
+  USVGItems,
+  uSVGRegister;
 
 { TcadScore }
 
@@ -71,16 +72,9 @@ begin
 end;
 
 procedure TcadScore.RefreshImage;
-var
-  bmp: tbitmap;
 begin
-  bmp := SVGToBitmap(round(Image1.Width), round(Image1.height),
-    SVGItems[CSVGJeton1], Image1.Bitmap.bitmapscale);
-  try
-    Image1.Bitmap.Assign(bmp);
-  finally
-    bmp.free;
-  end;
+  Image1.Bitmap.Assign(TOlfSVGBitmapList.Bitmap(SVGItemsListIndex, CSVGJeton1,
+    round(Image1.Width), round(Image1.height), Image1.Bitmap.bitmapscale));
 end;
 
 procedure TcadScore.SetScore(const Value: int64);
