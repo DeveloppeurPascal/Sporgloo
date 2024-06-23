@@ -57,7 +57,8 @@ uses
   System.IOUtils,
   System.Classes,
   System.Types,
-  Olf.RTL.CryptDecrypt;
+  Olf.RTL.CryptDecrypt,
+  Sporgloo.Consts;
 
 var
   ConfigInstance: TConfig;
@@ -168,7 +169,7 @@ end;
 
 function TConfig.GetServerIPv4Port: word;
 begin
-  result := FParams.getValue('ServerIPv4Port', 8080);
+  result := FParams.getValue('ServerIPv4Port', CDefaultServerPort);
 end;
 
 function TConfig.GetServerIPv6: string;
@@ -182,7 +183,7 @@ function TConfig.GetServerIPv6Port: word;
 begin
   raise Exception.Create('No IPv6 server available.');
   // TODO : add IPv6 setup for the server
-  result := FParams.getValue('ServerIPv6Port', 8080);
+  result := FParams.getValue('ServerIPv6Port', CDefaultServerPort);
 end;
 
 procedure TConfig.SetBackgroundMusic(const Value: boolean);
