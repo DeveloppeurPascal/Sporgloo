@@ -27,70 +27,118 @@ object frmMain: TfrmMain
     Size.Width = 1341.000000000000000000
     Size.Height = 629.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 7
+    TabOrder = 3
     inline gbHomeMenuButtons: TcadGrayBox
       Align = Center
       Locked = True
       HitTest = False
-      Size.Width = 220.000000000000000000
-      Size.Height = 150.000000000000000000
+      Size.Width = 300.000000000000000000
+      Size.Height = 349.000000000000000000
       Size.PlatformDefault = False
       inherited rOutside: TRectangle
-        Size.Width = 220.000000000000000000
-        Size.Height = 150.000000000000000000
+        Size.Width = 300.000000000000000000
+        Size.Height = 349.000000000000000000
         inherited rBackground: TRectangle
-          Size.Width = 208.000000000000000000
-          Size.Height = 138.000000000000000000
+          Size.Width = 288.000000000000000000
+          Size.Height = 337.000000000000000000
           inherited sContent: TVertScrollBox
-            Size.Width = 198.000000000000000000
-            Size.Height = 118.000000000000000000
-            Viewport.Width = 182.000000000000000000
-            Viewport.Height = 118.000000000000000000
+            Size.Width = 278.000000000000000000
+            Size.Height = 317.000000000000000000
+            Viewport.Width = 262.000000000000000000
+            Viewport.Height = 317.000000000000000000
             inline btnPlay: TcadYellowMenuButton
               Align = Top
               Locked = True
               Margins.Bottom = 5.000000000000000000
-              Size.Width = 182.000000000000000000
+              Size.Width = 262.000000000000000000
               Size.Height = 49.000000000000000000
               Size.PlatformDefault = False
               OnClick = btnPlayClick
               inherited rUp: TRectangle
-                Size.Width = 182.000000000000000000
+                Size.Width = 262.000000000000000000
               end
               inherited rDown: TRectangle
-                Size.Width = 182.000000000000000000
+                Size.Width = 262.000000000000000000
               end
             end
             inline btnQuit: TcadYellowMenuButton
               Align = Top
               Locked = True
               Margins.Bottom = 5.000000000000000000
-              Position.Y = 108.000000000000000000
-              Size.Width = 182.000000000000000000
+              Position.Y = 270.000000000000000000
+              Size.Width = 262.000000000000000000
               Size.Height = 49.000000000000000000
               Size.PlatformDefault = False
               OnClick = btnQuitClick
               inherited rUp: TRectangle
-                Size.Width = 182.000000000000000000
+                Size.Width = 262.000000000000000000
               end
               inherited rDown: TRectangle
-                Size.Width = 182.000000000000000000
+                Size.Width = 262.000000000000000000
               end
             end
             inline btnNewGame: TcadYellowMenuButton
               Align = Top
               Locked = True
               Margins.Bottom = 5.000000000000000000
-              Position.Y = 54.000000000000000000
-              Size.Width = 182.000000000000000000
+              Position.Y = 216.000000000000000000
+              Size.Width = 262.000000000000000000
               Size.Height = 49.000000000000000000
               Size.PlatformDefault = False
               OnClick = btnNewGameClick
               inherited rUp: TRectangle
-                Size.Width = 182.000000000000000000
+                Size.Width = 262.000000000000000000
               end
               inherited rDown: TRectangle
-                Size.Width = 182.000000000000000000
+                Size.Width = 262.000000000000000000
+              end
+            end
+            inline btnCredits: TcadYellowMenuButton
+              Align = Top
+              Locked = True
+              Margins.Bottom = 5.000000000000000000
+              Position.Y = 162.000000000000000000
+              Size.Width = 262.000000000000000000
+              Size.Height = 49.000000000000000000
+              Size.PlatformDefault = False
+              OnClick = btnCreditsClick
+              inherited rUp: TRectangle
+                Size.Width = 262.000000000000000000
+              end
+              inherited rDown: TRectangle
+                Size.Width = 262.000000000000000000
+              end
+            end
+            inline btnHallOfFame: TcadYellowMenuButton
+              Align = Top
+              Locked = True
+              Margins.Bottom = 5.000000000000000000
+              Position.Y = 108.000000000000000000
+              Size.Width = 262.000000000000000000
+              Size.Height = 49.000000000000000000
+              Size.PlatformDefault = False
+              OnClick = btnHallOfFameClick
+              inherited rUp: TRectangle
+                Size.Width = 262.000000000000000000
+              end
+              inherited rDown: TRectangle
+                Size.Width = 262.000000000000000000
+              end
+            end
+            inline btnOptions: TcadYellowMenuButton
+              Align = Top
+              Locked = True
+              Margins.Bottom = 5.000000000000000000
+              Position.Y = 54.000000000000000000
+              Size.Width = 262.000000000000000000
+              Size.Height = 49.000000000000000000
+              Size.PlatformDefault = False
+              OnClick = btnOptionsClick
+              inherited rUp: TRectangle
+                Size.Width = 262.000000000000000000
+              end
+              inherited rDown: TRectangle
+                Size.Width = 262.000000000000000000
               end
             end
           end
@@ -106,7 +154,7 @@ object frmMain: TfrmMain
     Size.Height = 629.000000000000000000
     Size.PlatformDefault = False
     Visible = False
-    TabOrder = 6
+    TabOrder = 2
     OnMouseDown = GamePageMouseDown
     OnMouseMove = GamePageMouseMove
     inline Viseur: TcadViseur
@@ -226,45 +274,13 @@ object frmMain: TfrmMain
       end
     end
   end
-  object NewGamePage: TLayout
-    Align = Contents
-    Size.Width = 640.000000000000000000
-    Size.Height = 480.000000000000000000
-    Size.PlatformDefault = False
-    Visible = False
-    TabOrder = 5
-  end
-  object CreditsPage: TLayout
-    Align = Contents
-    Size.Width = 640.000000000000000000
-    Size.Height = 480.000000000000000000
-    Size.PlatformDefault = False
-    Visible = False
-    TabOrder = 4
-  end
-  object ScorePage: TLayout
-    Align = Contents
-    Size.Width = 640.000000000000000000
-    Size.Height = 480.000000000000000000
-    Size.PlatformDefault = False
-    Visible = False
-    TabOrder = 3
-  end
-  object OptionsPage: TLayout
-    Align = Contents
-    Size.Width = 640.000000000000000000
-    Size.Height = 480.000000000000000000
-    Size.PlatformDefault = False
-    Visible = False
-    TabOrder = 2
-  end
   object WaitPage: TLayout
     Align = Contents
     Size.Width = 640.000000000000000000
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
     Visible = False
-    TabOrder = 8
+    TabOrder = 4
     object WaitAnimation: TAniIndicator
       Align = Center
     end
@@ -275,7 +291,7 @@ object frmMain: TfrmMain
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
     Visible = False
-    TabOrder = 10
+    TabOrder = 6
     object Layout1: TLayout
       Align = Top
       Margins.Top = 30.000000000000000000

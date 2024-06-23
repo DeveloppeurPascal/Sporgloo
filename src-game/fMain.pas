@@ -42,10 +42,6 @@ type
     MapFrame1: TMapFrame;
     HomePage: TLayout;
     GamePage: TLayout;
-    NewGamePage: TLayout;
-    CreditsPage: TLayout;
-    ScorePage: TLayout;
-    OptionsPage: TLayout;
     WaitPage: TLayout;
     WaitAnimation: TAniIndicator;
     txtImgTitre: TOlfFMXTextImageFrame;
@@ -66,6 +62,9 @@ type
     cadYellowGameButtonPause1: TcadYellowGameButtonPause;
     cadYellowGameButtonMusicOnOff1: TcadYellowGameButtonMusicOnOff;
     btnNewGame: TcadYellowMenuButton;
+    btnCredits: TcadYellowMenuButton;
+    btnHallOfFame: TcadYellowMenuButton;
+    btnOptions: TcadYellowMenuButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -81,6 +80,9 @@ type
     procedure cadYellowGameButtonMusicOnOff1Click(Sender: TObject);
     procedure OlfAboutDialog1URLClick(const AURL: string);
     procedure btnNewGameClick(Sender: TObject);
+    procedure btnCreditsClick(Sender: TObject);
+    procedure btnHallOfFameClick(Sender: TObject);
+    procedure btnOptionsClick(Sender: TObject);
   private
     FActivePage: TPageType;
     FPreviousGamePadKey: Word;
@@ -90,6 +92,10 @@ type
     property ActivePage: TPageType read FActivePage write SetActivePage;
     procedure ShowGameTitle(isVisible: boolean = true);
     procedure InitializeGamePage;
+    procedure ShowNewGamePage;
+    procedure ShowCreditsPage;
+    procedure ShowHallOfFamePage;
+    procedure ShowOptionsPage;
     procedure InitializeHomePage;
     procedure DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
     procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
@@ -130,32 +136,29 @@ uses
   USVGPersos,
   cChoosePlayerImageID;
 
+procedure TfrmMain.btnCreditsClick(Sender: TObject);
+begin
+  ActivePage := TPageType.Credits;
+end;
+
+procedure TfrmMain.btnHallOfFameClick(Sender: TObject);
+begin
+  ActivePage := TPageType.Scores;
+end;
+
 procedure TfrmMain.btnNewGameClick(Sender: TObject);
 begin
-  // TODO : traduire texte
-  TcadShowYesNoBox.ShowModal(self, 'Starting a new game will erase current one.'
-    + slinebreak + 'Are you sure you want to loose your current game ?',
-    procedure
-    begin
-      tgamedata.current.APIClient.SendKillCurrentPlayer
-        (tgamedata.current.Session.SessionID,
-        tgamedata.current.Player.PlayerID);
-      TcadShowMessageBox.ShowModal(self, 'Current game will be destroyed.' +
-        slinebreak + 'A new game will restart soon.');
-    end,
-    procedure
-    begin
-      TcadShowMessageBox.ShowModal(self,
-        'Use "Play" button to continue your current game.');
-    end);
+  ActivePage := TPageType.NewGame;
+end;
+
+procedure TfrmMain.btnOptionsClick(Sender: TObject);
+begin
+  ActivePage := TPageType.Options;
 end;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
   ActivePage := TPageType.Game;
-  if (tgamedata.current.Player.ImageID < 0) or
-    (tgamedata.current.Player.ImageID >= length(SVGPersos)) then
-    TcadChoosePlayerImageID.Execute(self);
 end;
 
 procedure TfrmMain.btnQuitClick(Sender: TObject);
@@ -395,6 +398,14 @@ begin
   lblScore.Score := tgamedata.current.Player.CoinsCount;
   lblLifeLevel.LifeLevel := tgamedata.current.Player.LivesCount;
   lblStarsCount.StarsCount := tgamedata.current.Player.StarsCount;
+
+  if (tgamedata.current.Player.ImageID < 0) or
+    (tgamedata.current.Player.ImageID >= length(SVGPersos)) then
+    TThread.ForceQueue(nil,
+      procedure
+      begin
+        TcadChoosePlayerImageID.Execute(self);
+      end);
 end;
 
 procedure TfrmMain.InitializeHomePage;
@@ -402,7 +413,19 @@ begin
   // TODO : traduire textes
   btnPlay.txtImage.Text := 'PLAY';
   btnNewGame.txtImage.Text := 'NEW GAME';
+{$IFDEF RELEASE}
+  btnNewGame.Visible := false;
+  // TODO : réactiver le bouton new game" une fois la fonctionnalité pleinement opérationnelle
+{$ENDIF}
+  btnOptions.txtImage.Text := 'OPTIONS';
+  btnOptions.Visible := false; // TODO : réactiver l'écran des options
+  btnHallOfFame.txtImage.Text := 'HALL OF FAME';
+  btnHallOfFame.Visible := false; // TODO : réactiver l'écran des scores
+  btnCredits.txtImage.Text := 'CREDITS';
   btnQuit.txtImage.Text := 'QUIT';
+{$IF Defined(IOS) or Defined(ANDROID)}
+  btnQuit.Visible := false;
+{$ENDIF}
   gbHomeMenuButtons.AutoHeight;
 end;
 
@@ -472,35 +495,31 @@ begin
     HidePage(GamePage);
 
   if Value = TPageType.NewGame then
-  begin
-    // TODO : initialize the "new game" screen
-    ShowPage(NewGamePage);
-  end
-  else
-    HidePage(NewGamePage);
+    ShowNewGamePage;
 
   if Value = TPageType.Credits then
-    ShowPage(CreditsPage)
-  else
-    HidePage(CreditsPage);
+    ShowCreditsPage;
 
   if Value = TPageType.Scores then
-  begin
-    // TODO : load scores from the server (or the local cache)
-    ShowPage(ScorePage);
-  end
-  else
-    HidePage(ScorePage);
+    ShowHallOfFamePage;
 
   if Value = TPageType.Options then
-  begin
-    // TODO : Initialize the options page from config settings
-    ShowPage(OptionsPage);
-  end
-  else
-    HidePage(OptionsPage);
+    ShowOptionsPage;
 
   FActivePage := Value;
+end;
+
+procedure TfrmMain.ShowCreditsPage;
+var
+  Text: string;
+begin
+  Text := ''; // TODO : traduire texte
+  // TODO : à compléter
+  TcadShowMessageBox.ShowModal(self, Text,
+    procedure
+    begin
+      ActivePage := TPageType.Home;
+    end);
 end;
 
 procedure TfrmMain.ShowGameTitle(isVisible: boolean);
@@ -512,6 +531,46 @@ begin
     txtImgTitre.Font := dmAdobeStock_526775911.ImageList;
     txtImgTitre.Text := 'SPORGLOO';
   end;
+end;
+
+procedure TfrmMain.ShowHallOfFamePage;
+begin
+  // TODO : à compléter
+  ActivePage := TPageType.Home;
+end;
+
+procedure TfrmMain.ShowNewGamePage;
+begin
+  // TODO : traduire texte
+  TcadShowYesNoBox.ShowModal(self, 'Starting a new game will erase current one.'
+    + slinebreak + 'Are you sure you want to loose your current game ?',
+    procedure
+    begin
+      tgamedata.current.APIClient.SendKillCurrentPlayer
+        (tgamedata.current.Session.SessionID,
+        tgamedata.current.Player.PlayerID);
+      TcadShowMessageBox.ShowModal(self, 'Current game will be destroyed.' +
+        slinebreak + 'A new game will restart soon.',
+        procedure
+        begin
+          ActivePage := TPageType.Home;
+        end);
+    end,
+    procedure
+    begin
+      TcadShowMessageBox.ShowModal(self,
+        'Use "Play" button to continue your current game.',
+        procedure
+        begin
+          ActivePage := TPageType.Home;
+        end);
+    end);
+end;
+
+procedure TfrmMain.ShowOptionsPage;
+begin
+  // TODO : à compléter
+  ActivePage := TPageType.Home;
 end;
 
 procedure TfrmMain.SubscribeToDisconnect;
