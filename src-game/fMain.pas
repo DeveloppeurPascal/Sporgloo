@@ -93,6 +93,7 @@ type
     procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
     procedure InitMainFormCaption;
     procedure MiseEnPause;
+    procedure InitAboutDialogBox;
   protected
     procedure SubscribeToServerConnectedMessage;
     procedure SubscribeToLostServerMessage;
@@ -194,6 +195,7 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   InitMainFormCaption;
+  InitAboutDialogBox;
 
   ActivePage := TPageType.None;
 
@@ -229,7 +231,13 @@ end;
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
 var KeyChar: Char; Shift: TShiftState);
 begin
-  if ((Key = vkReturn) or (KeyChar = ' ')) and (ActivePage = TPageType.Home)
+  if (Key = vkF1) then
+  begin
+    OlfAboutDialog1.Execute;
+    Key := 0;
+    KeyChar := #0;
+  end
+  else if ((Key = vkReturn) or (KeyChar = ' ')) and (ActivePage = TPageType.Home)
   then
   begin
     btnPlayClick(Sender);
@@ -309,6 +317,37 @@ X, Y: Single);
 begin
   Viseur.Position.X := trunc(X / CSporglooTileSize) * CSporglooTileSize;
   Viseur.Position.Y := trunc(Y / CSporglooTileSize) * CSporglooTileSize;
+end;
+
+procedure TfrmMain.InitAboutDialogBox;
+begin
+  // TODO : traduire texte(s)
+  OlfAboutDialog1.Licence.Text :=
+    'This program is distributed as shareware. If you use it (especially for ' +
+    'commercial or income-generating purposes), please remember the author and '
+    + 'contribute to its development by purchasing a license.' + slinebreak +
+    slinebreak +
+    'This software is supplied as is, with or without bugs. No warranty is offered '
+    + 'as to its operation or the data processed. Make backups!';
+  OlfAboutDialog1.Description.Text := 'Sporgloo is an online multi player game.'
+    + slinebreak + slinebreak + '*****************' + slinebreak +
+    '* Publisher info' + slinebreak + slinebreak +
+    'This application was developed by Patrick Prémartin.' + slinebreak +
+    slinebreak +
+    'It is published by OLF SOFTWARE, a company registered in Paris (France) under the reference 439521725.'
+    + slinebreak + slinebreak + '****************' + slinebreak +
+    '* Personal data' + slinebreak + slinebreak +
+    'This program is autonomous in its current version. It does not depend on the Internet and communicates nothing to the outside world.'
+    + slinebreak + slinebreak + 'We have no knowledge of what you do with it.' +
+    slinebreak + slinebreak +
+    'No information about you is transmitted to us or to any third party.' +
+    slinebreak + slinebreak +
+    'We use no cookies, no tracking, no stats on your use of the application.' +
+    slinebreak + slinebreak + '**********************' + slinebreak +
+    '* User support' + slinebreak + slinebreak +
+    'If you have any questions or require additional functionality, please leave us a message on the application''s website or on its code repository.'
+    + slinebreak + slinebreak + 'To find out more, visit ' +
+    OlfAboutDialog1.URL;
 end;
 
 procedure TfrmMain.InitializeGamePage;
