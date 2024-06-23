@@ -51,7 +51,7 @@ type
     txtImgTitre: TOlfFMXTextImageFrame;
     lGameTitle: TLayout;
     Layout1: TLayout;
-    cadGrayBox1: TcadGrayBox;
+    gbHomeMenuButtons: TcadGrayBox;
     btnPlay: TcadYellowMenuButton;
     btnQuit: TcadYellowMenuButton;
     Viseur: TcadViseur;
@@ -65,6 +65,7 @@ type
     lRightButtons: TLayout;
     cadYellowGameButtonPause1: TcadYellowGameButtonPause;
     cadYellowGameButtonMusicOnOff1: TcadYellowGameButtonMusicOnOff;
+    btnNewGame: TcadYellowMenuButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -374,7 +375,9 @@ procedure TfrmMain.InitializeHomePage;
 begin
   // TODO : traduire textes
   btnPlay.txtImage.Text := 'PLAY';
+  btnNewGame.txtImage.Text := 'NEW GAME';
   btnQuit.txtImage.Text := 'QUIT';
+  gbHomeMenuButtons.AutoHeight;
 end;
 
 procedure TfrmMain.InitMainFormCaption;

@@ -24,12 +24,11 @@ object frmMain: TfrmMain
   end
   object HomePage: TLayout
     Align = Contents
-    Size.Width = 640.000000000000000000
-    Size.Height = 480.000000000000000000
+    Size.Width = 1341.000000000000000000
+    Size.Height = 629.000000000000000000
     Size.PlatformDefault = False
-    Visible = False
     TabOrder = 7
-    inline cadGrayBox1: TcadGrayBox
+    inline gbHomeMenuButtons: TcadGrayBox
       Align = Center
       Locked = True
       HitTest = False
@@ -45,37 +44,52 @@ object frmMain: TfrmMain
           inherited sContent: TVertScrollBox
             Size.Width = 198.000000000000000000
             Size.Height = 118.000000000000000000
-            Viewport.Width = 198.000000000000000000
+            Viewport.Width = 182.000000000000000000
             Viewport.Height = 118.000000000000000000
             inline btnPlay: TcadYellowMenuButton
               Align = Top
               Locked = True
               Margins.Bottom = 5.000000000000000000
-              Size.Width = 198.000000000000000000
+              Size.Width = 182.000000000000000000
               Size.Height = 49.000000000000000000
               Size.PlatformDefault = False
               OnClick = btnPlayClick
               inherited rUp: TRectangle
-                Size.Width = 198.000000000000000000
+                Size.Width = 182.000000000000000000
               end
               inherited rDown: TRectangle
-                Size.Width = 198.000000000000000000
+                Size.Width = 182.000000000000000000
               end
             end
             inline btnQuit: TcadYellowMenuButton
               Align = Top
               Locked = True
               Margins.Bottom = 5.000000000000000000
-              Position.Y = 54.000000000000000000
-              Size.Width = 198.000000000000000000
+              Position.Y = 108.000000000000000000
+              Size.Width = 182.000000000000000000
               Size.Height = 49.000000000000000000
               Size.PlatformDefault = False
               OnClick = btnQuitClick
               inherited rUp: TRectangle
-                Size.Width = 198.000000000000000000
+                Size.Width = 182.000000000000000000
               end
               inherited rDown: TRectangle
-                Size.Width = 198.000000000000000000
+                Size.Width = 182.000000000000000000
+              end
+            end
+            inline btnNewGame: TcadYellowMenuButton
+              Align = Top
+              Locked = True
+              Margins.Bottom = 5.000000000000000000
+              Position.Y = 54.000000000000000000
+              Size.Width = 182.000000000000000000
+              Size.Height = 49.000000000000000000
+              Size.PlatformDefault = False
+              inherited rUp: TRectangle
+                Size.Width = 182.000000000000000000
+              end
+              inherited rDown: TRectangle
+                Size.Width = 182.000000000000000000
               end
             end
           end
@@ -90,6 +104,7 @@ object frmMain: TfrmMain
     Size.Width = 1341.000000000000000000
     Size.Height = 629.000000000000000000
     Size.PlatformDefault = False
+    Visible = False
     TabOrder = 6
     OnMouseDown = GamePageMouseDown
     OnMouseMove = GamePageMouseMove
