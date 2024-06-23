@@ -89,7 +89,7 @@ begin
       (CSporglooTileSize - h) / 2;
 
     BitmapScale := MapImage.Bitmap.BitmapScale;
-    if APlayer.ImageID in [0 .. length(SVGPersos)] then
+    if (APlayer.ImageID >= 0) and (APlayer.ImageID < length(SVGPersos)) then
       bmp := TOlfSVGBitmapList.Bitmap(SVGPersosListIndex, APlayer.ImageID,
         Round(w), Round(h), BitmapScale)
     else
