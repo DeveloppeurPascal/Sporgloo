@@ -78,6 +78,7 @@ type
     procedure TimerGamePadTimer(Sender: TObject);
     procedure cadYellowGameButtonPause1Click(Sender: TObject);
     procedure cadYellowGameButtonMusicOnOff1Click(Sender: TObject);
+    procedure OlfAboutDialog1URLClick(const AURL: string);
   private
     FActivePage: TPageType;
     FPreviousGamePadKey: Word;
@@ -119,7 +120,8 @@ uses
   uBackgroundMusic,
   Gamolf.RTL.Joystick,
   FMX.Platform,
-  Olf.FMX.AboutDialogForm;
+  Olf.FMX.AboutDialogForm,
+  u_urlOpen;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
@@ -348,6 +350,11 @@ end;
 procedure TfrmMain.MiseEnPause;
 begin
   ActivePage := TPageType.Home;
+end;
+
+procedure TfrmMain.OlfAboutDialog1URLClick(const AURL: string);
+begin
+  url_Open_In_Browser(AURL);
 end;
 
 procedure TfrmMain.SetActivePage(const Value: TPageType);

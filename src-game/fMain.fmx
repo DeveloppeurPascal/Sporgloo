@@ -346,6 +346,7 @@ object frmMain: TfrmMain
     Images = dmAboutBoxLogo.imgLogo
     ImageIndex = 0
     URL = 'https://sporgloo.gamolf.fr'
+    onURLClick = OlfAboutDialog1URLClick
     Copyright = '(c) 2023-2024 Patrick Pr'#233'martin'
     Left = 152
     Top = 360
