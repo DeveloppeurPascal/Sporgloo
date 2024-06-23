@@ -70,6 +70,7 @@ var
   BitmapScale: single;
   bmp: tbitmap;
   GameData: TGameData;
+  CellPlayerImageID: Integer;
 begin
   if not assigned(MapImage.Bitmap) then
     MapImage.Bitmap := tbitmap.Create;
@@ -81,6 +82,9 @@ begin
     (APlayer.PlayerX <= GameData.ViewportXMax) and
     (APlayer.PlayerY <= GameData.ViewportYMax) then
   begin
+    CellPlayerImageID := GameData.Map.GetCellAt(APlayer.PlayerX,
+      APlayer.PlayerY).PlayerImageID;
+
     w := 18 * 1.5;
     x := abs(GameData.ViewportX - APlayer.PlayerX) * CSporglooTileSize +
       (CSporglooTileSize - w) / 2;
@@ -91,6 +95,10 @@ begin
     BitmapScale := MapImage.Bitmap.BitmapScale;
     if (APlayer.ImageID >= 0) and (APlayer.ImageID < length(SVGPersos)) then
       bmp := TOlfSVGBitmapList.Bitmap(SVGPersosListIndex, APlayer.ImageID,
+        Round(w), Round(h), BitmapScale)
+    else if (CellPlayerImageID >= 0) and (CellPlayerImageID < length(SVGPersos))
+    then
+      bmp := TOlfSVGBitmapList.Bitmap(SVGPersosListIndex, CellPlayerImageID,
         Round(w), Round(h), BitmapScale)
     else
       bmp := TOlfSVGBitmapList.Bitmap(SVGPersosListIndex, CSVGPerso1, Round(w),
