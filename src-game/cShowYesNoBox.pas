@@ -92,10 +92,8 @@ begin
   smb.btnNo.txtImage.Text := 'No';
   smb.FOnNoClick := OnNoClick;
   smb.Text1.Text := Text;
-  if smb.Width > ACurForm.ClientWidth then
-    smb.Width := ACurForm.ClientWidth;
-  if smb.Height > ACurForm.ClientHeight then
-    smb.Height := ACurForm.ClientHeight;
+
+  smb.AutoHeight;
 end;
 
 end.
