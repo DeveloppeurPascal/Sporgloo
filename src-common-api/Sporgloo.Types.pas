@@ -262,6 +262,7 @@ begin
           player.PlayerX := FX;
           player.Playery := FY;
           Players.add(Value, player);
+          TGameData.Current.GetInfosPlayer(player.PlayerID);
         end;
       end;
     end;
