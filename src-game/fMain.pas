@@ -153,7 +153,8 @@ end;
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
   ActivePage := TPageType.Game;
-  if not(tgamedata.current.Player.ImageID in [0 .. length(SVGPersos)]) then
+  if (tgamedata.current.Player.ImageID < 0) or
+    (tgamedata.current.Player.ImageID >= length(SVGPersos)) then
     TcadChoosePlayerImageID.Execute(self);
 end;
 
