@@ -1,5 +1,5 @@
 ********************************************
-* Feuille de route Sporgloo au 10 mai 2024 *
+* Feuille de route Sporgloo au 23 juin 2024 *
 ********************************************
 
 
@@ -29,12 +29,6 @@
 
 
 **********
-* Dans le jeu
-
-- signer les paramètres du jeu en DEBUG aussi, histoire d'éviter les bidouilles et avoir le même fonctionnement partout
-
-
-**********
 * Dans le serveur
 
 - déplacer la gestion des étoiles du client vers le serveur (à part le -1 quand on en pose une)
@@ -50,15 +44,10 @@
 **********
 * Dans le jeu
 
-- passer uConfig en mode jeu normal (ne pas réinitialiser DeviceID/PlayerId à chaque lancement du programme)
 - choisir une image pour les coffres forts
-- sortir les images du personnage du joueur dans une liste d'images séparée (pour gérer le choix au démarrage d'une partie)
 - implémenter les changements d'affichages au niveau d'une cellule de la carte (coffres forts, ...)
-- implémenter les changements au niveau du déplacement du joueur (détection de cases autorisées ou pas)
-- implémenter les changements au niveau du placement d'une étoile (détection de cases autorisées ou pas)
-- implémenter le lancement d'une nouvelle partie
-- modifier le lancement d'une partie existante
-- implémenter les écrans manquants (crédits du jeu, options, hall of fame, jouer, nouvelle partie)
+- implémenter les écrans manquants (crédits du jeu, options, hall of fame)
+- implmenter la prise en charge des boutons et choix dans les boites de dialogue depuis le clavier et les contrôleurs de jeux
 - implémenter le changement de boutons d'interface au clavier ou des raccourcis en mode jeu pour PAUSE / MUSIC / EFFETS
 - choisir des effets sonores à jouer sur certaines actions
 - implémenter l'émission des effets sonores
