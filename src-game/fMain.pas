@@ -126,20 +126,22 @@ uses
   Olf.FMX.AboutDialogForm,
   u_urlOpen,
   cShowMessageBox,
-  cShowYesNoBox;
+  cShowYesNoBox,
+  USVGPersos,
+  cChoosePlayerImageID;
 
 procedure TfrmMain.btnNewGameClick(Sender: TObject);
 begin
   // TODO : traduire texte
-  TcadShowYesNoBox.ShowModal(self,
-    'Starting a new game will erase current one.'+slinebreak+'Are you sure you want to loose your current game ?',
+  TcadShowYesNoBox.ShowModal(self, 'Starting a new game will erase current one.'
+    + slinebreak + 'Are you sure you want to loose your current game ?',
     procedure
     begin
       tgamedata.current.APIClient.SendKillCurrentPlayer
         (tgamedata.current.Session.SessionID,
         tgamedata.current.Player.PlayerID);
-      TcadShowMessageBox.ShowModal(self,
-        'Current game will be destroyed.'+slinebreak+'A new game will restart soon.');
+      TcadShowMessageBox.ShowModal(self, 'Current game will be destroyed.' +
+        slinebreak + 'A new game will restart soon.');
     end,
     procedure
     begin
@@ -151,6 +153,8 @@ end;
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
   ActivePage := TPageType.Game;
+  if not(tgamedata.current.Player.ImageID in [0 .. length(SVGPersos)]) then
+    TcadChoosePlayerImageID.Execute(self);
 end;
 
 procedure TfrmMain.btnQuitClick(Sender: TObject);
