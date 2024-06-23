@@ -122,7 +122,9 @@ uses
   Gamolf.RTL.Joystick,
   FMX.Platform,
   Olf.FMX.AboutDialogForm,
-  u_urlOpen;
+  u_urlOpen,
+  cShowMessageBox,
+  cShowYesNoBox;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
@@ -496,7 +498,7 @@ begin
         TGameData.Current.APIClient := nil;
       end;
 {$IFDEF DEBUG}
-      ShowMessage('Serveur disconnected');
+      showmessage('Serveur disconnected');
 {$ENDIF}
       // TODO : afficher un message à l'utilisateur pour lui indiquer que le serveur a demandé la déconnexion
     end);
@@ -519,7 +521,7 @@ begin
 
       // TODO : if connexion failed, retry after a user confirmation or close the program
 {$IFDEF DEBUG}
-      ShowMessage('Serveur lost');
+      showmessage('Serveur lost');
 {$ENDIF}
     end);
 end;
