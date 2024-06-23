@@ -21,6 +21,9 @@ object frmMain: TfrmMain
       Size.Width = 1341.000000000000000000
       Size.Height = 629.000000000000000000
     end
+    inherited TimerPlayerMove: TTimer
+      OnTimer = MapFrame1TimerPlayerMoveTimer
+    end
   end
   object HomePage: TLayout
     Align = Contents
@@ -370,8 +373,8 @@ object frmMain: TfrmMain
   end
   object OlfAboutDialog1: TOlfAboutDialog
     Titre = 'Sporgloo'
-    VersionNumero = '0.4 alpha'
-    VersionDate = '20240526'
+    VersionNumero = '0.5 alpha'
+    VersionDate = '20240623'
     MultiResBitmap = <
       item
       end>
@@ -382,5 +385,14 @@ object frmMain: TfrmMain
     Copyright = '(c) 2023-2024 Patrick Pr'#233'martin'
     Left = 152
     Top = 360
+  end
+  object Label1: TLabel
+    Align = Bottom
+    Position.Y = 612.000000000000000000
+    Size.Width = 1341.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Label1'
+    TabOrder = 13
   end
 end

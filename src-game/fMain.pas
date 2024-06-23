@@ -65,6 +65,7 @@ type
     btnCredits: TcadYellowMenuButton;
     btnHallOfFame: TcadYellowMenuButton;
     btnOptions: TcadYellowMenuButton;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -83,6 +84,7 @@ type
     procedure btnCreditsClick(Sender: TObject);
     procedure btnHallOfFameClick(Sender: TObject);
     procedure btnOptionsClick(Sender: TObject);
+    procedure MapFrame1TimerPlayerMoveTimer(Sender: TObject);
   private
     FActivePage: TPageType;
     FPreviousGamePadKey: Word;
@@ -440,6 +442,14 @@ begin
     OlfAboutDialog1.VersionNumero;
 end;
 
+procedure TfrmMain.MapFrame1TimerPlayerMoveTimer(Sender: TObject);
+begin
+  MapFrame1.TimerPlayerMoveTimer(Sender);
+  Label1.Text := tgamedata.current.Player.PlayerX.ToString + ',' +
+    tgamedata.current.Player.Playery.ToString;
+  // TODO : retirer Label 1 (info de débogage pour versions alpha)
+end;
+
 procedure TfrmMain.MiseEnPause;
 begin
   ActivePage := TPageType.Home;
@@ -515,7 +525,8 @@ var
 begin
   Text := OlfAboutDialog1.Description.Text.trim + slinebreak + slinebreak +
     '**********' + slinebreak + '* License' + slinebreak + slinebreak +
-    OlfAboutDialog1.Licence.Text.trim;
+    OlfAboutDialog1.Licence.Text.trim + slinebreak + slinebreak + 'v' +
+    OlfAboutDialog1.VersionNumero + '-' + OlfAboutDialog1.VersionDate;
 
   TcadShowMessageBox.ShowModal(self, Text,
     procedure
