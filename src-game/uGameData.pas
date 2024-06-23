@@ -48,6 +48,7 @@ type
     procedure CenterViewPort;
 
     procedure RefreshMap;
+    procedure GetInfosPlayer(const PlayerID: string);
   end;
 
 implementation
@@ -111,6 +112,11 @@ begin
   Session.Free;
   Player.Free;
   inherited;
+end;
+
+procedure TGameData.GetInfosPlayer(const PlayerID: string);
+begin
+  APIClient.SendAskForPlayerInfos(Session.SessionID, PlayerID);
 end;
 
 function TGameData.isServerConnected: boolean;
