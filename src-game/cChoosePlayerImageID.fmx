@@ -1,0 +1,49 @@
+inherited cadChoosePlayerImageID: TcadChoosePlayerImageID
+  Align = Center
+  Size.Width = 500.000000000000000000
+  Size.Height = 250.000000000000000000
+  inherited rOutside: TRectangle
+    Size.Width = 500.000000000000000000
+    Size.Height = 250.000000000000000000
+    inherited rBackground: TRectangle
+      Size.Width = 488.000000000000000000
+      Size.Height = 238.000000000000000000
+      inherited sContent: TVertScrollBox
+        Size.Width = 478.000000000000000000
+        Size.Height = 158.000000000000000000
+        Viewport.Width = 478.000000000000000000
+        Viewport.Height = 158.000000000000000000
+        object FlowLayout1: TFlowLayout
+          Align = Top
+          Size.Width = 478.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Justify = Left
+          JustifyLastLine = Left
+          FlowDirection = LeftToRight
+        end
+      end
+      object Layout1: TLayout
+        Align = Top
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 478.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        inline OlfFMXTextImageFrame1: TOlfFMXTextImageFrame
+          Align = Center
+          HitTest = False
+          Size.Width = 488.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+        end
+      end
+    end
+  end
+end
