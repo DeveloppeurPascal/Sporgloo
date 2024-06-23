@@ -80,6 +80,7 @@ type
     procedure cadYellowGameButtonPause1Click(Sender: TObject);
     procedure cadYellowGameButtonMusicOnOff1Click(Sender: TObject);
     procedure OlfAboutDialog1URLClick(const AURL: string);
+    procedure btnNewGameClick(Sender: TObject);
   private
     FActivePage: TPageType;
     FPreviousGamePadKey: Word;
@@ -127,6 +128,26 @@ uses
   cShowMessageBox,
   cShowYesNoBox;
 
+procedure TfrmMain.btnNewGameClick(Sender: TObject);
+begin
+  // TODO : traduire texte
+  TcadShowYesNoBox.ShowModal(self,
+    'Starting a new game will erase current one.'+slinebreak+'Are you sure you want to loose your current game ?',
+    procedure
+    begin
+      tgamedata.current.APIClient.SendKillCurrentPlayer
+        (tgamedata.current.Session.SessionID,
+        tgamedata.current.Player.PlayerID);
+      TcadShowMessageBox.ShowModal(self,
+        'Current game will be destroyed.'+slinebreak+'A new game will restart soon.');
+    end,
+    procedure
+    begin
+      TcadShowMessageBox.ShowModal(self,
+        'Use "Play" button to continue your current game.');
+    end);
+end;
+
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
   ActivePage := TPageType.Game;
@@ -139,7 +160,7 @@ end;
 
 procedure TfrmMain.cadYellowGameButtonMusicOnOff1Click(Sender: TObject);
 begin
-  TBackgroundMusic.Current.OnOff(not tconfig.Current.BackgroundMusic);
+  TBackgroundMusic.current.OnOff(not tconfig.current.BackgroundMusic);
 end;
 
 procedure TfrmMain.cadYellowGameButtonPause1Click(Sender: TObject);
@@ -178,20 +199,20 @@ procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   msg: TLogoffMessage;
 begin
-  if assigned(TGameData.Current.APIClient) then
+  if assigned(tgamedata.current.APIClient) then
     try
       msg := TLogoffMessage.Create;
       try
         try
-          TGameData.Current.APIClient.SendMessage(msg);
+          tgamedata.current.APIClient.SendMessage(msg);
         except
         end;
       finally
         msg.free;
       end;
-      TGameData.Current.APIClient.free;
+      tgamedata.current.APIClient.free;
     finally
-      TGameData.Current.APIClient := nil;
+      tgamedata.current.APIClient := nil;
     end;
 end;
 
@@ -219,16 +240,16 @@ begin
   TThread.ForceQueue(nil,
     procedure
     begin
-      TGameData.Current.APIClient := tsporglooclient.Create
-        (tconfig.Current.ServerIPv4, tconfig.Current.ServerIPv4port);
+      tgamedata.current.APIClient := tsporglooclient.Create
+        (tconfig.current.ServerIPv4, tconfig.current.ServerIPv4port);
       // TODO : add a connection on IPv6 if available
-      TGameData.Current.APIClient.onConnected := DoClientConnected;
-      TGameData.Current.APIClient.onLostConnection := DoClientLostConnection;
-      TGameData.Current.APIClient.Connect;
+      tgamedata.current.APIClient.onConnected := DoClientConnected;
+      tgamedata.current.APIClient.onLostConnection := DoClientLostConnection;
+      tgamedata.current.APIClient.Connect;
       ActivePage := TPageType.Home;
     end);
 
-  TBackgroundMusic.Current.OnOff(tconfig.Current.BackgroundMusic);
+  TBackgroundMusic.current.OnOff(tconfig.current.BackgroundMusic);
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
@@ -290,14 +311,14 @@ procedure TfrmMain.GamePageMouseDown(Sender: TObject; Button: TMouseButton;
 Shift: TShiftState; X, Y: Single);
 var
   MapX, MapY: TSporglooAPINumber;
-  GameData: TGameData;
+  GameData: tgamedata;
   MapCell: TSporglooMapCell;
 begin
   Viseur.Position.X := trunc(X / CSporglooTileSize) * CSporglooTileSize;
   Viseur.Position.Y := trunc(Y / CSporglooTileSize) * CSporglooTileSize;
 
-  GameData := TGameData.Current;
-  if (GameData.player.StarsCount > 0) then
+  GameData := tgamedata.current;
+  if (GameData.Player.StarsCount > 0) then
   begin
     MapX := trunc(X / CSporglooTileSize) + GameData.ViewportX;
     MapY := trunc(Y / CSporglooTileSize) + GameData.ViewportY;
@@ -308,9 +329,9 @@ begin
       MapCell.PlayerID.IsEmpty then
     begin
       GameData.APIClient.SendPlayerPutAStar(GameData.Session.SessionID,
-        GameData.player.PlayerID, MapX, MapY);
+        GameData.Player.PlayerID, MapX, MapY);
 
-      GameData.player.StarsCount := GameData.player.StarsCount - 1;
+      GameData.Player.StarsCount := GameData.Player.StarsCount - 1;
     end;
   end;
 end;
@@ -366,9 +387,9 @@ begin
 
   lDisplayScoreAndLevels.height := CSporglooTileSize * 0.8;
 
-  lblScore.Score := TGameData.Current.player.CoinsCount;
-  lblLifeLevel.LifeLevel := TGameData.Current.player.LivesCount;
-  lblStarsCount.StarsCount := TGameData.Current.player.StarsCount;
+  lblScore.Score := tgamedata.current.Player.CoinsCount;
+  lblLifeLevel.LifeLevel := tgamedata.current.Player.LivesCount;
+  lblStarsCount.StarsCount := tgamedata.current.Player.StarsCount;
 end;
 
 procedure TfrmMain.InitializeHomePage;
@@ -495,10 +516,10 @@ begin
     begin
       if not(M is TDisconnectMessage) then
         exit;
-      if assigned(TGameData.Current.APIClient) then
+      if assigned(tgamedata.current.APIClient) then
       begin
-        TGameData.Current.APIClient.free;
-        TGameData.Current.APIClient := nil;
+        tgamedata.current.APIClient.free;
+        tgamedata.current.APIClient := nil;
       end;
 {$IFDEF DEBUG}
       showmessage('Serveur disconnected');
@@ -563,7 +584,7 @@ begin
       msg: TServerConnectedMessage;
       Client: tsporglooclient;
       DeviceID, PlayerID: string;
-      GameData: TGameData;
+      GameData: tgamedata;
     begin
       if not(M is TServerConnectedMessage) then
         exit;
@@ -572,13 +593,13 @@ begin
         exit;
       Client := msg.Value;
 
-      GameData := TGameData.Current;
+      GameData := tgamedata.current;
 
-      DeviceID := GameData.player.DeviceID;
+      DeviceID := GameData.Player.DeviceID;
       if DeviceID.IsEmpty then
         raise Exception.Create('Unknow device ID !');
 
-      PlayerID := GameData.player.PlayerID;
+      PlayerID := GameData.Player.PlayerID;
       if PlayerID.IsEmpty then
         Client.SendClientRegister(DeviceID)
       else
@@ -594,7 +615,7 @@ var
 begin
   GameControllerDetected := false;
 
-  if TPlatformServices.Current.SupportsPlatformService(IGamolfJoystickService,
+  if TPlatformServices.current.SupportsPlatformService(IGamolfJoystickService,
     GamePadService) then
     GamePadService.ForEachConnectedDevice(JoystickInfo,
       procedure(JoystickID: TJoystickID; var JoystickInfo: TJoystickInfo)

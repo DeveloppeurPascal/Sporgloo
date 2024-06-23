@@ -85,6 +85,7 @@ object frmMain: TfrmMain
               Size.Width = 182.000000000000000000
               Size.Height = 49.000000000000000000
               Size.PlatformDefault = False
+              OnClick = btnNewGameClick
               inherited rUp: TRectangle
                 Size.Width = 182.000000000000000000
               end
