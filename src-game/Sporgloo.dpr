@@ -51,7 +51,8 @@ uses
   USVGTrees in '..\assets\graphics\Trees\USVGTrees.pas',
   USVGUserInterface in '..\assets\graphics\UserInterface\USVGUserInterface.pas',
   Olf.Skia.SVGToBitmap in '..\lib-externes\librairies\src\Olf.Skia.SVGToBitmap.pas',
-  uSVGRegister in 'uSVGRegister.pas';
+  uSVGRegister in 'uSVGRegister.pas',
+  cShowMessageBox in 'cShowMessageBox.pas' {cadShowMessageBox: TFrame};
 
 {$R *.res}
 
