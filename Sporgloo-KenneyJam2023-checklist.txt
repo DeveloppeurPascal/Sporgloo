@@ -1,26 +1,21 @@
 => écran des scores (hall of fame) : background du jeu, boite de dialogue avec titre, liste des scores à l'intérieur (plus tard aussi les pseudos après modération)
-=> écran des crédits du jeu : background du jeu, boite de dialogue avec titre, texte
 => écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
-
 
 - gérer les déplacements du joueurs vers l'étoile la plus proche en pathfinding
 
-
 - changer l'UI, ajouter boites de dialogue, actions entre joueurs et revoir le fonctionnement global du jeu
-- ajout des écrans manquants (cf TLayout dans fMain.pas du jeu)
-
 
 - traiter les TODO
 
-
 - ajouter des bruitages
-
 
 - tests iOS (sur tablette)
 - tests Android (sur tablette)
 
-
 - changer le stockage du jeu côté serveur (mettre une base de données au lieu du stockage en mémoire) (#35)
 
-
 - traduire les textes à l'écran
+
+- vérifier ce qu'il se passe quand l'API est erronée entre client et serveur : le serveur doit refuser la connexion, ça doit remonter sous forme d'erreur sur le client et afficher une boite de dialogue ou à minima le stocker en log quelque part
+
+- bogue : les infos d'ID image du player sur les cellules de la map ne sont pas remontées aux clients par le serveur
