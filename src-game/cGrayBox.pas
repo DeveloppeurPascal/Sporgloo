@@ -45,17 +45,19 @@ begin
     if (rBackground.Children[i] is tcontrol) then
     begin
       c := rBackground.Children[i] as tcontrol;
-      if c = sContent then
-        h := h + c.Margins.Top + c.Margins.Bottom
-      else
-        h := h + c.Margins.Top + c.Height + c.Margins.Bottom;
+      if c.Visible then
+        if c = sContent then
+          h := h + c.Margins.Top + c.Margins.Bottom
+        else
+          h := h + c.Margins.Top + c.Height + c.Margins.Bottom;
     end;
 
   for i := 0 to sContent.Content.ChildrenCount - 1 do
     if (sContent.Content.Children[i] is tcontrol) then
     begin
       c := sContent.Content.Children[i] as tcontrol;
-      h := h + c.Margins.Top + c.Height + c.Margins.Bottom;
+      if c.Visible then
+        h := h + c.Margins.Top + c.Height + c.Margins.Bottom;
     end;
 
   if parent is tcustomform then
