@@ -1,7 +1,6 @@
 => écran des scores (hall of fame) : background du jeu, boite de dialogue avec titre, liste des scores à l'intérieur (plus tard aussi les pseudos après modération)
 => écran des crédits du jeu : background du jeu, boite de dialogue avec titre, texte
 => écran des options/réglages : background du jeu, boite de dialogue avec titre, gestion du volume et de l'activation des musiques d'ambience, gestion du volume et de l'activation des bruitages (si on en ajoute plus tard)
-=> écran du jeu (nouvelle partie) : background du jeu, boite de dialogue avec titre, saisie du nom du joueur (facultatif) pour stockage avec son score plus tard
 
 
 - gérer les déplacements du joueurs vers l'étoile la plus proche en pathfinding
@@ -22,7 +21,6 @@
 
 
 - changer le stockage du jeu côté serveur (mettre une base de données au lieu du stockage en mémoire) (#35)
-- permettre au joueur de choisir un avatar pour son personnage
 
 
 - traduire les textes à l'écran
