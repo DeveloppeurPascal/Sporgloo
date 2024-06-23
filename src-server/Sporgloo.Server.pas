@@ -767,6 +767,8 @@ begin
 {$IFDEF DEBUG}
   // writeln('ERROR ' + ord(AErrorCode).tostring + ': ' + AErrorText);
 {$ENDIF}
+  writeln('ERROR ' + ord(AErrorCode).tostring + ': ' + AErrorText);
+  // TODO : pprem
   msg := TErrorMessage.Create;
   try
     msg.ErrorCode := ord(AErrorCode);
