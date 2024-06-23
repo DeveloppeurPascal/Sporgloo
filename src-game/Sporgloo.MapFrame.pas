@@ -89,8 +89,12 @@ begin
       (CSporglooTileSize - h) / 2;
 
     BitmapScale := MapImage.Bitmap.BitmapScale;
-    bmp := TOlfSVGBitmapList.Bitmap(SVGPersosListIndex, CSVGPerso10, Round(w),
-      Round(h), BitmapScale);
+    if APlayer.ImageID in [0 .. length(SVGPersos)] then
+      bmp := TOlfSVGBitmapList.Bitmap(SVGPersosListIndex, APlayer.ImageID,
+        Round(w), Round(h), BitmapScale)
+    else
+      bmp := TOlfSVGBitmapList.Bitmap(SVGPersosListIndex, CSVGPerso1, Round(w),
+        Round(h), BitmapScale);
     MapImage.Bitmap.Canvas.BeginScene;
     try
       MapImage.Bitmap.Canvas.DrawBitmap(bmp, bmp.BoundsF,
