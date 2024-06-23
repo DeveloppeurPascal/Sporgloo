@@ -375,8 +375,8 @@ begin
     'No information about you is transmitted to us or to any third party.' +
     slinebreak + slinebreak +
     'We use no cookies, no tracking, no stats on your use of the application.' +
-    slinebreak + slinebreak + '**********************' + slinebreak +
-    '* User support' + slinebreak + slinebreak +
+    slinebreak + slinebreak + '***************' + slinebreak + '* User support'
+    + slinebreak + slinebreak +
     'If you have any questions or require additional functionality, please leave us a message on the application''s website or on its code repository.'
     + slinebreak + slinebreak + 'To find out more, visit ' +
     OlfAboutDialog1.URL;
@@ -513,8 +513,10 @@ procedure TfrmMain.ShowCreditsPage;
 var
   Text: string;
 begin
-  Text := ''; // TODO : traduire texte
-  // TODO : à compléter
+  Text := OlfAboutDialog1.Description.Text.trim + slinebreak + slinebreak +
+    '**********' + slinebreak + '* License' + slinebreak + slinebreak +
+    OlfAboutDialog1.Licence.Text.trim;
+
   TcadShowMessageBox.ShowModal(self, Text,
     procedure
     begin
