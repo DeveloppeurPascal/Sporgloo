@@ -19,6 +19,7 @@ inherited cadShowYesNoBox: TcadShowYesNoBox
           Size.Width = 478.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
           TextSettings.HorzAlign = Leading
         end
       end
