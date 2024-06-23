@@ -37,7 +37,6 @@
 - prendre en charge la baisse du niveau de vie des joueurs
 - prendre en charge la mise en place de coffres forts à la disparition de joueurs de la carte (inactivité de plus de 7 jours hors session, suppression d'un joueur à la demande de création d'une nouvelle partie)
 - changer le fonctionnement de la mise à jour des cellules avec gestion d'une liste d'abonnés pour ne pas l'envoyer à tous les appareils connectés inutilement
-- implémenter le mode "démon Linux" sur le serveur
 - ajouter une rotation des backups afin d'éviter des pertes en cas de corruption en cours de route
 
 
@@ -46,7 +45,7 @@
 
 - choisir une image pour les coffres forts
 - implémenter les changements d'affichages au niveau d'une cellule de la carte (coffres forts, ...)
-- implémenter les écrans manquants (crédits du jeu, options, hall of fame)
+- implémenter les écrans manquants (options, hall of fame)
 - implmenter la prise en charge des boutons et choix dans les boites de dialogue depuis le clavier et les contrôleurs de jeux
 - implémenter le changement de boutons d'interface au clavier ou des raccourcis en mode jeu pour PAUSE / MUSIC / EFFETS
 - choisir des effets sonores à jouer sur certaines actions
