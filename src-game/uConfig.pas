@@ -116,11 +116,6 @@ begin
   if not assigned(ConfigInstance) then
   begin
     ConfigInstance := TConfig.Create;
-
-    // pprem
-    // TODO : à supprimer
-    ConfigInstance.SetDeviceID('');
-    ConfigInstance.SetPlayerID('');
   end;
   result := ConfigInstance;
 end;
