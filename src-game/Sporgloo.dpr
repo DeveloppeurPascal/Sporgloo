@@ -53,7 +53,8 @@ uses
   Olf.Skia.SVGToBitmap in '..\lib-externes\librairies\src\Olf.Skia.SVGToBitmap.pas',
   uSVGRegister in 'uSVGRegister.pas',
   cShowMessageBox in 'cShowMessageBox.pas' {cadShowMessageBox: TFrame},
-  cShowYesNoBox in 'cShowYesNoBox.pas' {cadShowYesNoBox: TFrame};
+  cShowYesNoBox in 'cShowYesNoBox.pas' {cadShowYesNoBox: TFrame},
+  cChoosePlayerImageID in 'cChoosePlayerImageID.pas' {cadChoosePlayerImageID: TFrame};
 
 {$R *.res}
 
