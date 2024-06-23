@@ -3,7 +3,9 @@ unit Sporgloo.Consts;
 interface
 
 const
-  CAPIVersion = 20240510;
+  CAPIVersion = 20240623;
+
+  CDefaultServerPort = 8080;
 
   CSporglooTileForest = 0;
   CSporglooTilePath = 1;
