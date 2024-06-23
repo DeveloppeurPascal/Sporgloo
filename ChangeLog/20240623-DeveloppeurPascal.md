@@ -22,6 +22,21 @@
 
 * correction d'un effet de bord lié à length() qui retourne un NativeInt devenant un int64 en compilation 64 bits et ne peut donc pas être utilisé dans un intervale comparé à une variable de type Integer
 
+* réorganisation du fonctionnement des pages (crédits, hall of fame, options) et suppression des TLayout au profit de la boite de dialogue modale à partir du cadre gris
+
+* ajout des boutons de menu manquants sur l'écran d'accueil
+* conditionnement des boutons à afficher ou masquer selon la plateforme
+* modification de la fonction de redimensionnement des boites de dialogue afin de tenir compte des éléments invisibles
+
+* remplissage de l'écran des crédits du jeu à partir des textes présents dans la boite de dialog "à propos"
+
+* changement de la taille des textes utilisés dans les boites de dialogue (ShowMessageBox, ShowYesNoBox)
 
 * mise à jour de la roadmap
 * mise à jour des tickets sur GitHub Issues
+
+* passage du serveur en démon Linux et ajout de paramètres sur la ligne de commande (-H pour HELP)
+
+* upgrade du numéro de version de l'API client/server pour forcer la mise à jour des programmes clients
+
+* publication d'une alpha 0.5a une fois les programmes fonctionnels sous Windows et Mac
