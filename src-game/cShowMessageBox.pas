@@ -36,7 +36,6 @@ type
 implementation
 
 {$R *.fmx}
-{ TcadShowMessageBox }
 
 procedure TcadShowMessageBox.btnOkClick(Sender: TObject);
 begin
