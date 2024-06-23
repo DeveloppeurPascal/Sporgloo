@@ -52,7 +52,8 @@ uses
   USVGUserInterface in '..\assets\graphics\UserInterface\USVGUserInterface.pas',
   Olf.Skia.SVGToBitmap in '..\lib-externes\librairies\src\Olf.Skia.SVGToBitmap.pas',
   uSVGRegister in 'uSVGRegister.pas',
-  cShowMessageBox in 'cShowMessageBox.pas' {cadShowMessageBox: TFrame};
+  cShowMessageBox in 'cShowMessageBox.pas' {cadShowMessageBox: TFrame},
+  cShowYesNoBox in 'cShowYesNoBox.pas' {cadShowYesNoBox: TFrame};
 
 {$R *.res}
 
