@@ -16,6 +16,7 @@ type
   public
     OtherPlayers: TSporglooPlayersList;
     class function Current: TGameData;
+    procedure GetInfosPlayer(const PlayerID: string);
   end;
 
 implementation
@@ -25,6 +26,11 @@ implementation
 class function TGameData.Current: TGameData;
 begin
   result := nil;
+end;
+
+procedure TGameData.GetInfosPlayer(const PlayerID: string);
+begin
+  //
 end;
 
 end.
