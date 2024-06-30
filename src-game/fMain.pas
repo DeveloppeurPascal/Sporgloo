@@ -255,7 +255,20 @@ begin
       // TODO : add a connection on IPv6 if available
       tgamedata.current.APIClient.onConnected := DoClientConnected;
       tgamedata.current.APIClient.onLostConnection := DoClientLostConnection;
-      tgamedata.current.APIClient.Connect;
+      try
+        tgamedata.current.APIClient.Connect;
+      except
+        TThread.ForceQueue(nil,
+          procedure
+          begin
+            TcadShowMessageBox.ShowModal(self,
+              'Can''t connect to the server. The game will stop. Please try again later.',
+              procedure
+              begin
+                Close;
+              end);
+          end);
+      end;
       ActivePage := TPageType.Home;
     end);
 
@@ -598,10 +611,12 @@ begin
         tgamedata.current.APIClient.free;
         tgamedata.current.APIClient := nil;
       end;
-{$IFDEF DEBUG}
-      showmessage('Serveur disconnected');
-{$ENDIF}
-      // TODO : afficher un message à l'utilisateur pour lui indiquer que le serveur a demandé la déconnexion
+      TcadShowMessageBox.ShowModal(self,
+        'The server is down. The game will close. Please retry later.',
+        procedure
+        begin
+          Close;
+        end);
     end);
 end;
 
@@ -620,10 +635,12 @@ begin
         exit;
       // Client := Msg.Value;
 
-      // TODO : if connexion failed, retry after a user confirmation or close the program
-{$IFDEF DEBUG}
-      showmessage('Serveur lost');
-{$ENDIF}
+      TcadShowMessageBox.ShowModal(self,
+        'Server lost. The game will close. Please retry later.',
+        procedure
+        begin
+          Close;
+        end);
     end);
 end;
 
