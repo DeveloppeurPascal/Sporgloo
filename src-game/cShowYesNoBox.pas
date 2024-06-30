@@ -85,6 +85,7 @@ begin
   r.fill.Color := talphacolors.Lightgray;
 
   smb := TcadShowYesNoBox.Create(ACurForm);
+  smb.name := '';
   smb.TagObject := r;
   smb.Parent := ACurForm;
   smb.btnYes.txtImage.Text := 'Yes'; // TODO : traduire le texte
