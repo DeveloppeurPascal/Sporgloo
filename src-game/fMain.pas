@@ -387,10 +387,6 @@ begin
   btnPlay.Visible := tgamedata.current.isServerConnected;
   btnNewGame.txtImage.Text := 'NEW GAME';
   btnNewGame.Visible := (tconfig.current.PlayerID <> '');
-{$IFDEF RELEASE}
-  btnNewGame.Visible := false;
-  // TODO : réactiver le bouton new game" une fois la fonctionnalité pleinement opérationnelle
-{$ENDIF}
   btnOptions.txtImage.Text := 'OPTIONS';
   btnOptions.Visible := false; // TODO : réactiver l'écran des options
   btnHallOfFame.txtImage.Text := 'HALL OF FAME';
@@ -535,6 +531,7 @@ begin
     + slinebreak + 'Are you sure you want to loose your current game ?',
     procedure
     begin
+      btnPlay.Visible := false;
       tgamedata.current.APIClient.SendKillCurrentPlayer
         (tgamedata.current.Session.SessionID,
         tgamedata.current.Player.PlayerID);
@@ -589,6 +586,7 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TLoginOKMessage,
     procedure(const Sender: TObject; const M: TMessage)
     begin
+      btnPlay.Visible := true;
       MapFrame1.TimerMapRefresh.Enabled := true;
     end);
 end;
