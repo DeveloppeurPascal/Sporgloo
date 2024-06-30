@@ -70,6 +70,12 @@ type
   TBackgroundMusicStatusMessage = class(TMessage<boolean>)
   end;
 
+  /// <summary>
+  /// The server answered to the LOGIN message.
+  /// </summary>
+  TLoginOKMessage = class(TMessage)
+  end;
+
 implementation
 
 end.

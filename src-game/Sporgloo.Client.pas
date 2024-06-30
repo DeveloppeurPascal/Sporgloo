@@ -113,12 +113,25 @@ begin
 
   LGameData := TGameData.Current;
   LGameData.Session.SessionID := msg.SessionID;
+
+  if msg.SessionID.IsEmpty then
+    raise exception.Create('Unknown session for login !');
+
+  if msg.PlayerID.IsEmpty then
+    raise exception.Create('Unknown player for login !');
+
+  tthread.queue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(self, TLoginOKMessage.Create);
+    end);
+
   SendAskForPlayerInfos(msg.SessionID, msg.PlayerID);
 end;
 
 procedure TSporglooClient.onClientRegisterResponse(const AFromServer
   : TOlfSocketMessagingServerConnectedClient;
-  const msg: TClientRegisterResponseMessage);
+const msg: TClientRegisterResponseMessage);
 begin
   if (tconfig.Current.DeviceID <> msg.DeviceID) then
     SendErrorMessage(TSporglooErrorCode.WrongDeviceID,
@@ -139,16 +152,17 @@ end;
 
 procedure TSporglooClient.onCoinsCountChange(const AFromServer
   : TOlfSocketMessagingServerConnectedClient;
-  const msg: TCoinsCountChangeMessage);
+const msg: TCoinsCountChangeMessage);
 begin
   TGameData.Current.Player.CoinsCount := msg.CoinsCount;
 end;
 
 procedure TSporglooClient.onCurrentPlayerKilled(const AFromServer
   : TOlfSocketMessagingServerConnectedClient;
-  const msg: TCurrentPlayerKilledMessage);
+const msg: TCurrentPlayerKilledMessage);
 begin
-  // TODO : à compléter
+  tconfig.Current.PlayerID := '';
+  TGameData.restart;
 end;
 
 procedure TSporglooClient.onErrorMessage(const AFromServer
@@ -156,7 +170,7 @@ procedure TSporglooClient.onErrorMessage(const AFromServer
 begin
   // TODO : manage the received error
   if (msg.ErrorCode = ord(TSporglooErrorCode.PlayerMoveDenied)) then
-    TThread.ForceQueue(nil,
+    tthread.forcequeue(nil,
       procedure
       begin
         TMessageManager.DefaultManager.SendMessage(self,
@@ -180,7 +194,7 @@ end;
 procedure TSporglooClient.onLogoff(const AFromServer
   : TOlfSocketMessagingServerConnectedClient; const msg: TLogoffMessage);
 begin
-  TThread.ForceQueue(nil,
+  tthread.forcequeue(nil,
     procedure
     begin
       TMessageManager.DefaultManager.SendMessage(self,
@@ -197,7 +211,7 @@ begin
   MapCell.TileID := msg.TileID;
   MapCell.PlayerID := msg.PlayerID;
 
-  TThread.queue(nil,
+  tthread.queue(nil,
     procedure
     begin
       TMessageManager.DefaultManager.SendMessage(self,

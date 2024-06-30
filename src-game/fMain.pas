@@ -32,7 +32,8 @@ uses
   cLifeLevel,
   cYellowGameButton,
   cYellowGameButtonPause,
-  cYellowGameButtonMusicOnOff;
+  cYellowGameButtonMusicOnOff,
+  FMX.Effects;
 
 type
 {$SCOPEDENUMS ON}
@@ -66,6 +67,7 @@ type
     btnHallOfFame: TcadYellowMenuButton;
     btnOptions: TcadYellowMenuButton;
     Label1: TLabel;
+    GlowEffect1: TGlowEffect;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -99,8 +101,6 @@ type
     procedure ShowHallOfFamePage;
     procedure ShowOptionsPage;
     procedure InitializeHomePage;
-    procedure DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
-    procedure DoClientLostConnection(const AClient: TOlfSMSrvConnectedClient);
     procedure InitMainFormCaption;
     procedure MiseEnPause;
     procedure InitAboutDialogBox;
@@ -109,6 +109,7 @@ type
     procedure SubscribeToLostServerMessage;
     procedure SubscribeToDisconnect;
     procedure SubscribeToPlayerLevelsUpdates;
+    procedure SubscribeToLoginOkMessage;
   public
   end;
 
@@ -178,33 +179,6 @@ begin
   MiseEnPause;
 end;
 
-procedure TfrmMain.DoClientConnected(const AClient: TOlfSMSrvConnectedClient);
-begin
-  if not(AClient is tsporglooclient) then
-    exit;
-
-  TThread.ForceQueue(nil,
-    procedure
-    begin
-      TMessageManager.DefaultManager.SendMessage(self,
-        TServerConnectedMessage.Create(AClient as tsporglooclient));
-    end);
-end;
-
-procedure TfrmMain.DoClientLostConnection(const AClient
-  : TOlfSMSrvConnectedClient);
-begin
-  if not(AClient is tsporglooclient) then
-    exit;
-
-  TThread.ForceQueue(nil,
-    procedure
-    begin
-      TMessageManager.DefaultManager.SendMessage(self,
-        TLostServerMessage.Create(AClient as tsporglooclient));
-    end);
-end;
-
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   msg: TLogoffMessage;
@@ -246,29 +220,12 @@ begin
   SubscribeToLostServerMessage;
   SubscribeToDisconnect;
   SubscribeToPlayerLevelsUpdates;
+  SubscribeToLoginOkMessage;
 
   TThread.ForceQueue(nil,
     procedure
     begin
-      tgamedata.current.APIClient := tsporglooclient.Create
-        (tconfig.current.ServerIPv4, tconfig.current.ServerIPv4port);
-      // TODO : add a connection on IPv6 if available
-      tgamedata.current.APIClient.onConnected := DoClientConnected;
-      tgamedata.current.APIClient.onLostConnection := DoClientLostConnection;
-      try
-        tgamedata.current.APIClient.Connect;
-      except
-        TThread.ForceQueue(nil,
-          procedure
-          begin
-            TcadShowMessageBox.ShowModal(self,
-              'Can''t connect to the server. The game will stop. Please try again later.',
-              procedure
-              begin
-                Close;
-              end);
-          end);
-      end;
+      tgamedata.restart;
       ActivePage := TPageType.Home;
     end);
 
@@ -427,7 +384,9 @@ procedure TfrmMain.InitializeHomePage;
 begin
   // TODO : traduire textes
   btnPlay.txtImage.Text := 'PLAY';
+  btnPlay.Visible := tgamedata.current.isServerConnected;
   btnNewGame.txtImage.Text := 'NEW GAME';
+  btnNewGame.Visible := (tconfig.current.PlayerID <> '');
 {$IFDEF RELEASE}
   btnNewGame.Visible := false;
   // TODO : réactiver le bouton new game" une fois la fonctionnalité pleinement opérationnelle
@@ -459,7 +418,11 @@ procedure TfrmMain.MapFrame1TimerPlayerMoveTimer(Sender: TObject);
 begin
   MapFrame1.TimerPlayerMoveTimer(Sender);
   Label1.Text := tgamedata.current.Player.PlayerX.ToString + ',' +
-    tgamedata.current.Player.Playery.ToString;
+    tgamedata.current.Player.Playery.ToString + ' ' +
+    tgamedata.current.ViewportX.ToString + ',' +
+    tgamedata.current.ViewportY.ToString + ' ' +
+    tgamedata.current.ViewportXMax.ToString + ',' +
+    tgamedata.current.ViewportYMax.ToString;
   // TODO : retirer Label 1 (info de débogage pour versions alpha)
 end;
 
@@ -575,6 +538,7 @@ begin
       tgamedata.current.APIClient.SendKillCurrentPlayer
         (tgamedata.current.Session.SessionID,
         tgamedata.current.Player.PlayerID);
+      // TODO : remplacer cette fenêtre par un écran d'attente, lancer le jeu une fos le TLoginOKMesage reçu et fermer cette fenêtre
       TcadShowMessageBox.ShowModal(self, 'Current game will be destroyed.' +
         slinebreak + 'A new game will restart soon.',
         procedure
@@ -617,6 +581,15 @@ begin
         begin
           Close;
         end);
+    end);
+end;
+
+procedure TfrmMain.SubscribeToLoginOkMessage;
+begin
+  TMessageManager.DefaultManager.SubscribeToMessage(TLoginOKMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    begin
+      MapFrame1.TimerMapRefresh.Enabled := true;
     end);
 end;
 

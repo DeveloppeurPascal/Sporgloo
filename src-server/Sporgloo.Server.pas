@@ -159,11 +159,13 @@ begin
         begin
           MapCell.HasChanged := false;
           for Session in SporglooSessions.Values do
-            try
-              SendMapCellInfo(Session.SocketClient, MapCell);
-            except
-              // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
-            end;
+            if assigned(Session.SocketClient) then
+              try
+                SendMapCellInfo(Session.SocketClient, MapCell);
+              except
+                // TODO : erreur avec une session, la virer ou traiter en fonction de l'erreur
+                Session.SocketClient := nil;
+              end;
         end
         else
           sleep(10);
@@ -251,36 +253,41 @@ begin
 {$IFDEF DEBUG}
   // writeln('onKillCurrentPlayer');
 {$ENDIF}
-  if msg.SessionID.IsEmpty then
-    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongSessionID,
-      'Session ID needed.');
+  if not msg.SessionID.IsEmpty then
+  begin
+    if assigned(AFromGame.tagobject) and
+      (AFromGame.tagobject is TSporglooSession) and
+      (msg.SessionID = (AFromGame.tagobject as TSporglooSession).SessionID) then
+      Session := AFromGame.tagobject as TSporglooSession
+    else if SporglooSessions.TryGetValue(msg.SessionID, Session) then
+      AFromGame.tagobject := Session
+    else
+      SendErrorMessage(AFromGame, TSporglooErrorCode.UnknowSessionID,
+        'Unknow Session !');
 
-  if assigned(AFromGame.tagobject) and (AFromGame.tagobject is TSporglooSession)
-    and (msg.SessionID = (AFromGame.tagobject as TSporglooSession).SessionID)
-  then
-    Session := AFromGame.tagobject as TSporglooSession
-  else if SporglooSessions.TryGetValue(msg.SessionID, Session) then
-    AFromGame.tagobject := Session
-  else
-    SendErrorMessage(AFromGame, TSporglooErrorCode.UnknowSessionID,
-      'Unknow Session !');
+    if msg.PlayerID.IsEmpty then
+      SendErrorMessage(AFromGame, TSporglooErrorCode.WrongPlayerID,
+        'Player ID needed.');
 
-  if msg.PlayerID.IsEmpty then
-    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongPlayerID,
-      'Player ID needed.');
+    if (msg.PlayerID <> Session.Player.PlayerID) then
+      SendErrorMessage(AFromGame,
+        TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
+        'Wrong player for this session.');
 
-  if (msg.PlayerID <> Session.Player.PlayerID) then
-    SendErrorMessage(AFromGame,
-      TSporglooErrorCode.WrongDeviceOrPlayerForSessionID,
-      'Wrong player for this session.');
+    // plus de lien entre le joueur en cours et l'appareil du joueur
+    Session.Player.DeviceID := '';
 
-  // plus de lien entre le joueur en cours et l'appareil du joueur
-  Session.Player.DeviceID := '';
-
-  // annulation de la session
-  AFromGame.tagobject := nil;
-  Session.SocketClient := nil;
-  Session.Free;
+    // annulation de la session
+    AFromGame.tagobject := nil;
+    Session.SocketClient := nil;
+    System.Tmonitor.enter(SporglooSessions);
+    try
+      SporglooSessions.Remove(Session.SessionID);
+    finally
+      System.Tmonitor.Exit(SporglooSessions);
+    end;
+    // Session.Free;// done by "remove()
+  end;
 
   // Confirmation de la suppression du lien entre le player et son joueur
   SendCurrentPlayerKilledResponse(AFromGame);
@@ -341,19 +348,22 @@ begin
 {$IFDEF DEBUG}
   // writeln('onAskForMapRefresh');
 {$ENDIF}
-  if msg.SessionID.IsEmpty then
-    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongSessionID,
-      'Session ID needed.');
+  // The SessionID can be empty on client program startup (before receiving the REGISTER answer).
 
-  if assigned(AFromGame.tagobject) and (AFromGame.tagobject is TSporglooSession)
-    and (msg.SessionID = (AFromGame.tagobject as TSporglooSession).SessionID)
-  then
-    Session := AFromGame.tagobject as TSporglooSession
-  else if SporglooSessions.TryGetValue(msg.SessionID, Session) then
-    AFromGame.tagobject := Session
+  if not msg.SessionID.IsEmpty then
+  begin
+    if assigned(AFromGame.tagobject) and
+      (AFromGame.tagobject is TSporglooSession) and
+      (msg.SessionID = (AFromGame.tagobject as TSporglooSession).SessionID) then
+      Session := AFromGame.tagobject as TSporglooSession
+    else if SporglooSessions.TryGetValue(msg.SessionID, Session) then
+      AFromGame.tagobject := Session
+    else
+      SendErrorMessage(AFromGame, TSporglooErrorCode.UnknowSessionID,
+        'Unknow Session !');
+  end
   else
-    SendErrorMessage(AFromGame, TSporglooErrorCode.UnknowSessionID,
-      'Unknow Session !');
+    Session := nil;
 
   if msg.ColNumber < 1 then
     Exit;
@@ -364,7 +374,10 @@ begin
     for Y := msg.Y to msg.Y + msg.RowNumber - 1 do
     begin
       SendMapCellInfo(AFromGame, SporglooMap.GetCellAt(X, Y));
-      // TODO : référencer la session au niveau de la liste des sessions à mettre à jour en cas de changement de chaque cellule
+      if assigned(Session) then
+      begin
+        // TODO : référencer la session au niveau de la liste des sessions à mettre à jour en cas de changement de chaque cellule
+      end;
     end;
 end;
 
@@ -471,56 +484,55 @@ begin
   if (msg.ServerAuthKey <> GetServerAuthKey(msg.DeviceID)) then
     SendErrorMessage(AFromGame, TSporglooErrorCode.WrongToken, 'Wrong token.');
 
-  Player := SporglooPlayers.GetPlayerByDevice(msg.DeviceID);
-  if not assigned(Player) then
+  // If the client sent a REGISTER, we forgot its previous player (if any).
+  // Player := SporglooPlayers.GetPlayerByDevice(msg.DeviceID);
+  // if not assigned(Player) then
+  // begin
+  Player := TSporglooPlayer.Create;
+  Player.DeviceID := msg.DeviceID;
+  Player.DeviceAuthKey := TOlfRandomIDGenerator.getIDBase62(50);
+  Player.PlayerID := GetUniqID;
+
+  if (SporglooSessions.count > 0) then
   begin
-    Player := TSporglooPlayer.Create;
-    Player.DeviceID := msg.DeviceID;
-    Player.DeviceAuthKey := TOlfRandomIDGenerator.getIDBase62(50);
-    Player.PlayerID := GetUniqID;
-
-    if (SporglooSessions.count > 0) then
-    begin
-      Session := SporglooSessions.ToArray[random(SporglooSessions.count)].Value;
-      repeat
-        Player.PlayerX := Session.Player.PlayerX +
-          random(CStartDistanceFromLastPlayer * 2) -
-          CStartDistanceFromLastPlayer;
-        Player.PlayerY := Session.Player.PlayerY +
-          random(CStartDistanceFromLastPlayer * 2) -
-          CStartDistanceFromLastPlayer;
-        ok := true;
-        // TODO : tester si un joueur est à ces nouvelles coordonnées une fois les joueurs dans la grille
-      until ok;
-    end
-    else
-    begin
-      repeat
-        Player.PlayerX := random(CStartDistanceFromLastPlayer +
-          CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
-        Player.PlayerY := random(CStartDistanceFromLastPlayer +
-          CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
-        ok := true;
-        // TODO : tester si un joueur est à ces nouvelles coordonnées une fois les joueurs dans la grille
-      until ok;
-    end;
-
-    Player.CoinsCount := 0;
-    Player.StarsCount := CStartStarsCount;
-    Player.LivesCount := CStartLifeLevel;
-    SporglooPlayers.Add(Player.PlayerID, Player);
-
-    MapCell := SporglooMap.GetCellAt(Player.PlayerX, Player.PlayerY);
-    MapCell.TileID := CSporglooTilePath;
-    MapCell.PlayerID := Player.PlayerID;
-    MapCell.PlayerImageID := Player.ImageID;
-
-    SendClientRegisterResponse(AFromGame, Player.DeviceID, Player.PlayerID,
-      Player.DeviceAuthKey);
+    Session := SporglooSessions.ToArray[random(SporglooSessions.count)].Value;
+    repeat
+      Player.PlayerX := Session.Player.PlayerX +
+        random(CStartDistanceFromLastPlayer * 2) - CStartDistanceFromLastPlayer;
+      Player.PlayerY := Session.Player.PlayerY +
+        random(CStartDistanceFromLastPlayer * 2) - CStartDistanceFromLastPlayer;
+      ok := true;
+      // TODO : tester si un joueur est à ces nouvelles coordonnées une fois les joueurs dans la grille
+    until ok;
   end
   else
-    SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceForPlayerID,
-      'A player is already registered for this device.');
+  begin
+    repeat
+      Player.PlayerX := random(CStartDistanceFromLastPlayer +
+        CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
+      Player.PlayerY := random(CStartDistanceFromLastPlayer +
+        CStartDistanceFromLastPlayer + 1) - CStartDistanceFromLastPlayer;
+      ok := true;
+      // TODO : tester si un joueur est à ces nouvelles coordonnées une fois les joueurs dans la grille
+    until ok;
+  end;
+
+  Player.CoinsCount := 0;
+  Player.StarsCount := CStartStarsCount;
+  Player.LivesCount := CStartLifeLevel;
+  SporglooPlayers.Add(Player.PlayerID, Player);
+
+  MapCell := SporglooMap.GetCellAt(Player.PlayerX, Player.PlayerY);
+  MapCell.TileID := CSporglooTilePath;
+  MapCell.PlayerID := Player.PlayerID;
+  MapCell.PlayerImageID := Player.ImageID;
+
+  SendClientRegisterResponse(AFromGame, Player.DeviceID, Player.PlayerID,
+    Player.DeviceAuthKey);
+  // end
+  // else
+  // SendErrorMessage(AFromGame, TSporglooErrorCode.WrongDeviceForPlayerID,
+  // 'A player is already registered for this device.');
 end;
 
 procedure TSporglooServer.onPlayerMove(const AFromGame
