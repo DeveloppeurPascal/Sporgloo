@@ -70,6 +70,7 @@ begin
   r.fill.Color := talphacolors.Lightgray;
 
   smb := TcadShowMessageBox.Create(ACurForm);
+  smb.name := '';
   smb.TagObject := r;
   smb.Parent := ACurForm;
   smb.btnOk.txtImage.Text := 'Ok';
