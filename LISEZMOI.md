@@ -1,10 +1,16 @@
 # Sporgloo
 
-[This page in english.](README.md)
+[This page in English.](README.md)
 
 Jeu vidéo développé en Delphi avec le framework FireMonkey à l'occasion de la game jam [Kenney Jam 2023](https://itch.io/jam/kenney-jam-2023) avec pour thème EXPLORATION.
 
 Ce dépôt de code contient un projet développé en langage Pascal Objet sous Delphi. Vous ne savez pas ce qu'est Dephi ni où le télécharger ? Vous en saurez plus [sur ce site web](https://delphi-resources.developpeur-pascal.fr/).
+
+## Présentations et conférences
+
+### Twitch
+
+Suivez mes streams de développement de logiciels, jeux vidéo, applications mobiles et sites web sur [ma chaîne Twitch](https://www.twitch.tv/patrickpremartin) ou en rediffusion sur [Serial Streameur](https://serialstreameur.fr) la plupart du temps en français.
 
 ## Utiliser ce logiciel
 
