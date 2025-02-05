@@ -160,7 +160,8 @@ end;
 function TConfig.GetServerIPv4: string;
 begin
 {$IFDEF RELEASE}
-  result := FParams.getValue('ServerIPv4', '92.222.216.2');
+//  result := FParams.getValue('ServerIPv4', '162.19.74.25');
+  result := '162.19.74.25';
   // VPS Sporgloo (temporary address)
 {$ELSE}
   result := FParams.getValue('ServerIPv4', '127.0.0.1');
